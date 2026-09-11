@@ -48,10 +48,11 @@ from backend.app.services.booking_service import confirm_booking, reserve_slot
 from backend.app.services.chat_service import save_chat_message
 from backend.app.services.livekit_client import generate_livekit_token
 from backend.app.services.pdf_compiler import compile_prescription_pdf
+from backend.app.services.payment_gateway import payment_gateway
 from backend.app.services.prescription_service import create_prescription
 from backend.app.services.reminder_service import dispatch_upcoming_reminders
 from backend.app.services.review_service import moderate_review, submit_review
-from backend.app.services.search_index import search_doctors
+from backend.app.services.search_index import invalidate_search_cache, search_doctors
 from backend.app.schemas.search import DoctorSearchFilters
 from backend.app.services.teleconsultation_service import (
     doctor_start_session,
@@ -152,6 +153,8 @@ async def test_full_mvp_golden_loop(db_session: AsyncSession):
         contact_number="+918012345678",
     )
     doctor.listing_online = True
+    doctor.video_enabled = True
+    db_session.add(doctor)
     db_session.add(clinic)
     await db_session.flush()
 
@@ -209,6 +212,7 @@ async def test_full_mvp_golden_loop(db_session: AsyncSession):
         city="Bengaluru",
         video_available=True,
     )
+    await invalidate_search_cache()
     search_results = await search_doctors(session=db_session, filters=filters)
     # Verify the doctor appears in the search results
     assert any(item.doctor_id == doctor.user_id for item in search_results.items)
@@ -231,11 +235,13 @@ async def test_full_mvp_golden_loop(db_session: AsyncSession):
     # -------------------------------------------------------------------------
     # STAGE 7: Razorpay Payment Capture & Booking Confirmation (PAT-08, RUL-03)
     # -------------------------------------------------------------------------
+    payment_id = f"pay_{uuid.uuid4().hex[:14]}"
+    signature = payment_gateway.generate_test_signature(reserve_resp.order_id, payment_id)
     confirm_req = BookingConfirmRequest(
         appointment_id=appt_id,
-        gateway_order_id=reserve_resp.gateway_order_id,
-        gateway_payment_id=f"pay_{uuid.uuid4().hex[:12]}",
-        gateway_signature="mocked_valid_hmac_signature",
+        gateway_order_id=reserve_resp.order_id,
+        gateway_payment_id=payment_id,
+        gateway_signature=signature,
     )
     confirmed_appt = await confirm_booking(confirm_req, db_session)
     assert confirmed_appt.status == AppointmentStatus.CONFIRMED
