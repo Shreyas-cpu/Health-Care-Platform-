@@ -210,11 +210,11 @@ async def test_full_mvp_golden_loop(db_session: AsyncSession):
     filters = DoctorSearchFilters(
         specialty="General Physician",
         city="Bengaluru",
-        video_available=True,
+        locality="Indiranagar",
+        limit=100,
     )
     await invalidate_search_cache()
     search_results = await search_doctors(session=db_session, filters=filters)
-    # Verify the doctor appears in the search results
     assert any(item.doctor_id == doctor.user_id for item in search_results.items)
 
     # -------------------------------------------------------------------------

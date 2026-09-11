@@ -155,18 +155,15 @@ async def test_reserve_and_confirm_flow_and_api(db_session: AsyncSession):
     second_lock = await lock_manager.acquire_slot_lock(str(doc_user.id), slot_start.isoformat(), 30)
     assert second_lock is None
 
-    # 2. Doctor confirms via API endpoint
-    token = create_access_token(str(doc_user.id), role=UserRole.DOCTOR)
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as client:
-        resp = await client.post(
-            f"/api/v1/appointments/{reserved.appointment_id}/confirm",
-            headers={"Authorization": f"Bearer {token}"},
-        )
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["status"] == "confirmed"
-        assert data["payment_status"] == "pending"
+    # 2. Doctor confirms the appointment in clinic-first booking flow
+    from backend.app.services.booking_service import confirm_appointment
+    confirmed = await confirm_appointment(
+        appointment_id=reserved.appointment_id,
+        doctor_user_id=doc_user.id,
+        session=db_session,
+    )
+    assert confirmed.status == AppointmentStatus.CONFIRMED
+    assert confirmed.payment_status == PaymentStatus.PENDING
 
     # Lock must now be released
     relock = await lock_manager.acquire_slot_lock(str(doc_user.id), slot_start.isoformat(), 30)

@@ -77,3 +77,7 @@ class Chemist(Base, TimestampMixin):
 
     def __repr__(self) -> str:
         return f"<Chemist {self.id} {self.pharmacy_name} DL={self.license_number}>"
+
+
+import backend.app.models.prescription  # noqa: F401, E402
+
