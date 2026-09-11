@@ -18,8 +18,10 @@ class AppointmentBase(BaseModel):
     slot_end: datetime
     fee_amount: Decimal = Field(default=Decimal("0.00"), ge=Decimal("0.00"))
 
+
 class AppointmentCreate(AppointmentBase):
     pass
+
 
 class AppointmentRead(AppointmentBase):
     model_config = ConfigDict(from_attributes=True)
@@ -33,12 +35,15 @@ class AppointmentRead(AppointmentBase):
     created_at: datetime
     updated_at: datetime
 
+
 class AppointmentTransitionRequest(BaseModel):
     target_status: AppointmentStatus
     reason: str | None = None
 
+
 class AppointmentCancelRequest(BaseModel):
     reason: str = Field(..., min_length=3, description="Mandatory cancellation reason")
+
 
 class AppointmentRescheduleRequest(BaseModel):
     new_slot_start: datetime

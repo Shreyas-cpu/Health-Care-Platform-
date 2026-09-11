@@ -20,7 +20,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 router = APIRouter(prefix="/prescriptions", tags=["Prescriptions"])
 
 
-@router.post("", response_model=PrescriptionResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "", response_model=PrescriptionResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_prescription_endpoint(
     req: PrescriptionCreate,
     current_user: User = Depends(require_roles(UserRole.DOCTOR)),
@@ -62,12 +64,14 @@ async def get_prescription_endpoint(
     )
 
 
-@router.get("/{prescription_id}/verify", response_model=PrescriptionVerificationResponse)
+@router.get(
+    "/{prescription_id}/verify", response_model=PrescriptionVerificationResponse
+)
 async def verify_prescription_endpoint(
     prescription_id: uuid.UUID,
     session: AsyncSession = Depends(get_db),
 ):
     """Verify digital signature and integrity of any prescription."""
     from backend.app.api.v1.chemists import verify_prescription_signature_endpoint
-    return await verify_prescription_signature_endpoint(prescription_id, session)
 
+    return await verify_prescription_signature_endpoint(prescription_id, session)

@@ -7,10 +7,8 @@ from backend.app.core.config import settings
 
 
 def get_redis_client() -> aioredis.Redis:
-    return aioredis.from_url(
-        settings.REDIS_URL,
-        decode_responses=True
-    )
+    return aioredis.from_url(settings.REDIS_URL, decode_responses=True)
+
 
 class DistributedLockManager:
     @staticmethod
@@ -51,26 +49,29 @@ class DistributedLockManager:
         finally:
             await client.aclose()
 
-    async def acquire_slot_lock(self, doctor_id: str, slot_iso: str, ttl_seconds: int = 600) -> str | None:
+    async def acquire_slot_lock(
+        self, doctor_id: str, slot_iso: str, ttl_seconds: int = 600
+    ) -> str | None:
         key = self.format_slot_key(doctor_id, slot_iso)
         return await self.acquire_lock(key, ttl_seconds=ttl_seconds)
 
-    async def release_slot_lock(self, doctor_id: str, slot_iso: str, token: str) -> bool:
+    async def release_slot_lock(
+        self, doctor_id: str, slot_iso: str, token: str
+    ) -> bool:
         key = self.format_slot_key(doctor_id, slot_iso)
         return await self.release_lock(key, token)
+
 
 async def publish_event(channel: str, event_type: str, data: dict[str, Any]) -> int:
     """
     Publishes an event to a Redis Pub/Sub channel for the Node.js real-time gateway.
     """
     client = get_redis_client()
-    payload = {
-        "event_type": event_type,
-        "data": data
-    }
+    payload = {"event_type": event_type, "data": data}
     try:
         return await client.publish(channel, json.dumps(payload))
     finally:
         await client.aclose()
+
 
 lock_manager = DistributedLockManager()

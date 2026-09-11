@@ -6,16 +6,16 @@ import uuid
 from typing import Any
 
 import firebase_admin
-from firebase_admin import auth as firebase_auth_admin, credentials
-from fastapi import HTTPException, status
 import jwt
-from sqlalchemy import or_, select
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.app.core.config import settings
 from backend.app.models.consent import ConsentRecord
 from backend.app.models.patient import Patient
 from backend.app.models.user import User, UserRole
+from fastapi import HTTPException, status
+from firebase_admin import auth as firebase_auth_admin
+from firebase_admin import credentials
+from sqlalchemy import or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 
@@ -24,19 +24,31 @@ def _get_or_init_firebase_app():
     """Initializes the default Firebase Admin SDK app if not already initialized."""
     if not firebase_admin._apps:
         try:
-            if settings.FIREBASE_CREDENTIALS_PATH and os.path.exists(settings.FIREBASE_CREDENTIALS_PATH):
+            if settings.FIREBASE_CREDENTIALS_PATH and os.path.exists(
+                settings.FIREBASE_CREDENTIALS_PATH
+            ):
                 cred = credentials.Certificate(settings.FIREBASE_CREDENTIALS_PATH)
-                firebase_admin.initialize_app(cred, {"projectId": settings.FIREBASE_PROJECT_ID})
-                logger.info("Firebase Admin initialized with service account credentials.")
+                firebase_admin.initialize_app(
+                    cred, {"projectId": settings.FIREBASE_PROJECT_ID}
+                )
+                logger.info(
+                    "Firebase Admin initialized with service account credentials."
+                )
             else:
-                options = {"projectId": settings.FIREBASE_PROJECT_ID} if settings.FIREBASE_PROJECT_ID else None
+                options = (
+                    {"projectId": settings.FIREBASE_PROJECT_ID}
+                    if settings.FIREBASE_PROJECT_ID
+                    else None
+                )
                 firebase_admin.initialize_app(options=options)
-                logger.info("Firebase Admin initialized with default application options.")
+                logger.info(
+                    "Firebase Admin initialized with default application options."
+                )
         except Exception as exc:
             logger.warning(
                 "Could not initialize live Firebase Admin app (%s). "
                 "Sandbox/mock verification fallback will be enabled.",
-                exc
+                exc,
             )
 
 
@@ -87,7 +99,9 @@ def verify_firebase_id_token(id_token: str) -> dict[str, Any]:
             missing_padding = len(payload_b64) % 4
             if missing_padding:
                 payload_b64 += "=" * (4 - missing_padding)
-            payload_data = json.loads(base64.urlsafe_b64decode(payload_b64.encode()).decode())
+            payload_data = json.loads(
+                base64.urlsafe_b64decode(payload_b64.encode()).decode()
+            )
             if "uid" not in payload_data and "sub" in payload_data:
                 payload_data["uid"] = payload_data["sub"]
             return payload_data
@@ -111,7 +125,11 @@ def verify_firebase_id_token(id_token: str) -> dict[str, Any]:
         if settings.FIREBASE_MOCK_AUTH and id_token.count(".") == 2:
             try:
                 unverified = jwt.decode(id_token, options={"verify_signature": False})
-                uid = unverified.get("user_id") or unverified.get("sub") or unverified.get("uid")
+                uid = (
+                    unverified.get("user_id")
+                    or unverified.get("sub")
+                    or unverified.get("uid")
+                )
                 if uid:
                     unverified["uid"] = uid
                     return unverified
@@ -127,7 +145,11 @@ def verify_firebase_id_token(id_token: str) -> dict[str, Any]:
     if settings.FIREBASE_MOCK_AUTH and id_token.count(".") == 2:
         try:
             unverified = jwt.decode(id_token, options={"verify_signature": False})
-            uid = unverified.get("user_id") or unverified.get("sub") or unverified.get("uid")
+            uid = (
+                unverified.get("user_id")
+                or unverified.get("sub")
+                or unverified.get("uid")
+            )
             if uid:
                 unverified["uid"] = uid
                 return unverified

@@ -11,9 +11,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 security_scheme = HTTPBearer(auto_error=True)
 
+
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Security(security_scheme),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
 ) -> User:
     token = credentials.credentials
     user: User | None = None
@@ -45,24 +46,28 @@ async def get_current_user(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired authentication token."
+            detail="Invalid or expired authentication token.",
         )
     if not user.is_active:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="User account is deactivated"
+            status_code=status.HTTP_403_FORBIDDEN, detail="User account is deactivated"
         )
     return user
+
 
 def require_roles(*allowed_roles: UserRole):
     async def role_checker(user: User = Depends(get_current_user)) -> User:
         if user.role not in allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Operation not permitted for role '{user.role.value}'"
+                detail=f"Operation not permitted for role '{user.role.value}'",
             )
         return user
+
     return role_checker
 
+
 require_super_admin = require_roles(UserRole.SUPER_ADMIN)
-require_verification_reviewer = require_roles(UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN)
+require_verification_reviewer = require_roles(
+    UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN
+)

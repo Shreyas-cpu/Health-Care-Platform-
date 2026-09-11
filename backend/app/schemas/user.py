@@ -6,12 +6,16 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class UserBase(BaseModel):
-    phone_number: str = Field(..., pattern=r"^\+?[1-9]\d{9,14}$", description="E.164 or Indian mobile format")
+    phone_number: str = Field(
+        ..., pattern=r"^\+?[1-9]\d{9,14}$", description="E.164 or Indian mobile format"
+    )
     email: EmailStr | None = None
     role: UserRole = UserRole.PATIENT
 
+
 class UserCreate(UserBase):
     password: str | None = None
+
 
 class UserRead(UserBase):
     model_config = ConfigDict(from_attributes=True)
@@ -21,14 +25,17 @@ class UserRead(UserBase):
     created_at: datetime
     updated_at: datetime
 
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserRead
 
+
 class OTPRequest(BaseModel):
     phone_number: str = Field(..., pattern=r"^\+?[1-9]\d{9,14}$")
     purpose: str = Field(default="login", description="login or registration")
+
 
 class OTPVerifyRequest(BaseModel):
     phone_number: str = Field(..., pattern=r"^\+?[1-9]\d{9,14}$")

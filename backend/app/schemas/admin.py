@@ -1,5 +1,7 @@
 from decimal import Decimal
+
 from pydantic import BaseModel, Field
+
 
 class PlatformTelemetryResponse(BaseModel):
     total_verified_doctors: int
@@ -16,5 +18,9 @@ class ReminderDispatchResponse(BaseModel):
 
 
 class ChemistStatusUpdateAction(BaseModel):
-    action: str = Field(..., description="Action to perform: activate, suspend, or deactivate")
-    reason_text: str = Field(..., min_length=1, description="Mandatory reason for chemist status update")
+    action: str = Field(
+        ..., description="Action to perform: activate, suspend, or deactivate"
+    )
+    reason_text: str = Field(
+        ..., min_length=1, description="Mandatory reason for chemist status update"
+    )

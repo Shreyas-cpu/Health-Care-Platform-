@@ -15,13 +15,18 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-router = APIRouter(prefix="/admin/verification", tags=["Admin Doctor Verification Pipeline"])
+router = APIRouter(
+    prefix="/admin/verification", tags=["Admin Doctor Verification Pipeline"]
+)
+
 
 @router.get("/queue", response_model=list[VerificationQueueItemRead])
 async def get_verification_queue(
     filter_status: VerificationStatus | None = None,
-    current_admin: User = Depends(require_roles(UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN)),
-    session: AsyncSession = Depends(get_db)
+    current_admin: User = Depends(
+        require_roles(UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN)
+    ),
+    session: AsyncSession = Depends(get_db),
 ):
     """
     Retrieves doctors in the verification queue.
@@ -31,12 +36,16 @@ async def get_verification_queue(
     if filter_status:
         stmt = stmt.where(Doctor.verification_status == filter_status)
     else:
-        stmt = stmt.where(Doctor.verification_status.in_([
-            VerificationStatus.SUBMITTED,
-            VerificationStatus.UNDER_REVIEW,
-            VerificationStatus.INFO_REQUESTED
-        ]))
-    
+        stmt = stmt.where(
+            Doctor.verification_status.in_(
+                [
+                    VerificationStatus.SUBMITTED,
+                    VerificationStatus.UNDER_REVIEW,
+                    VerificationStatus.INFO_REQUESTED,
+                ]
+            )
+        )
+
     stmt = stmt.order_by(Doctor.created_at.asc())
     results = (await session.execute(stmt)).scalars().all()
 
@@ -50,11 +59,14 @@ async def get_verification_queue(
 
     return queue_items
 
+
 @router.get("/{doctor_id}", response_model=VerificationQueueItemRead)
 async def get_doctor_verification_details(
     doctor_id: uuid.UUID,
-    current_admin: User = Depends(require_roles(UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN)),
-    session: AsyncSession = Depends(get_db)
+    current_admin: User = Depends(
+        require_roles(UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN)
+    ),
+    session: AsyncSession = Depends(get_db),
 ):
     stmt = (
         select(Doctor)
@@ -63,18 +75,23 @@ async def get_doctor_verification_details(
     )
     doctor = (await session.execute(stmt)).scalar_one_or_none()
     if not doctor:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Doctor not found.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Doctor not found."
+        )
 
     docs_read = [DoctorDocumentRead.model_validate(d) for d in doctor.documents]
     return VerificationQueueItemRead(doctor=doctor, documents=docs_read)
+
 
 @router.post("/{doctor_id}/transition", response_model=VerificationQueueItemRead)
 async def transition_verification_status(
     doctor_id: uuid.UUID,
     req: VerificationTransitionRequest,
     request: Request,
-    current_admin: User = Depends(require_roles(UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN)),
-    session: AsyncSession = Depends(get_db)
+    current_admin: User = Depends(
+        require_roles(UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN)
+    ),
+    session: AsyncSession = Depends(get_db),
 ):
     """
     Transitions doctor verification status through the 6-state pipeline.
@@ -88,7 +105,9 @@ async def transition_verification_status(
     )
     doctor = (await session.execute(stmt)).scalar_one_or_none()
     if not doctor:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Doctor not found.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Doctor not found."
+        )
 
     client_ip = request.client.host if request.client else None
 
@@ -100,7 +119,7 @@ async def transition_verification_status(
         session=session,
         reason_text=req.reason_text,
         review_notes=req.review_notes,
-        ip_address=client_ip
+        ip_address=client_ip,
     )
 
     await session.commit()

@@ -3,7 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from backend.app.schemas.prescription import PrescriptionResponse
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 
 class PatientDocumentResponse(BaseModel):

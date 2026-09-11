@@ -12,10 +12,15 @@ class Clinic(Base, TimestampMixin):
 
     __tablename__ = "clinics"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     doctor_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("doctors.user_id", ondelete="CASCADE"),
-        unique=True, nullable=False, index=True,
+        UUID(as_uuid=True),
+        ForeignKey("doctors.user_id", ondelete="CASCADE"),
+        unique=True,
+        nullable=False,
+        index=True,
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     address: Mapped[str] = mapped_column(Text, nullable=False)
@@ -32,5 +37,7 @@ class Clinic(Base, TimestampMixin):
     def google_maps_url(self) -> str:
         if self.latitude is not None and self.longitude is not None:
             return f"https://www.google.com/maps/search/?api=1&query={self.latitude},{self.longitude}"
-        query = urllib.parse.quote(f"{self.name}, {self.address}, {self.city}, {self.pincode}")
+        query = urllib.parse.quote(
+            f"{self.name}, {self.address}, {self.city}, {self.pincode}"
+        )
         return f"https://www.google.com/maps/search/?api=1&query={query}"

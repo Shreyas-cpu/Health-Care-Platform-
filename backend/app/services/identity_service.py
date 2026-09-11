@@ -22,7 +22,9 @@ class IdentityService:
     def _otp_rate_limit_key(phone_number: str) -> str:
         return f"otp:ratelimit:{phone_number}"
 
-    async def request_otp(self, phone_number: str, purpose: str = "login") -> tuple[bool, str]:
+    async def request_otp(
+        self, phone_number: str, purpose: str = "login"
+    ) -> tuple[bool, str]:
         """
         Generates and stores a 6-digit OTP code in Redis.
         Returns (success, message).
@@ -31,7 +33,10 @@ class IdentityService:
             rate_key = self._otp_rate_limit_key(phone_number)
             is_limited = await redis.get(rate_key)
             if is_limited:
-                return False, "Too many OTP requests. Please wait 60 seconds before trying again."
+                return (
+                    False,
+                    "Too many OTP requests. Please wait 60 seconds before trying again.",
+                )
 
             otp_code = f"{random.randint(100000, 999999)}"
             code_key = self._otp_key(phone_number)
@@ -39,7 +44,9 @@ class IdentityService:
             await redis.set(rate_key, "1", ex=self.OTP_RATE_LIMIT_SECONDS)
 
         # In dev/testing, print to log; in production, dispatch via SMS gateway (SNS/Twilio)
-        print(f"[OTP SERVICE] Dispatching OTP {otp_code} to {phone_number} (purpose: {purpose})")
+        print(
+            f"[OTP SERVICE] Dispatching OTP {otp_code} to {phone_number} (purpose: {purpose})"
+        )
         return True, "OTP dispatched successfully."
 
     async def verify_otp(
@@ -49,7 +56,7 @@ class IdentityService:
         role: UserRole,
         session: AsyncSession,
         ip_address: str | None = None,
-        consent_version: str | None = "1.0"
+        consent_version: str | None = "1.0",
     ) -> TokenResponse:
         """
         Verifies OTP code from Redis.
@@ -76,10 +83,7 @@ class IdentityService:
         is_new_user = False
         if not user:
             user = User(
-                id=uuid.uuid4(),
-                phone_number=phone_number,
-                role=role,
-                is_active=True
+                id=uuid.uuid4(), phone_number=phone_number, role=role, is_active=True
             )
             session.add(user)
             await session.flush()
@@ -90,10 +94,12 @@ class IdentityService:
             consent = ConsentRecord(
                 id=uuid.uuid4(),
                 user_id=user.id,
-                purpose="patient_registration_and_care" if role == UserRole.PATIENT else "doctor_onboarding",
+                purpose="patient_registration_and_care"
+                if role == UserRole.PATIENT
+                else "doctor_onboarding",
                 consent_version=consent_version or "1.0",
                 is_granted=True,
-                ip_address=ip_address
+                ip_address=ip_address,
             )
             session.add(consent)
             await session.flush()
@@ -105,20 +111,15 @@ class IdentityService:
         token = create_access_token(
             subject=str(user.id),
             role=user.role.value,
-            extra_claims={"phone": user.phone_number}
+            extra_claims={"phone": user.phone_number},
         )
 
         return TokenResponse(
-            access_token=token,
-            token_type="bearer",
-            user=UserRead.model_validate(user)
+            access_token=token, token_type="bearer", user=UserRead.model_validate(user)
         )
 
     async def authenticate_admin(
-        self,
-        phone_number: str,
-        password: str,
-        session: AsyncSession
+        self, phone_number: str, password: str, session: AsyncSession
     ) -> TokenResponse:
         """
         Staff / Admin authentication using phone and password.
@@ -136,14 +137,10 @@ class IdentityService:
         if user.role not in (UserRole.SUPER_ADMIN, UserRole.VERIFICATION_REVIEWER):
             raise ValueError("Unauthorized role for staff authentication.")
 
-        token = create_access_token(
-            subject=str(user.id),
-            role=user.role.value
-        )
+        token = create_access_token(subject=str(user.id), role=user.role.value)
         return TokenResponse(
-            access_token=token,
-            token_type="bearer",
-            user=UserRead.model_validate(user)
+            access_token=token, token_type="bearer", user=UserRead.model_validate(user)
         )
+
 
 identity_service = IdentityService()

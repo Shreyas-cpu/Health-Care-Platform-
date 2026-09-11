@@ -3,12 +3,10 @@ from datetime import UTC, datetime
 from decimal import Decimal
 
 from backend.app.core.redis import lock_manager
-from backend.app.models.appointment import Appointment, AppointmentStatus, PaymentStatus
+from backend.app.models.appointment import Appointment, AppointmentStatus
 from backend.app.models.cancellation_policy import CancellationPolicy
-from backend.app.models.payment import PaymentTransaction, PaymentTransactionStatus
 from backend.app.services.appointment_state import appointment_state_machine
 from backend.app.services.audit import record_audit_log
-from backend.app.services.payment_gateway import payment_gateway
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -30,10 +28,16 @@ async def evaluate_cancellation(
     """
     if policy is None and session is not None:
         policy = (
-            await session.execute(
-                select(CancellationPolicy).where(CancellationPolicy.is_active.is_(True))
+            (
+                await session.execute(
+                    select(CancellationPolicy).where(
+                        CancellationPolicy.is_active.is_(True)
+                    )
+                )
             )
-        ).scalars().first()
+            .scalars()
+            .first()
+        )
 
     cutoff_hours = policy.cutoff_hours if policy else DEFAULT_CUTOFF_HOURS
     refund_percentage = (
@@ -80,7 +84,11 @@ async def process_cancellation(
             detail="Appointment not found",
         )
 
-    if appt.status in {AppointmentStatus.CANCELLED, AppointmentStatus.COMPLETED, AppointmentStatus.NO_SHOW}:
+    if appt.status in {
+        AppointmentStatus.CANCELLED,
+        AppointmentStatus.COMPLETED,
+        AppointmentStatus.NO_SHOW,
+    }:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Appointment in status '{appt.status.value}' cannot be cancelled",

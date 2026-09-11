@@ -19,7 +19,7 @@ from backend.app.schemas.prescription import PrescriptionResponse
 from backend.app.services.digital_signature import verify_prescription_signature
 from backend.app.services.prescription_service import _to_prescription_response
 from backend.app.services.storage import storage_service
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -99,7 +99,7 @@ async def list_chemists(
     session: AsyncSession = Depends(get_db),
 ):
     """List directory of pharmacies with optional locality/city/clinic filters."""
-    query = select(Chemist).where(Chemist.is_active == True)  # noqa: E712
+    query = select(Chemist).where(Chemist.is_active == True)
     if city and isinstance(city, str):
         query = query.where(Chemist.city.ilike(f"%{city.strip()}%"))
     if locality and isinstance(locality, str):
@@ -118,7 +118,6 @@ async def list_chemist_prescriptions(
     current_user: User = Depends(require_roles(UserRole.CHEMIST)),
     session: AsyncSession = Depends(get_db),
 ):
-
     """View digital prescriptions routed to the logged-in chemist."""
     chemist_res = await session.execute(
         select(Chemist).where(Chemist.user_id == current_user.id)
@@ -235,7 +234,11 @@ async def verify_prescription_signature_endpoint(
         )
 
     doctor = await session.get(Doctor, rx.doctor_id)
-    reg_number = doctor.medical_reg_number if doctor and doctor.medical_reg_number else "MCI-REG-PROVISIONAL"
+    reg_number = (
+        doctor.medical_reg_number
+        if doctor and doctor.medical_reg_number
+        else "MCI-REG-PROVISIONAL"
+    )
 
     is_valid = verify_prescription_signature(
         prescription=rx,

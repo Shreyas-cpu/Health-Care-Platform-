@@ -1,4 +1,5 @@
 """PostgreSQL-backed doctor catalog with a short Redis query cache."""
+
 import hashlib
 import json
 from decimal import Decimal
@@ -30,10 +31,17 @@ def _cache_key(filters: DoctorSearchFilters) -> str:
 def _result(doctor: Doctor) -> DoctorSearchResult:
     clinic = ClinicRead.model_validate(doctor.clinic) if doctor.clinic else None
     return DoctorSearchResult(
-        doctor_id=doctor.user_id, full_name=doctor.full_name, specialty=doctor.specialty,
-        years_experience=doctor.years_experience, bio=doctor.bio, gender=doctor.gender,
-        in_person_fee=doctor.in_person_fee, video_fee=doctor.video_fee or Decimal("0.00"),
-        listing_online=doctor.listing_online, video_enabled=doctor.video_enabled, clinic=clinic,
+        doctor_id=doctor.user_id,
+        full_name=doctor.full_name,
+        specialty=doctor.specialty,
+        years_experience=doctor.years_experience,
+        bio=doctor.bio,
+        gender=doctor.gender,
+        in_person_fee=doctor.in_person_fee,
+        video_fee=doctor.video_fee or Decimal("0.00"),
+        listing_online=doctor.listing_online,
+        video_enabled=doctor.video_enabled,
+        clinic=clinic,
         latitude=clinic.latitude if clinic else None,
         longitude=clinic.longitude if clinic else None,
         google_maps_url=clinic.google_maps_url if clinic else None,
@@ -52,7 +60,9 @@ async def invalidate_search_cache() -> int:
         await client.aclose()
 
 
-async def search_doctors(session: AsyncSession, filters: DoctorSearchFilters) -> DoctorSearchResponse:
+async def search_doctors(
+    session: AsyncSession, filters: DoctorSearchFilters
+) -> DoctorSearchResponse:
     """Search only verified, published doctors. RUL-02 is enforced in every query."""
     key = _cache_key(filters)
     client = get_redis_client()
@@ -66,13 +76,22 @@ async def search_doctors(session: AsyncSession, filters: DoctorSearchFilters) ->
         await client.aclose()
 
     # An outer join keeps doctors with no clinic in the unfiltered catalog.
-    statement = select(Doctor).outerjoin(Clinic).options(selectinload(Doctor.clinic)).where(
-        Doctor.verification_status == VerificationStatus.VERIFIED,
-        Doctor.listing_online.is_(True),
+    statement = (
+        select(Doctor)
+        .outerjoin(Clinic)
+        .options(selectinload(Doctor.clinic))
+        .where(
+            Doctor.verification_status == VerificationStatus.VERIFIED,
+            Doctor.listing_online.is_(True),
+        )
     )
-    count_statement = select(func.count(Doctor.user_id)).outerjoin(Clinic).where(
-        Doctor.verification_status == VerificationStatus.VERIFIED,
-        Doctor.listing_online.is_(True),
+    count_statement = (
+        select(func.count(Doctor.user_id))
+        .outerjoin(Clinic)
+        .where(
+            Doctor.verification_status == VerificationStatus.VERIFIED,
+            Doctor.listing_online.is_(True),
+        )
     )
 
     predicates: list[Any] = []
@@ -94,9 +113,15 @@ async def search_doctors(session: AsyncSession, filters: DoctorSearchFilters) ->
         count_statement = count_statement.where(*predicates)
 
     total = int((await session.execute(count_statement)).scalar_one())
-    statement = statement.order_by(Doctor.full_name).offset((filters.page - 1) * filters.limit).limit(filters.limit)
+    statement = (
+        statement.order_by(Doctor.full_name)
+        .offset((filters.page - 1) * filters.limit)
+        .limit(filters.limit)
+    )
     doctors = (await session.execute(statement)).scalars().all()
-    response = DoctorSearchResponse(items=[_result(doctor) for doctor in doctors], total=total)
+    response = DoctorSearchResponse(
+        items=[_result(doctor) for doctor in doctors], total=total
+    )
 
     client = get_redis_client()
     try:

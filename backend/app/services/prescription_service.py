@@ -6,7 +6,11 @@ import uuid
 from datetime import UTC, datetime
 
 from backend.app.core.config import settings
-from backend.app.models.appointment import Appointment, AppointmentMode, AppointmentStatus
+from backend.app.models.appointment import (
+    Appointment,
+    AppointmentMode,
+    AppointmentStatus,
+)
 from backend.app.models.doctor import Doctor
 from backend.app.models.drug import DrugMaster, seed_default_drugs
 from backend.app.models.prescription import Prescription, PrescriptionItem
@@ -19,7 +23,6 @@ from backend.app.services.digital_signature import generate_prescription_signatu
 from backend.app.services.pdf_compiler import compile_and_upload_prescription_pdf
 from backend.app.services.storage import storage_service
 from fastapi import HTTPException, status
-
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -114,7 +117,9 @@ async def create_prescription(
                 )
 
     existing = await session.execute(
-        select(Prescription).where(Prescription.appointment_id == effective_req.appointment_id)
+        select(Prescription).where(
+            Prescription.appointment_id == effective_req.appointment_id
+        )
     )
     if existing.scalar_one_or_none() is not None:
         raise HTTPException(
@@ -124,7 +129,11 @@ async def create_prescription(
 
     # Fetch doctor details for digital signature
     doctor = await session.get(Doctor, effective_doctor_id)
-    medical_reg_number = doctor.medical_reg_number if doctor and doctor.medical_reg_number else "MCI-REG-PROVISIONAL"
+    medical_reg_number = (
+        doctor.medical_reg_number
+        if doctor and doctor.medical_reg_number
+        else "MCI-REG-PROVISIONAL"
+    )
 
     issued_at = datetime.now(UTC)
     effective_chemist_id = chemist_id or effective_req.chemist_id
@@ -169,11 +178,12 @@ async def create_prescription(
     await session.commit()
     await session.refresh(prescription)
 
-
     # Generate PDF (sync path for immediate download_url; Celery task also available).
     try:
         await compile_and_upload_prescription_pdf(prescription.id, session)
-        await session.refresh(prescription, attribute_names=["items", "pdf_s3_key", "updated_at"])
+        await session.refresh(
+            prescription, attribute_names=["items", "pdf_s3_key", "updated_at"]
+        )
     except Exception as exc:
         # Prescription is persisted even if PDF upload fails; Celery can retry.
         print(f"[PRESCRIPTION] PDF compile/upload failed: {exc}")
@@ -215,12 +225,20 @@ async def get_prescription(
             detail="Prescription not found.",
         )
 
-    if require_patient and requester_id is not None and prescription.patient_id != requester_id:
+    if (
+        require_patient
+        and requester_id is not None
+        and prescription.patient_id != requester_id
+    ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not authorized to view this prescription.",
         )
-    if require_doctor and requester_id is not None and prescription.doctor_id != requester_id:
+    if (
+        require_doctor
+        and requester_id is not None
+        and prescription.doctor_id != requester_id
+    ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not authorized to view this prescription.",

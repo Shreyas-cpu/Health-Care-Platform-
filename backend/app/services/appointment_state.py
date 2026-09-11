@@ -8,14 +8,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class InvalidStateTransitionError(HTTPException):
-    def __init__(self, from_status: AppointmentStatus, to_status: AppointmentStatus, reason: str = ""):
+    def __init__(
+        self,
+        from_status: AppointmentStatus,
+        to_status: AppointmentStatus,
+        reason: str = "",
+    ):
         detail = f"Illegal appointment transition from '{from_status.value}' to '{to_status.value}'."
         if reason:
             detail += f" Reason: {reason}"
-        super().__init__(
-            status_code=422,
-            detail=detail
-        )
+        super().__init__(status_code=422, detail=detail)
+
 
 class AppointmentStateMachine:
     """
@@ -61,12 +64,16 @@ class AppointmentStateMachine:
     }
 
     @classmethod
-    def can_transition(cls, from_status: AppointmentStatus, to_status: AppointmentStatus) -> bool:
+    def can_transition(
+        cls, from_status: AppointmentStatus, to_status: AppointmentStatus
+    ) -> bool:
         allowed = cls.TRANSITIONS.get(from_status, set())
         return to_status in allowed
 
     @classmethod
-    def validate_transition(cls, from_status: AppointmentStatus, to_status: AppointmentStatus) -> None:
+    def validate_transition(
+        cls, from_status: AppointmentStatus, to_status: AppointmentStatus
+    ) -> None:
         if not cls.can_transition(from_status, to_status):
             raise InvalidStateTransitionError(from_status, to_status)
 
@@ -76,7 +83,7 @@ class AppointmentStateMachine:
         target_status: AppointmentStatus,
         session: AsyncSession,
         reason: str | None = None,
-        extra_data: dict[str, Any] | None = None
+        extra_data: dict[str, Any] | None = None,
     ) -> Appointment:
         """
         Executes an atomic transition on the appointment record.
@@ -109,11 +116,14 @@ class AppointmentStateMachine:
             event_payload.update(extra_data)
 
         try:
-            await publish_event("appointment:events", "appointment_status_changed", event_payload)
+            await publish_event(
+                "appointment:events", "appointment_status_changed", event_payload
+            )
         except Exception as e:
             # Non-blocking for DB transaction, but logged
             print(f"[STATE MACHINE] Warning: Redis Pub/Sub event publish failed: {e}")
 
         return appointment
+
 
 appointment_state_machine = AppointmentStateMachine()

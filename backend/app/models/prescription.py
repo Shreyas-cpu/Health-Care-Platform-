@@ -47,9 +47,15 @@ class Prescription(Base, TimestampMixin):
         index=True,
     )
     digital_signature: Mapped[str] = mapped_column(String(255), nullable=False)
-    digital_signature_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    dispense_status: Mapped[str] = mapped_column(String(50), default="pending", nullable=False)
-    dispensed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    digital_signature_timestamp: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False
+    )
+    dispense_status: Mapped[str] = mapped_column(
+        String(50), default="pending", nullable=False
+    )
+    dispensed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     dispensed_by_chemist_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("chemists.id", ondelete="SET NULL"),
@@ -77,7 +83,6 @@ class Prescription(Base, TimestampMixin):
 
     def __repr__(self) -> str:
         return f"<Prescription {self.id} appointment={self.appointment_id} status={self.dispense_status}>"
-
 
 
 class PrescriptionItem(Base, TimestampMixin):
@@ -111,4 +116,4 @@ class PrescriptionItem(Base, TimestampMixin):
         return f"<PrescriptionItem {self.drug_name} {self.dosage} {self.frequency}>"
 
 
-import backend.app.models.chemist  # noqa: F401, E402
+import backend.app.models.chemist  # noqa: F401

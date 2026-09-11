@@ -29,14 +29,20 @@ class PaymentTransaction(Base, TimestampMixin):
         nullable=False,
         index=True,
     )
-    gateway_order_id: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    gateway_order_id: Mapped[str] = mapped_column(
+        String(100), nullable=False, index=True
+    )
     gateway_payment_id: Mapped[str | None] = mapped_column(
         String(100), nullable=True, index=True
     )
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     currency: Mapped[str] = mapped_column(String(10), default="INR", nullable=False)
     status: Mapped[PaymentTransactionStatus] = mapped_column(
-        Enum(PaymentTransactionStatus, name="payment_transaction_status", native_enum=True),
+        Enum(
+            PaymentTransactionStatus,
+            name="payment_transaction_status",
+            native_enum=True,
+        ),
         nullable=False,
         default=PaymentTransactionStatus.PENDING,
         index=True,

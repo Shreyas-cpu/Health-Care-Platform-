@@ -1,7 +1,4 @@
 import uuid
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.api.deps import require_verification_reviewer
 from backend.app.core.database import get_db
@@ -12,17 +9,37 @@ from backend.app.schemas.admin import ChemistStatusUpdateAction
 from backend.app.schemas.chemist import ChemistResponse
 from backend.app.schemas.review import ReviewModerationAction, ReviewRead
 from backend.app.services.audit import record_audit_log
-from backend.app.services.review_service import list_reviews_for_moderation, moderate_review
+from backend.app.services.review_service import (
+    list_reviews_for_moderation,
+    moderate_review,
+)
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/admin/moderation", tags=["Admin Moderation"])
 
+
 @router.get("/reviews", response_model=list[ReviewRead])
-async def moderation_reviews(status: ReviewStatus | None = None, _: User = Depends(require_verification_reviewer), session: AsyncSession = Depends(get_db)):
+async def moderation_reviews(
+    status: ReviewStatus | None = None,
+    _: User = Depends(require_verification_reviewer),
+    session: AsyncSession = Depends(get_db),
+):
     return await list_reviews_for_moderation(status, session)
 
+
 @router.post("/reviews/{review_id}/action", response_model=ReviewRead)
-async def moderation_action(review_id: uuid.UUID, payload: ReviewModerationAction, current_user: User = Depends(require_verification_reviewer), session: AsyncSession = Depends(get_db)):
-    return await moderate_review(current_user.id, review_id, payload.action, payload.reason_text, session)
+async def moderation_action(
+    review_id: uuid.UUID,
+    payload: ReviewModerationAction,
+    current_user: User = Depends(require_verification_reviewer),
+    session: AsyncSession = Depends(get_db),
+):
+    return await moderate_review(
+        current_user.id, review_id, payload.action, payload.reason_text, session
+    )
+
 
 @router.get("/chemists", response_model=list[ChemistResponse])
 async def list_chemists_for_moderation(
@@ -33,6 +50,7 @@ async def list_chemists_for_moderation(
     stmt = select(Chemist).order_by(Chemist.created_at.desc())
     result = await session.execute(stmt)
     return list(result.scalars().all())
+
 
 @router.post("/chemists/{chemist_id}/status", response_model=ChemistResponse)
 async def update_chemist_status(

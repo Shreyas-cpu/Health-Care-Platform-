@@ -30,7 +30,9 @@ class DoctorAvailability(Base, TimestampMixin):
     day_of_week: Mapped[int] = mapped_column(Integer, nullable=False)  # 0=Mon .. 6=Sun
     start_time: Mapped[time] = mapped_column(Time, nullable=False)
     end_time: Mapped[time] = mapped_column(Time, nullable=False)
-    slot_duration_minutes: Mapped[int] = mapped_column(Integer, default=15, nullable=False)
+    slot_duration_minutes: Mapped[int] = mapped_column(
+        Integer, default=15, nullable=False
+    )
     buffer_minutes: Mapped[int] = mapped_column(Integer, default=5, nullable=False)
     mode: Mapped[str] = mapped_column(String(20), default="both", nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)

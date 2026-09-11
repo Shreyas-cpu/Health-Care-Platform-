@@ -13,6 +13,7 @@ class DoctorRegisterRequest(BaseModel):
     years_experience: int = Field(default=0, ge=0, le=70)
     bio: str | None = None
 
+
 class DoctorRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -28,6 +29,7 @@ class DoctorRead(BaseModel):
     video_enabled: bool
     created_at: datetime
     updated_at: datetime
+
 
 class DoctorVisibilityUpdate(BaseModel):
     listing_online: bool | None = None

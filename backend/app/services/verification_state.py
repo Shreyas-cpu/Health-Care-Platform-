@@ -10,14 +10,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class InvalidVerificationTransitionError(HTTPException):
-    def __init__(self, from_status: VerificationStatus, to_status: VerificationStatus, reason: str = ""):
+    def __init__(
+        self,
+        from_status: VerificationStatus,
+        to_status: VerificationStatus,
+        reason: str = "",
+    ):
         detail = f"Illegal verification transition from '{from_status.value}' to '{to_status.value}'."
         if reason:
             detail += f" Reason: {reason}"
-        super().__init__(
-            status_code=422,
-            detail=detail
-        )
+        super().__init__(status_code=422, detail=detail)
+
 
 class VerificationStateMachine:
     """
@@ -29,34 +32,33 @@ class VerificationStateMachine:
     5. Rejected
     6. Suspended
     """
+
     TRANSITIONS: dict[VerificationStatus, set[VerificationStatus]] = {
-        VerificationStatus.SUBMITTED: {
-            VerificationStatus.UNDER_REVIEW
-        },
+        VerificationStatus.SUBMITTED: {VerificationStatus.UNDER_REVIEW},
         VerificationStatus.UNDER_REVIEW: {
             VerificationStatus.INFO_REQUESTED,
             VerificationStatus.VERIFIED,
-            VerificationStatus.REJECTED
+            VerificationStatus.REJECTED,
         },
         VerificationStatus.INFO_REQUESTED: {
             VerificationStatus.SUBMITTED,
             VerificationStatus.UNDER_REVIEW,
-            VerificationStatus.REJECTED
+            VerificationStatus.REJECTED,
         },
-        VerificationStatus.VERIFIED: {
-            VerificationStatus.SUSPENDED
-        },
+        VerificationStatus.VERIFIED: {VerificationStatus.SUSPENDED},
         VerificationStatus.SUSPENDED: {
             VerificationStatus.UNDER_REVIEW,
-            VerificationStatus.VERIFIED
+            VerificationStatus.VERIFIED,
         },
         VerificationStatus.REJECTED: {
             VerificationStatus.UNDER_REVIEW  # Allowed upon formal appeal
-        }
+        },
     }
 
     @classmethod
-    def can_transition(cls, from_status: VerificationStatus, to_status: VerificationStatus) -> bool:
+    def can_transition(
+        cls, from_status: VerificationStatus, to_status: VerificationStatus
+    ) -> bool:
         allowed = cls.TRANSITIONS.get(from_status, set())
         return to_status in allowed
 
@@ -65,7 +67,7 @@ class VerificationStateMachine:
         cls,
         from_status: VerificationStatus,
         to_status: VerificationStatus,
-        reason_text: str | None = None
+        reason_text: str | None = None,
     ) -> None:
         if not cls.can_transition(from_status, to_status):
             raise InvalidVerificationTransitionError(from_status, to_status)
@@ -75,7 +77,7 @@ class VerificationStateMachine:
             if not reason_text or not reason_text.strip():
                 raise HTTPException(
                     status_code=422,
-                    detail=f"Status transition to '{to_status.value}' strictly requires a non-empty reason."
+                    detail=f"Status transition to '{to_status.value}' strictly requires a non-empty reason.",
                 )
 
     async def transition_doctor_status(
@@ -86,7 +88,7 @@ class VerificationStateMachine:
         session: AsyncSession,
         reason_text: str | None = None,
         review_notes: str | None = None,
-        ip_address: str | None = None
+        ip_address: str | None = None,
     ) -> VerificationReview:
         """
         Executes atomic transition on doctor verification status.
@@ -112,13 +114,16 @@ class VerificationStateMachine:
             previous_status=previous_status,
             new_status=new_status,
             reason_text=reason_text.strip() if reason_text else None,
-            review_notes=review_notes.strip() if review_notes else None
+            review_notes=review_notes.strip() if review_notes else None,
         )
         session.add(review)
 
         # RUL-04: Record immutable audit log in the exact same transaction
         audit_action = f"doctor_verification_{new_status.value}"
-        audit_reason = reason_text or f"Doctor verification status transitioned to {new_status.value}"
+        audit_reason = (
+            reason_text
+            or f"Doctor verification status transitioned to {new_status.value}"
+        )
         await record_audit_log(
             admin_user_id=admin_user_id,
             target_entity_type="doctor",
@@ -128,7 +133,7 @@ class VerificationStateMachine:
             session=session,
             previous_state={"status": previous_status.value},
             new_state={"status": new_status.value},
-            ip_address=ip_address
+            ip_address=ip_address,
         )
 
         await session.flush()
@@ -142,12 +147,13 @@ class VerificationStateMachine:
                     "doctor_id": str(doctor.user_id),
                     "previous_status": previous_status.value,
                     "new_status": new_status.value,
-                    "listing_online": doctor.listing_online
-                }
+                    "listing_online": doctor.listing_online,
+                },
             )
         except Exception as e:
             print(f"[VERIFICATION SERVICE] Warning: Redis event publish failed: {e}")
 
         return review
+
 
 verification_state_machine = VerificationStateMachine()

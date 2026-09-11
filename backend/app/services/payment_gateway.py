@@ -13,7 +13,12 @@ class PaymentGateway:
     Amounts are converted to paise (INR * 100) for gateway APIs.
     """
 
-    PLACEHOLDER_MARKERS = ("placeholder", "sandbox", "healthcare_sandbox", "test_healthcare")
+    PLACEHOLDER_MARKERS = (
+        "placeholder",
+        "sandbox",
+        "healthcare_sandbox",
+        "test_healthcare",
+    )
 
     def __init__(self) -> None:
         self.key_id = settings.RAZORPAY_KEY_ID

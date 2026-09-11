@@ -79,7 +79,9 @@ async def list_availability(
     return rows
 
 
-@router.post("/leaves", response_model=LeaveResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/leaves", response_model=LeaveResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_leave(
     data: LeaveCreate,
     current_user: User = Depends(require_roles(UserRole.DOCTOR)),

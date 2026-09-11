@@ -79,5 +79,4 @@ class Chemist(Base, TimestampMixin):
         return f"<Chemist {self.id} {self.pharmacy_name} DL={self.license_number}>"
 
 
-import backend.app.models.prescription  # noqa: F401, E402
-
+import backend.app.models.prescription  # noqa: F401

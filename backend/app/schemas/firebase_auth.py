@@ -1,14 +1,22 @@
 import uuid
-from pydantic import BaseModel, Field
 
 from backend.app.models.user import UserRole
+from pydantic import BaseModel, Field
 
 
 class FirebaseLoginRequest(BaseModel):
-    id_token: str = Field(..., description="Firebase ID Token (JWT) acquired from Firebase Client SDK")
-    role: UserRole = Field(default=UserRole.PATIENT, description="Target role (patient, doctor, chemist)")
-    full_name: str | None = Field(default=None, description="Display name for new patient/user creation")
-    consent_version: str = Field(default="v1.0", description="DPDP Act patient consent policy version")
+    id_token: str = Field(
+        ..., description="Firebase ID Token (JWT) acquired from Firebase Client SDK"
+    )
+    role: UserRole = Field(
+        default=UserRole.PATIENT, description="Target role (patient, doctor, chemist)"
+    )
+    full_name: str | None = Field(
+        default=None, description="Display name for new patient/user creation"
+    )
+    consent_version: str = Field(
+        default="v1.0", description="DPDP Act patient consent policy version"
+    )
 
 
 class FirebaseLoginResponse(BaseModel):
@@ -35,4 +43,6 @@ class FirebaseVerifyTokenResponse(BaseModel):
 
 
 class FirebaseBindPhoneRequest(BaseModel):
-    phone_number: str = Field(..., description="E.164 phone number to bind to the user profile")
+    phone_number: str = Field(
+        ..., description="E.164 phone number to bind to the user profile"
+    )

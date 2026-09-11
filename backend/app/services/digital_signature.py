@@ -103,10 +103,13 @@ def verify_prescription_signature(
     medical_reg_number: str | None = None,
 ) -> bool:
     """Validate signature integrity of a prescription.
-    
+
     Returns True if valid and untampered, False otherwise.
     """
-    if not hasattr(prescription, "digital_signature") or not prescription.digital_signature:
+    if (
+        not hasattr(prescription, "digital_signature")
+        or not prescription.digital_signature
+    ):
         return False
 
     reg_num = medical_reg_number

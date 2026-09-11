@@ -1,17 +1,20 @@
 import json
-from datetime import datetime, timedelta, timezone
-
-from jose import jwt
+from datetime import UTC, datetime, timedelta
 
 from backend.app.core.config import settings
+from jose import jwt
 
 
 def generate_livekit_token(
-    room_name: str, participant_identity: str, participant_name: str, role: str,
-    is_admin: bool = False, ttl_minutes: int = 60,
+    room_name: str,
+    participant_identity: str,
+    participant_name: str,
+    role: str,
+    is_admin: bool = False,
+    ttl_minutes: int = 60,
 ) -> str:
     """Create a short-lived LiveKit-compatible access token for one participant."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     claims = {
         "iss": settings.LIVEKIT_API_KEY,
         "sub": participant_identity,
@@ -19,8 +22,12 @@ def generate_livekit_token(
         "nbf": int(now.timestamp()),
         "exp": int((now + timedelta(minutes=ttl_minutes)).timestamp()),
         "video": {
-            "room": room_name, "roomJoin": True, "canPublish": True,
-            "canSubscribe": True, "canPublishData": True, "roomRecord": is_admin,
+            "room": room_name,
+            "roomJoin": True,
+            "canPublish": True,
+            "canSubscribe": True,
+            "canPublishData": True,
+            "roomRecord": is_admin,
         },
         "metadata": json.dumps({"role": role, "user_id": participant_identity}),
     }

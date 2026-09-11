@@ -19,4 +19,6 @@ class Patient(Base, TimestampMixin):
     gender: Mapped[str | None] = mapped_column(String(20), nullable=True)
     date_of_birth: Mapped[date | None] = mapped_column(Date, nullable=True)
 
-    user = relationship("User", lazy="selectin", backref=backref("patient_profile", uselist=False))
+    user = relationship(
+        "User", lazy="selectin", backref=backref("patient_profile", uselist=False)
+    )

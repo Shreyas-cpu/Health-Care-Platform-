@@ -2,7 +2,11 @@ import uuid
 from datetime import datetime
 from decimal import Decimal
 
-from backend.app.models.appointment import AppointmentMode, AppointmentStatus, PaymentStatus
+from backend.app.models.appointment import (
+    AppointmentMode,
+    AppointmentStatus,
+    PaymentStatus,
+)
 from pydantic import BaseModel, ConfigDict
 
 

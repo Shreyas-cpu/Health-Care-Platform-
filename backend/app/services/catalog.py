@@ -1,5 +1,5 @@
-from decimal import Decimal
 import uuid
+from decimal import Decimal
 
 from backend.app.core.redis import publish_event
 from backend.app.models.clinic import Clinic
@@ -23,17 +23,27 @@ async def get_public_doctor_profile(
     session: AsyncSession, doctor_id: uuid.UUID
 ) -> DoctorPublicProfile | None:
     """Load a doctor profile and its clinic for public presentation."""
-    doctor = (await session.execute(
-        select(Doctor).options(selectinload(Doctor.clinic)).where(Doctor.user_id == doctor_id)
-    )).scalar_one_or_none()
+    doctor = (
+        await session.execute(
+            select(Doctor)
+            .options(selectinload(Doctor.clinic))
+            .where(Doctor.user_id == doctor_id)
+        )
+    ).scalar_one_or_none()
     if not doctor:
         return None
     clinic = _clinic_read(doctor.clinic)
     return DoctorPublicProfile(
-        doctor_id=doctor.user_id, full_name=doctor.full_name, specialty=doctor.specialty,
-        years_experience=doctor.years_experience, bio=doctor.bio, gender=doctor.gender,
-        in_person_fee=doctor.in_person_fee, video_fee=doctor.video_fee or Decimal("0.00"),
-        listing_online=doctor.listing_online, video_enabled=doctor.video_enabled,
+        doctor_id=doctor.user_id,
+        full_name=doctor.full_name,
+        specialty=doctor.specialty,
+        years_experience=doctor.years_experience,
+        bio=doctor.bio,
+        gender=doctor.gender,
+        in_person_fee=doctor.in_person_fee,
+        video_fee=doctor.video_fee or Decimal("0.00"),
+        listing_online=doctor.listing_online,
+        video_enabled=doctor.video_enabled,
         clinic=clinic,
         latitude=clinic.latitude if clinic else None,
         longitude=clinic.longitude if clinic else None,
@@ -44,7 +54,9 @@ async def get_public_doctor_profile(
 async def upsert_doctor_clinic(
     session: AsyncSession, doctor_id: uuid.UUID, data: ClinicCreateOrUpdate
 ) -> Clinic:
-    clinic = (await session.execute(select(Clinic).where(Clinic.doctor_id == doctor_id))).scalar_one_or_none()
+    clinic = (
+        await session.execute(select(Clinic).where(Clinic.doctor_id == doctor_id))
+    ).scalar_one_or_none()
     if clinic is None:
         clinic = Clinic(doctor_id=doctor_id, **data.model_dump())
         session.add(clinic)
@@ -58,7 +70,9 @@ async def upsert_doctor_clinic(
 
 
 async def _doctor_or_raise(session: AsyncSession, doctor_id: uuid.UUID) -> Doctor:
-    doctor = (await session.execute(select(Doctor).where(Doctor.user_id == doctor_id))).scalar_one_or_none()
+    doctor = (
+        await session.execute(select(Doctor).where(Doctor.user_id == doctor_id))
+    ).scalar_one_or_none()
     if not doctor:
         raise ValueError("Doctor profile not found.")
     return doctor
@@ -66,11 +80,15 @@ async def _doctor_or_raise(session: AsyncSession, doctor_id: uuid.UUID) -> Docto
 
 async def _publish_visibility(doctor: Doctor) -> None:
     try:
-        await publish_event("doctor:events", "doctor_visibility_toggled", {
-            "doctor_id": str(doctor.user_id),
-            "listing_online": doctor.listing_online,
-            "video_enabled": doctor.video_enabled,
-        })
+        await publish_event(
+            "doctor:events",
+            "doctor_visibility_toggled",
+            {
+                "doctor_id": str(doctor.user_id),
+                "listing_online": doctor.listing_online,
+                "video_enabled": doctor.video_enabled,
+            },
+        )
     except Exception:
         # Redis notifications supplement the DB-backed catalog; they must not make updates fail.
         pass
@@ -97,7 +115,9 @@ async def toggle_doctor_video(
     doctor = await _doctor_or_raise(session, doctor_id)
     target = not doctor.video_enabled if video_enabled is None else video_enabled
     if target and doctor.verification_status != VerificationStatus.VERIFIED:
-        raise ValueError("Doctor profile must be 'verified' before offering video consultations.")
+        raise ValueError(
+            "Doctor profile must be 'verified' before offering video consultations."
+        )
     doctor.video_enabled = target
     await session.commit()
     await session.refresh(doctor)

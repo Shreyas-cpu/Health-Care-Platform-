@@ -6,7 +6,9 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class ChemistRegisterRequest(BaseModel):
     pharmacy_name: str = Field(..., min_length=2, max_length=255)
-    license_number: str = Field(..., min_length=3, max_length=100)  # Drug License / DL No
+    license_number: str = Field(
+        ..., min_length=3, max_length=100
+    )  # Drug License / DL No
     clinic_id: uuid.UUID | None = None
     address: str = Field(..., min_length=5)
     city: str = Field(..., min_length=2, max_length=100)

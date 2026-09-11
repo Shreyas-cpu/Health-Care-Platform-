@@ -1,5 +1,4 @@
 import uuid
-from typing import Optional
 
 from backend.app.api.deps import get_current_user, require_roles
 from backend.app.core.config import settings
@@ -34,7 +33,7 @@ router = APIRouter(prefix="/patients/me", tags=["Patient Health Vault & History"
 async def upload_patient_document(
     file: UploadFile = File(...),
     doc_type: str = Form("medical_history"),
-    notes: Optional[str] = Form(None),
+    notes: str | None = Form(None),
     current_user: User = Depends(require_roles(UserRole.PATIENT)),
     session: AsyncSession = Depends(get_db),
 ):
@@ -165,7 +164,11 @@ async def download_patient_document(
 
     # Security check: must be owner or super admin/reviewer
     is_owner = doc.patient_id == current_user.id
-    is_privileged = current_user.role in {UserRole.SUPER_ADMIN, UserRole.VERIFICATION_REVIEWER, UserRole.DOCTOR}
+    is_privileged = current_user.role in {
+        UserRole.SUPER_ADMIN,
+        UserRole.VERIFICATION_REVIEWER,
+        UserRole.DOCTOR,
+    }
     if not is_owner and not is_privileged:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -200,7 +203,6 @@ async def delete_patient_document(
 
     await session.delete(doc)
     await session.commit()
-    return None
 
 
 @router.get("/appointments/history", response_model=list[AppointmentHistoryItem])
@@ -224,7 +226,9 @@ async def get_appointment_history(
     for appt in appointments:
         # Load doctor
         doctor = (
-            await session.execute(select(Doctor).where(Doctor.user_id == appt.doctor_id))
+            await session.execute(
+                select(Doctor).where(Doctor.user_id == appt.doctor_id)
+            )
         ).scalar_one_or_none()
         doctor_name = doctor.full_name if doctor else "Doctor"
         specialty = doctor.specialty if doctor else "General Physician"
@@ -265,11 +269,15 @@ async def get_appointment_history(
                 clinic_city=clinic_city,
                 google_maps_url=google_maps_url,
                 mode=appt.mode.value if hasattr(appt.mode, "value") else str(appt.mode),
-                status=appt.status.value if hasattr(appt.status, "value") else str(appt.status),
+                status=appt.status.value
+                if hasattr(appt.status, "value")
+                else str(appt.status),
                 slot_start=appt.slot_start,
                 slot_end=appt.slot_end,
                 fee_amount=appt.fee_amount,
-                payment_status=appt.payment_status.value if hasattr(appt.payment_status, "value") else str(appt.payment_status),
+                payment_status=appt.payment_status.value
+                if hasattr(appt.payment_status, "value")
+                else str(appt.payment_status),
                 prescription_id=prescription_id,
                 prescription_download_url=prescription_dl_url,
             )

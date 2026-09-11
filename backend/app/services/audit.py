@@ -14,7 +14,7 @@ async def record_audit_log(
     session: AsyncSession,
     previous_state: dict[str, Any] | None = None,
     new_state: dict[str, Any] | None = None,
-    ip_address: str | None = None
+    ip_address: str | None = None,
 ) -> AuditLog:
     """
     RUL-04: Immutable audit logging.
@@ -33,7 +33,7 @@ async def record_audit_log(
         previous_state=previous_state,
         new_state=new_state,
         reason=reason.strip(),
-        ip_address=ip_address
+        ip_address=ip_address,
     )
     session.add(audit_entry)
     await session.flush()

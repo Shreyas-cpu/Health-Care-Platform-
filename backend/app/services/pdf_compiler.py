@@ -29,7 +29,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 
-
 async def compile_prescription_pdf(
     prescription_id: uuid.UUID,
     session: AsyncSession,
@@ -106,9 +105,10 @@ async def compile_prescription_pdf(
                 f"{clinic.city} - {clinic.pincode}"
             )
 
-
     patient_name = (
-        patient.full_name if patient and patient.full_name else str(prescription.patient_id)
+        patient.full_name
+        if patient and patient.full_name
+        else str(prescription.patient_id)
     )
     appt_date = (
         appointment.slot_start.strftime("%d %b %Y, %H:%M")
@@ -129,7 +129,9 @@ async def compile_prescription_pdf(
         Paragraph(f"Diagnosis: {prescription.diagnosis}", meta_style),
     ]
     if prescription.clinical_notes:
-        story.append(Paragraph(f"Clinical Notes: {prescription.clinical_notes}", meta_style))
+        story.append(
+            Paragraph(f"Clinical Notes: {prescription.clinical_notes}", meta_style)
+        )
 
     story.append(Paragraph("Rx", section_style))
 
@@ -165,9 +167,15 @@ async def compile_prescription_pdf(
     story.append(Spacer(1, 10))
 
     # Official Cryptographic Digital Signature Seal Box
-    raw_hash = getattr(prescription, "digital_signature", None) or "PROVISIONAL-SIGNATURE"
-    truncated_hash = f"{raw_hash[:16]}...{raw_hash[-16:]}" if len(raw_hash) > 32 else raw_hash
-    sig_time = getattr(prescription, "digital_signature_timestamp", prescription.issued_at)
+    raw_hash = (
+        getattr(prescription, "digital_signature", None) or "PROVISIONAL-SIGNATURE"
+    )
+    truncated_hash = (
+        f"{raw_hash[:16]}...{raw_hash[-16:]}" if len(raw_hash) > 32 else raw_hash
+    )
+    sig_time = getattr(
+        prescription, "digital_signature_timestamp", prescription.issued_at
+    )
     if sig_time.tzinfo is None:
         sig_time_str = sig_time.strftime("%d %b %Y, %H:%M:%S UTC")
     else:
@@ -192,8 +200,17 @@ async def compile_prescription_pdf(
 
     sig_data = [
         [Paragraph("<b>✓ DIGITALLY SIGNED &amp; VERIFIED</b>", sig_header_style)],
-        [Paragraph(f"<b>Doctor Medical Reg. No:</b> {reg_number} ({council})", sig_text_style)],
-        [Paragraph(f"<b>Cryptographic Hash (SHA-256):</b> {truncated_hash}", sig_text_style)],
+        [
+            Paragraph(
+                f"<b>Doctor Medical Reg. No:</b> {reg_number} ({council})",
+                sig_text_style,
+            )
+        ],
+        [
+            Paragraph(
+                f"<b>Cryptographic Hash (SHA-256):</b> {truncated_hash}", sig_text_style
+            )
+        ],
         [Paragraph(f"<b>Signed At:</b> {sig_time_str}", sig_text_style)],
     ]
     sig_table = Table(sig_data, colWidths=[160 * mm])

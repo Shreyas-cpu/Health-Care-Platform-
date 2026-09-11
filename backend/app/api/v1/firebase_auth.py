@@ -1,7 +1,3 @@
-import uuid
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.app.api.deps import get_current_user
 from backend.app.core.database import get_db
 from backend.app.core.security import create_access_token
@@ -13,7 +9,12 @@ from backend.app.schemas.firebase_auth import (
     FirebaseVerifyTokenRequest,
     FirebaseVerifyTokenResponse,
 )
-from backend.app.services.firebase_auth import sync_firebase_user, verify_firebase_id_token
+from backend.app.services.firebase_auth import (
+    sync_firebase_user,
+    verify_firebase_id_token,
+)
+from fastapi import APIRouter, Depends, Request
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/auth/firebase", tags=["Firebase Authentication"])
 

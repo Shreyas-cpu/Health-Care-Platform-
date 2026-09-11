@@ -1,20 +1,35 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
+
+from backend.app.models.appointment import Appointment, AppointmentStatus
+from backend.app.models.notification import (
+    Notification,
+    NotificationChannel,
+    NotificationStatus,
+    NotificationType,
+)
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.app.models.appointment import Appointment, AppointmentStatus
-from backend.app.models.notification import Notification, NotificationChannel, NotificationStatus, NotificationType
+
 
 async def dispatch_upcoming_reminders(session: AsyncSession) -> list[Notification]:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     appointments = (
-        await session.execute(
-            select(Appointment).where(
-                Appointment.status.in_([AppointmentStatus.CONFIRMED, AppointmentStatus.REQUESTED]),
-                Appointment.reminder_sent.is_(False),
-                Appointment.slot_start.between(now - timedelta(minutes=5), now + timedelta(hours=2)),
+        (
+            await session.execute(
+                select(Appointment).where(
+                    Appointment.status.in_(
+                        [AppointmentStatus.CONFIRMED, AppointmentStatus.REQUESTED]
+                    ),
+                    Appointment.reminder_sent.is_(False),
+                    Appointment.slot_start.between(
+                        now - timedelta(minutes=5), now + timedelta(hours=2)
+                    ),
+                )
             )
         )
-    ).scalars().all()
+        .scalars()
+        .all()
+    )
     notifications = []
     for appt in appointments:
         notification = Notification(
@@ -34,4 +49,3 @@ async def dispatch_upcoming_reminders(session: AsyncSession) -> list[Notificatio
     for notification in notifications:
         await session.refresh(notification)
     return notifications
-

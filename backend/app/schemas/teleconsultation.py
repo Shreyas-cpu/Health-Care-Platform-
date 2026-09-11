@@ -1,10 +1,8 @@
 import uuid
 from datetime import datetime
-from typing import Optional
-
-from pydantic import BaseModel, ConfigDict
 
 from backend.app.models.teleconsultation import SessionStatus
+from pydantic import BaseModel, ConfigDict
 
 SessionStatusEnum = SessionStatus
 
@@ -16,10 +14,10 @@ class TeleconsultationSessionRead(BaseModel):
     appointment_id: uuid.UUID
     room_name: str
     status: SessionStatusEnum
-    patient_joined_at: Optional[datetime] = None
-    doctor_joined_at: Optional[datetime] = None
-    session_started_at: Optional[datetime] = None
-    session_ended_at: Optional[datetime] = None
+    patient_joined_at: datetime | None = None
+    doctor_joined_at: datetime | None = None
+    session_started_at: datetime | None = None
+    session_ended_at: datetime | None = None
     recording_enabled: bool
     doctor_recording_consent: bool
     patient_recording_consent: bool
@@ -37,7 +35,7 @@ class RecordingConsentRequest(BaseModel):
 
 class ChatMessageCreate(BaseModel):
     message_text: str
-    file_s3_key: Optional[str] = None
+    file_s3_key: str | None = None
 
 
 class ChatMessageRead(BaseModel):
@@ -48,5 +46,5 @@ class ChatMessageRead(BaseModel):
     sender_id: uuid.UUID
     sender_role: str
     message_text: str
-    file_s3_key: Optional[str] = None
+    file_s3_key: str | None = None
     created_at: datetime

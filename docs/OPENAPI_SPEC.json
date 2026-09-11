@@ -1,0 +1,6009 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Digital Healthcare Services Platform",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/request-otp": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Request Otp",
+        "operationId": "request_otp_api_v1_auth_request_otp_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OTPRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/verify-otp": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Verify Otp",
+        "operationId": "verify_otp_api_v1_auth_verify_otp_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OTPVerifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get Me",
+        "operationId": "get_me_api_v1_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/firebase/login": {
+      "post": {
+        "tags": [
+          "Firebase Authentication"
+        ],
+        "summary": "Firebase Login",
+        "description": "Exchanges a Firebase ID Token (JWT) from Firebase Phone Auth or Google Sign-In\nfor a platform session access token, auto-provisioning the User profile and\nDPDP consent record on first login.",
+        "operationId": "firebase_login_api_v1_auth_firebase_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirebaseLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FirebaseLoginResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/firebase/verify": {
+      "post": {
+        "tags": [
+          "Firebase Authentication"
+        ],
+        "summary": "Verify Token",
+        "description": "Verifies a Firebase ID token and inspects its decoded identity claims.",
+        "operationId": "verify_token_api_v1_auth_firebase_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirebaseVerifyTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FirebaseVerifyTokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/firebase/bind-phone": {
+      "post": {
+        "tags": [
+          "Firebase Authentication"
+        ],
+        "summary": "Bind Phone",
+        "description": "Binds or updates a phone number on the currently authenticated user profile.",
+        "operationId": "bind_phone_api_v1_auth_firebase_bind_phone_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirebaseBindPhoneRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/firebase/me": {
+      "get": {
+        "tags": [
+          "Firebase Authentication"
+        ],
+        "summary": "Get Firebase Profile",
+        "description": "Returns the authenticated user's Firebase identity profile.",
+        "operationId": "get_firebase_profile_api_v1_auth_firebase_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/register": {
+      "post": {
+        "tags": [
+          "Doctor Onboarding & Practice Management"
+        ],
+        "summary": "Register Doctor",
+        "description": "Submits doctor professional profile attached to Phase 01 User identity.\nInitial status is 'submitted'.",
+        "operationId": "register_doctor_api_v1_doctors_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoctorRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/documents/presign": {
+      "post": {
+        "tags": [
+          "Doctor Onboarding & Practice Management"
+        ],
+        "summary": "Presign Document Upload",
+        "description": "Generates pre-signed S3 upload URL for medical registration certificates or degrees.",
+        "operationId": "presign_document_upload_api_v1_doctors_documents_presign_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentPresignRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentPresignResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/documents/confirm": {
+      "post": {
+        "tags": [
+          "Doctor Onboarding & Practice Management"
+        ],
+        "summary": "Confirm Document Upload",
+        "description": "Registers the uploaded document metadata in the database against the doctor profile.",
+        "operationId": "confirm_document_upload_api_v1_doctors_documents_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentConfirmRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorDocumentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/me": {
+      "get": {
+        "tags": [
+          "Doctor Onboarding & Practice Management"
+        ],
+        "summary": "Get Doctor Profile",
+        "operationId": "get_doctor_profile_api_v1_doctors_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorRead"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/me/documents": {
+      "get": {
+        "tags": [
+          "Doctor Onboarding & Practice Management"
+        ],
+        "summary": "List Doctor Documents",
+        "operationId": "list_doctor_documents_api_v1_doctors_me_documents_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/DoctorDocumentRead"
+                  },
+                  "type": "array",
+                  "title": "Response List Doctor Documents Api V1 Doctors Me Documents Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/verification/queue": {
+      "get": {
+        "tags": [
+          "Admin Doctor Verification Pipeline"
+        ],
+        "summary": "Get Verification Queue",
+        "description": "Retrieves doctors in the verification queue.\nBy default returns 'submitted', 'under_review', and 'info_requested'.",
+        "operationId": "get_verification_queue_api_v1_admin_verification_queue_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/VerificationStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Filter Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VerificationQueueItemRead"
+                  },
+                  "title": "Response Get Verification Queue Api V1 Admin Verification Queue Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/verification/{doctor_id}": {
+      "get": {
+        "tags": [
+          "Admin Doctor Verification Pipeline"
+        ],
+        "summary": "Get Doctor Verification Details",
+        "operationId": "get_doctor_verification_details_api_v1_admin_verification__doctor_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "doctor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Doctor Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationQueueItemRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/verification/{doctor_id}/transition": {
+      "post": {
+        "tags": [
+          "Admin Doctor Verification Pipeline"
+        ],
+        "summary": "Transition Verification Status",
+        "description": "Transitions doctor verification status through the 6-state pipeline.\nMandates reason for rejections and suspensions.\nWrites immutable audit log entry in the same transaction (RUL-04).",
+        "operationId": "transition_verification_status_api_v1_admin_verification__doctor_id__transition_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "doctor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Doctor Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationTransitionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationQueueItemRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/patient/send-otp": {
+      "post": {
+        "tags": [
+          "Patient Authentication & Profile"
+        ],
+        "summary": "Send Otp",
+        "operationId": "send_otp_api_v1_auth_patient_send_otp_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendOTPRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/patient/verify-otp": {
+      "post": {
+        "tags": [
+          "Patient Authentication & Profile"
+        ],
+        "summary": "Verify Otp",
+        "operationId": "verify_otp_api_v1_auth_patient_verify_otp_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyOTPRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientAuthResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/patient/me": {
+      "get": {
+        "tags": [
+          "Patient Authentication & Profile"
+        ],
+        "summary": "Get Me",
+        "operationId": "get_me_api_v1_auth_patient_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientProfileRead"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Patient Authentication & Profile"
+        ],
+        "summary": "Update Me",
+        "operationId": "update_me_api_v1_auth_patient_me_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientProfileUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientProfileRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/me/clinic": {
+      "post": {
+        "tags": [
+          "Doctor Public Profile & Practice"
+        ],
+        "summary": "Save Clinic",
+        "operationId": "save_clinic_api_v1_doctors_me_clinic_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClinicCreateOrUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClinicRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/me/toggle-listing": {
+      "post": {
+        "tags": [
+          "Doctor Public Profile & Practice"
+        ],
+        "summary": "Toggle Listing",
+        "operationId": "toggle_listing_api_v1_doctors_me_toggle_listing_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleListingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/me/toggle-video": {
+      "post": {
+        "tags": [
+          "Doctor Public Profile & Practice"
+        ],
+        "summary": "Toggle Video",
+        "operationId": "toggle_video_api_v1_doctors_me_toggle_video_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleVideoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/{doctor_id}": {
+      "get": {
+        "tags": [
+          "Doctor Public Profile & Practice"
+        ],
+        "summary": "Public Profile",
+        "operationId": "public_profile_api_v1_doctors__doctor_id__get",
+        "parameters": [
+          {
+            "name": "doctor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Doctor Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorPublicProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/doctors": {
+      "get": {
+        "tags": [
+          "Search Catalog"
+        ],
+        "summary": "Search Catalog",
+        "operationId": "search_catalog_api_v1_search_doctors_get",
+        "parameters": [
+          {
+            "name": "specialty",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Specialty"
+            }
+          },
+          {
+            "name": "locality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Locality"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "City"
+            }
+          },
+          {
+            "name": "min_fee",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Min Fee"
+            }
+          },
+          {
+            "name": "max_fee",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Max Fee"
+            }
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Gender"
+            }
+          },
+          {
+            "name": "video_available",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Video Available"
+            }
+          },
+          {
+            "name": "available_today",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Available Today"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorSearchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/": {
+      "post": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Create Review",
+        "operationId": "create_review_api_v1_reviews__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/reviews/doctor/{doctor_id}": {
+      "get": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Doctor Reviews",
+        "operationId": "doctor_reviews_api_v1_reviews_doctor__doctor_id__get",
+        "parameters": [
+          {
+            "name": "doctor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Doctor Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReviewRead"
+                  },
+                  "title": "Response Doctor Reviews Api V1 Reviews Doctor  Doctor Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/dashboard/telemetry": {
+      "get": {
+        "tags": [
+          "Admin Dashboard"
+        ],
+        "summary": "Telemetry",
+        "operationId": "telemetry_api_v1_admin_dashboard_telemetry_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformTelemetryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/dashboard/dispatch-reminders": {
+      "post": {
+        "tags": [
+          "Admin Dashboard"
+        ],
+        "summary": "Dispatch Reminders",
+        "operationId": "dispatch_reminders_api_v1_admin_dashboard_dispatch_reminders_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReminderDispatchResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/moderation/reviews": {
+      "get": {
+        "tags": [
+          "Admin Moderation"
+        ],
+        "summary": "Moderation Reviews",
+        "operationId": "moderation_reviews_api_v1_admin_moderation_reviews_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ReviewStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReviewRead"
+                  },
+                  "title": "Response Moderation Reviews Api V1 Admin Moderation Reviews Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/moderation/reviews/{review_id}/action": {
+      "post": {
+        "tags": [
+          "Admin Moderation"
+        ],
+        "summary": "Moderation Action",
+        "operationId": "moderation_action_api_v1_admin_moderation_reviews__review_id__action_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewModerationAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/moderation/chemists": {
+      "get": {
+        "tags": [
+          "Admin Moderation"
+        ],
+        "summary": "List Chemists For Moderation",
+        "description": "List all registered pharmacies, DL numbers, clinic affiliations, and active statuses.",
+        "operationId": "list_chemists_for_moderation_api_v1_admin_moderation_chemists_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ChemistResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Chemists For Moderation Api V1 Admin Moderation Chemists Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/moderation/chemists/{chemist_id}/status": {
+      "post": {
+        "tags": [
+          "Admin Moderation"
+        ],
+        "summary": "Update Chemist Status",
+        "description": "Toggle or update chemist status with mandatory RUL-04 audit logging.",
+        "operationId": "update_chemist_status_api_v1_admin_moderation_chemists__chemist_id__status_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chemist_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Chemist Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChemistStatusUpdateAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schedules/availability": {
+      "get": {
+        "tags": [
+          "Schedules & Availability"
+        ],
+        "summary": "List Availability",
+        "operationId": "list_availability_api_v1_schedules_availability_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AvailabilityResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Availability Api V1 Schedules Availability Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Schedules & Availability"
+        ],
+        "summary": "Create Availability",
+        "operationId": "create_availability_api_v1_schedules_availability_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AvailabilityCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailabilityResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/schedules/leaves": {
+      "post": {
+        "tags": [
+          "Schedules & Availability"
+        ],
+        "summary": "Create Leave",
+        "operationId": "create_leave_api_v1_schedules_leaves_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeaveCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaveResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/doctors/{doctor_id}/slots": {
+      "get": {
+        "tags": [
+          "Schedules & Availability"
+        ],
+        "summary": "Get Doctor Slots",
+        "operationId": "get_doctor_slots_api_v1_doctors__doctor_id__slots_get",
+        "parameters": [
+          {
+            "name": "doctor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Doctor Id"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "Date to query slots for (YYYY-MM-DD)",
+              "title": "Date"
+            },
+            "description": "Date to query slots for (YYYY-MM-DD)"
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^(in_person|video)$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Mode"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SlotResponse"
+                  },
+                  "title": "Response Get Doctor Slots Api V1 Doctors  Doctor Id  Slots Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bookings/reserve": {
+      "post": {
+        "tags": [
+          "Atomic Booking"
+        ],
+        "summary": "Reserve Booking",
+        "description": "Authenticated patient reserves a slot with Redis lock + pending payment order.",
+        "operationId": "reserve_booking_api_v1_bookings_reserve_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingReserveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingReserveResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/bookings/confirm": {
+      "post": {
+        "tags": [
+          "Atomic Booking"
+        ],
+        "summary": "Confirm Booking Endpoint",
+        "description": "Patient submits payment verification to atomically confirm booking.",
+        "operationId": "confirm_booking_endpoint_api_v1_bookings_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingConfirmRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/payments/create-order": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Create Order",
+        "description": "Initiate gateway order for an appointment fee.",
+        "operationId": "create_order_api_v1_payments_create_order_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentCreateOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreateOrderResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/payments/verify-and-capture": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Verify And Capture",
+        "description": "Atomic capture: update PaymentTransaction to CAPTURED, confirm appointment,\nand release Redis slot lock.",
+        "operationId": "verify_and_capture_api_v1_payments_verify_and_capture_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentVerifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/appointments/{appointment_id}/cancel": {
+      "post": {
+        "tags": [
+          "Cancellations"
+        ],
+        "summary": "Cancel Appointment",
+        "description": "Authenticated user cancels an appointment with a mandatory reason.",
+        "operationId": "cancel_appointment_api_v1_appointments__appointment_id__cancel_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "appointment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Appointment Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancellationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancellationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/appointments/{appointment_id}/confirm": {
+      "post": {
+        "tags": [
+          "Appointments"
+        ],
+        "summary": "Confirm Appointment Endpoint",
+        "description": "Doctor or clinic confirms the appointment (REQUESTED -> CONFIRMED).",
+        "operationId": "confirm_appointment_endpoint_api_v1_appointments__appointment_id__confirm_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "appointment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Appointment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/doctor/queue": {
+      "get": {
+        "tags": [
+          "Doctor Clinical Queue"
+        ],
+        "summary": "Doctor Daily Queue",
+        "description": "Doctor gets their daily clinical queue (defaults to today IST).",
+        "operationId": "doctor_daily_queue_api_v1_doctor_queue_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QueueAppointmentResponse"
+                  },
+                  "title": "Response Doctor Daily Queue Api V1 Doctor Queue Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/doctor/queue/{appointment_id}/mark-complete": {
+      "post": {
+        "tags": [
+          "Doctor Clinical Queue"
+        ],
+        "summary": "Queue Mark Complete",
+        "operationId": "queue_mark_complete_api_v1_doctor_queue__appointment_id__mark_complete_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "appointment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Appointment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/doctor/queue/{appointment_id}/mark-no-show": {
+      "post": {
+        "tags": [
+          "Doctor Clinical Queue"
+        ],
+        "summary": "Queue Mark No Show",
+        "operationId": "queue_mark_no_show_api_v1_doctor_queue__appointment_id__mark_no_show_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "appointment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Appointment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prescriptions": {
+      "post": {
+        "tags": [
+          "Prescriptions"
+        ],
+        "summary": "Create Prescription Endpoint",
+        "description": "Doctor creates a prescription with CMP-01 telemedicine restriction checks.",
+        "operationId": "create_prescription_endpoint_api_v1_prescriptions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrescriptionCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrescriptionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/prescriptions/drugs/autocomplete": {
+      "get": {
+        "tags": [
+          "Prescriptions"
+        ],
+        "summary": "Drug Autocomplete",
+        "description": "Search DrugMaster for medication autocomplete.",
+        "operationId": "drug_autocomplete_api_v1_prescriptions_drugs_autocomplete_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Query"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DrugMasterResponse"
+                  },
+                  "title": "Response Drug Autocomplete Api V1 Prescriptions Drugs Autocomplete Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prescriptions/{prescription_id}": {
+      "get": {
+        "tags": [
+          "Prescriptions"
+        ],
+        "summary": "Get Prescription Endpoint",
+        "description": "Return prescription details including a pre-signed download URL.",
+        "operationId": "get_prescription_endpoint_api_v1_prescriptions__prescription_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "prescription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Prescription Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrescriptionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prescriptions/{prescription_id}/verify": {
+      "get": {
+        "tags": [
+          "Chemists"
+        ],
+        "summary": "Verify Prescription Signature Endpoint",
+        "description": "Public / Chemist endpoint to cryptographically verify digital signature integrity.",
+        "operationId": "verify_prescription_signature_endpoint_api_v1_prescriptions__prescription_id__verify_get",
+        "parameters": [
+          {
+            "name": "prescription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Prescription Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrescriptionVerificationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patient/records/prescriptions": {
+      "get": {
+        "tags": [
+          "Patient Health Records"
+        ],
+        "summary": "List My Prescriptions",
+        "description": "Patient views all prescriptions from completed visits.",
+        "operationId": "list_my_prescriptions_api_v1_patient_records_prescriptions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PrescriptionResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List My Prescriptions Api V1 Patient Records Prescriptions Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/patient/records/prescriptions/{prescription_id}/download": {
+      "get": {
+        "tags": [
+          "Patient Health Records"
+        ],
+        "summary": "Download My Prescription",
+        "description": "Patient downloads a pre-signed URL for a prescription PDF.",
+        "operationId": "download_my_prescription_api_v1_patient_records_prescriptions__prescription_id__download_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "prescription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Prescription Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chemists/register": {
+      "post": {
+        "tags": [
+          "Chemists"
+        ],
+        "summary": "Register Chemist",
+        "description": "Register a pharmacy with Drug License (DL) details.",
+        "operationId": "register_chemist_api_v1_chemists_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChemistRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/chemists": {
+      "get": {
+        "tags": [
+          "Chemists"
+        ],
+        "summary": "List Chemists",
+        "description": "List directory of pharmacies with optional locality/city/clinic filters.",
+        "operationId": "list_chemists_api_v1_chemists_get",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "City"
+            }
+          },
+          {
+            "name": "locality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Locality"
+            }
+          },
+          {
+            "name": "clinic_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Clinic Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChemistResponse"
+                  },
+                  "title": "Response List Chemists Api V1 Chemists Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chemist/prescriptions": {
+      "get": {
+        "tags": [
+          "Chemists"
+        ],
+        "summary": "List Chemist Prescriptions",
+        "description": "View digital prescriptions routed to the logged-in chemist.",
+        "operationId": "list_chemist_prescriptions_api_v1_chemist_prescriptions_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "dispense_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Dispense Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrescriptionResponse"
+                  },
+                  "title": "Response List Chemist Prescriptions Api V1 Chemist Prescriptions Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chemist/prescriptions/{prescription_id}/dispense": {
+      "post": {
+        "tags": [
+          "Chemists"
+        ],
+        "summary": "Dispense Prescription",
+        "description": "Chemist marks prescription as fulfilled / dispensed.",
+        "operationId": "dispense_prescription_api_v1_chemist_prescriptions__prescription_id__dispense_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "prescription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Prescription Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DispensePrescriptionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients/me/documents": {
+      "get": {
+        "tags": [
+          "Patient Health Vault & History"
+        ],
+        "summary": "Get Patient Vault",
+        "description": "Retrieve all uploaded medical documents alongside system-generated consultation prescriptions.",
+        "operationId": "get_patient_vault_api_v1_patients_me_documents_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientVaultResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Patient Health Vault & History"
+        ],
+        "summary": "Upload Patient Document",
+        "description": "Upload health records, past prescriptions, scans, or lab reports to patient vault.",
+        "operationId": "upload_patient_document_api_v1_patients_me_documents_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_patient_document_api_v1_patients_me_documents_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientDocumentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/patients/me/documents/{document_id}/download": {
+      "get": {
+        "tags": [
+          "Patient Health Vault & History"
+        ],
+        "summary": "Download Patient Document",
+        "description": "Get presigned download URL for a specific uploaded document.",
+        "operationId": "download_patient_document_api_v1_patients_me_documents__document_id__download_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Document Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients/me/documents/{document_id}": {
+      "delete": {
+        "tags": [
+          "Patient Health Vault & History"
+        ],
+        "summary": "Delete Patient Document",
+        "description": "Delete an uploaded health document from patient vault.",
+        "operationId": "delete_patient_document_api_v1_patients_me_documents__document_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Document Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients/me/appointments/history": {
+      "get": {
+        "tags": [
+          "Patient Health Vault & History"
+        ],
+        "summary": "Get Appointment History",
+        "description": "Complete appointment history for the patient with doctor details,\nclinic geolocation & Google Maps redirection link, and attached prescriptions.",
+        "operationId": "get_appointment_history_api_v1_patients_me_appointments_history_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AppointmentHistoryItem"
+                  },
+                  "type": "array",
+                  "title": "Response Get Appointment History Api V1 Patients Me Appointments History Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AppointmentHistoryItem": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "doctor_name": {
+            "type": "string",
+            "title": "Doctor Name"
+          },
+          "specialty": {
+            "type": "string",
+            "title": "Specialty"
+          },
+          "clinic_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Id"
+          },
+          "clinic_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Name"
+          },
+          "clinic_address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Address"
+          },
+          "clinic_city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic City"
+          },
+          "google_maps_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Google Maps Url"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "slot_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot Start"
+          },
+          "slot_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot End"
+          },
+          "fee_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Fee Amount"
+          },
+          "payment_status": {
+            "type": "string",
+            "title": "Payment Status"
+          },
+          "prescription_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prescription Id"
+          },
+          "prescription_download_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prescription Download Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "doctor_id",
+          "doctor_name",
+          "specialty",
+          "mode",
+          "status",
+          "slot_start",
+          "slot_end",
+          "fee_amount",
+          "payment_status"
+        ],
+        "title": "AppointmentHistoryItem"
+      },
+      "AppointmentMode": {
+        "type": "string",
+        "enum": [
+          "in_person",
+          "video"
+        ],
+        "title": "AppointmentMode"
+      },
+      "AppointmentRead": {
+        "properties": {
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "clinic_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Id"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/AppointmentMode"
+          },
+          "slot_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot Start"
+          },
+          "slot_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot End"
+          },
+          "fee_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Fee Amount",
+            "default": "0.00"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatus"
+          },
+          "payment_status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "cancellation_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancellation Reason"
+          },
+          "rescheduled_from_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rescheduled From Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doctor_id",
+          "mode",
+          "slot_start",
+          "slot_end",
+          "id",
+          "patient_id",
+          "status",
+          "payment_status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "AppointmentRead"
+      },
+      "AppointmentStatus": {
+        "type": "string",
+        "enum": [
+          "requested",
+          "confirmed",
+          "rescheduled",
+          "checked_in",
+          "in_consultation",
+          "completed",
+          "cancelled",
+          "no_show"
+        ],
+        "title": "AppointmentStatus",
+        "description": "PRD Section 2A: 8-state appointment lifecycle"
+      },
+      "AvailabilityCreate": {
+        "properties": {
+          "clinic_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Id"
+          },
+          "day_of_week": {
+            "type": "integer",
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Day Of Week"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "time",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "time",
+            "title": "End Time"
+          },
+          "slot_duration_minutes": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 5.0,
+            "title": "Slot Duration Minutes",
+            "default": 15
+          },
+          "buffer_minutes": {
+            "type": "integer",
+            "maximum": 60.0,
+            "minimum": 0.0,
+            "title": "Buffer Minutes",
+            "default": 5
+          },
+          "mode": {
+            "type": "string",
+            "pattern": "^(in_person|video|both)$",
+            "title": "Mode",
+            "default": "both"
+          }
+        },
+        "type": "object",
+        "required": [
+          "day_of_week",
+          "start_time",
+          "end_time"
+        ],
+        "title": "AvailabilityCreate"
+      },
+      "AvailabilityResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "clinic_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Id"
+          },
+          "day_of_week": {
+            "type": "integer",
+            "title": "Day Of Week"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "time",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "time",
+            "title": "End Time"
+          },
+          "slot_duration_minutes": {
+            "type": "integer",
+            "title": "Slot Duration Minutes"
+          },
+          "buffer_minutes": {
+            "type": "integer",
+            "title": "Buffer Minutes"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "doctor_id",
+          "day_of_week",
+          "start_time",
+          "end_time",
+          "slot_duration_minutes",
+          "buffer_minutes",
+          "mode",
+          "is_active",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "AvailabilityResponse"
+      },
+      "Body_upload_patient_document_api_v1_patients_me_documents_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "doc_type": {
+            "type": "string",
+            "title": "Doc Type",
+            "default": "medical_history"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_patient_document_api_v1_patients_me_documents_post"
+      },
+      "BookingConfirmRequest": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "gateway_order_id": {
+            "type": "string",
+            "title": "Gateway Order Id"
+          },
+          "gateway_payment_id": {
+            "type": "string",
+            "title": "Gateway Payment Id"
+          },
+          "gateway_signature": {
+            "type": "string",
+            "title": "Gateway Signature"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "gateway_order_id",
+          "gateway_payment_id",
+          "gateway_signature"
+        ],
+        "title": "BookingConfirmRequest"
+      },
+      "BookingReserveRequest": {
+        "properties": {
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "clinic_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Id"
+          },
+          "slot_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot Start"
+          },
+          "slot_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot End"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/AppointmentMode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doctor_id",
+          "slot_start",
+          "slot_end",
+          "mode"
+        ],
+        "title": "BookingReserveRequest"
+      },
+      "BookingReserveResponse": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "slot_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot Start"
+          },
+          "slot_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot End"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/AppointmentMode"
+          },
+          "fee_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Fee Amount"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatus"
+          },
+          "payment_status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "lock_token": {
+            "type": "string",
+            "title": "Lock Token"
+          },
+          "order_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Order Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "doctor_id",
+          "patient_id",
+          "slot_start",
+          "slot_end",
+          "mode",
+          "fee_amount",
+          "status",
+          "payment_status",
+          "lock_token"
+        ],
+        "title": "BookingReserveResponse"
+      },
+      "CancellationRequest": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 3,
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reason"
+        ],
+        "title": "CancellationRequest"
+      },
+      "CancellationResponse": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "is_refunded": {
+            "type": "boolean",
+            "title": "Is Refunded"
+          },
+          "refund_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Refund Amount"
+          },
+          "refund_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refund Id"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "status",
+          "is_refunded",
+          "refund_amount",
+          "message"
+        ],
+        "title": "CancellationResponse"
+      },
+      "ChemistRegisterRequest": {
+        "properties": {
+          "pharmacy_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 2,
+            "title": "Pharmacy Name"
+          },
+          "license_number": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 3,
+            "title": "License Number"
+          },
+          "clinic_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Id"
+          },
+          "address": {
+            "type": "string",
+            "minLength": 5,
+            "title": "Address"
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "City"
+          },
+          "locality": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Locality"
+          },
+          "pincode": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 5,
+            "title": "Pincode"
+          },
+          "contact_number": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 8,
+            "title": "Contact Number"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pharmacy_name",
+          "license_number",
+          "address",
+          "city",
+          "locality",
+          "pincode",
+          "contact_number"
+        ],
+        "title": "ChemistRegisterRequest"
+      },
+      "ChemistResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "pharmacy_name": {
+            "type": "string",
+            "title": "Pharmacy Name"
+          },
+          "license_number": {
+            "type": "string",
+            "title": "License Number"
+          },
+          "clinic_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Id"
+          },
+          "address": {
+            "type": "string",
+            "title": "Address"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "locality": {
+            "type": "string",
+            "title": "Locality"
+          },
+          "pincode": {
+            "type": "string",
+            "title": "Pincode"
+          },
+          "contact_number": {
+            "type": "string",
+            "title": "Contact Number"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "pharmacy_name",
+          "license_number",
+          "address",
+          "city",
+          "locality",
+          "pincode",
+          "contact_number",
+          "is_active",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ChemistResponse"
+      },
+      "ChemistStatusUpdateAction": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "title": "Action",
+            "description": "Action to perform: activate, suspend, or deactivate"
+          },
+          "reason_text": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Reason Text",
+            "description": "Mandatory reason for chemist status update"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "reason_text"
+        ],
+        "title": "ChemistStatusUpdateAction"
+      },
+      "ClinicCreateOrUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "address": {
+            "type": "string",
+            "title": "Address"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "locality": {
+            "type": "string",
+            "title": "Locality"
+          },
+          "pincode": {
+            "type": "string",
+            "title": "Pincode"
+          },
+          "contact_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contact Number"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "address",
+          "city",
+          "locality",
+          "pincode"
+        ],
+        "title": "ClinicCreateOrUpdate"
+      },
+      "ClinicRead": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "address": {
+            "type": "string",
+            "title": "Address"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "locality": {
+            "type": "string",
+            "title": "Locality"
+          },
+          "pincode": {
+            "type": "string",
+            "title": "Pincode"
+          },
+          "contact_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contact Number"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "google_maps_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Google Maps Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "address",
+          "city",
+          "locality",
+          "pincode",
+          "id",
+          "doctor_id"
+        ],
+        "title": "ClinicRead"
+      },
+      "DispensePrescriptionResponse": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "prescription_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Prescription Id"
+          },
+          "dispense_status": {
+            "type": "string",
+            "title": "Dispense Status"
+          },
+          "dispensed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Dispensed At"
+          },
+          "dispensed_by_chemist_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Dispensed By Chemist Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message",
+          "prescription_id",
+          "dispense_status",
+          "dispensed_at",
+          "dispensed_by_chemist_id"
+        ],
+        "title": "DispensePrescriptionResponse"
+      },
+      "DoctorDocumentRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "doc_type": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          "file_name": {
+            "type": "string",
+            "title": "File Name"
+          },
+          "s3_key": {
+            "type": "string",
+            "title": "S3 Key"
+          },
+          "uploaded_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Uploaded At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "doctor_id",
+          "doc_type",
+          "file_name",
+          "s3_key",
+          "uploaded_at"
+        ],
+        "title": "DoctorDocumentRead"
+      },
+      "DoctorPublicProfile": {
+        "properties": {
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "specialty": {
+            "type": "string",
+            "title": "Specialty"
+          },
+          "years_experience": {
+            "type": "integer",
+            "title": "Years Experience"
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bio"
+          },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "in_person_fee": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "In Person Fee"
+          },
+          "video_fee": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Video Fee",
+            "default": "0.00"
+          },
+          "listing_online": {
+            "type": "boolean",
+            "title": "Listing Online"
+          },
+          "video_enabled": {
+            "type": "boolean",
+            "title": "Video Enabled",
+            "default": false
+          },
+          "rating": {
+            "type": "number",
+            "title": "Rating",
+            "default": 4.8
+          },
+          "qualifications": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Qualifications"
+          },
+          "clinic": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ClinicRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
+          "google_maps_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Google Maps Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doctor_id",
+          "full_name",
+          "specialty",
+          "years_experience",
+          "in_person_fee",
+          "listing_online"
+        ],
+        "title": "DoctorPublicProfile"
+      },
+      "DoctorRead": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "medical_reg_number": {
+            "type": "string",
+            "title": "Medical Reg Number"
+          },
+          "council_name": {
+            "type": "string",
+            "title": "Council Name"
+          },
+          "specialty": {
+            "type": "string",
+            "title": "Specialty"
+          },
+          "years_experience": {
+            "type": "integer",
+            "title": "Years Experience"
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bio"
+          },
+          "verification_status": {
+            "$ref": "#/components/schemas/VerificationStatus"
+          },
+          "listing_online": {
+            "type": "boolean",
+            "title": "Listing Online"
+          },
+          "video_enabled": {
+            "type": "boolean",
+            "title": "Video Enabled"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "full_name",
+          "medical_reg_number",
+          "council_name",
+          "specialty",
+          "years_experience",
+          "bio",
+          "verification_status",
+          "listing_online",
+          "video_enabled",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "DoctorRead"
+      },
+      "DoctorRegisterRequest": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 2,
+            "title": "Full Name"
+          },
+          "medical_reg_number": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 3,
+            "title": "Medical Reg Number"
+          },
+          "council_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 3,
+            "title": "Council Name"
+          },
+          "specialty": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Specialty"
+          },
+          "years_experience": {
+            "type": "integer",
+            "maximum": 70.0,
+            "minimum": 0.0,
+            "title": "Years Experience",
+            "default": 0
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bio"
+          }
+        },
+        "type": "object",
+        "required": [
+          "full_name",
+          "medical_reg_number",
+          "council_name",
+          "specialty"
+        ],
+        "title": "DoctorRegisterRequest"
+      },
+      "DoctorSearchResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DoctorSearchResult"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "DoctorSearchResponse"
+      },
+      "DoctorSearchResult": {
+        "properties": {
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "specialty": {
+            "type": "string",
+            "title": "Specialty"
+          },
+          "years_experience": {
+            "type": "integer",
+            "title": "Years Experience"
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bio"
+          },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "in_person_fee": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "In Person Fee"
+          },
+          "video_fee": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Video Fee",
+            "default": "0.00"
+          },
+          "listing_online": {
+            "type": "boolean",
+            "title": "Listing Online"
+          },
+          "video_enabled": {
+            "type": "boolean",
+            "title": "Video Enabled",
+            "default": false
+          },
+          "rating": {
+            "type": "number",
+            "title": "Rating",
+            "default": 4.8
+          },
+          "clinic": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ClinicRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
+          "google_maps_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Google Maps Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doctor_id",
+          "full_name",
+          "specialty",
+          "years_experience",
+          "in_person_fee",
+          "listing_online"
+        ],
+        "title": "DoctorSearchResult"
+      },
+      "DocumentConfirmRequest": {
+        "properties": {
+          "doc_type": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          "file_name": {
+            "type": "string",
+            "title": "File Name"
+          },
+          "s3_key": {
+            "type": "string",
+            "title": "S3 Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doc_type",
+          "file_name",
+          "s3_key"
+        ],
+        "title": "DocumentConfirmRequest"
+      },
+      "DocumentPresignRequest": {
+        "properties": {
+          "doc_type": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          "file_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "File Name"
+          },
+          "content_type": {
+            "type": "string",
+            "title": "Content Type",
+            "default": "application/pdf"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doc_type",
+          "file_name"
+        ],
+        "title": "DocumentPresignRequest"
+      },
+      "DocumentPresignResponse": {
+        "properties": {
+          "upload_url": {
+            "type": "string",
+            "title": "Upload Url"
+          },
+          "s3_key": {
+            "type": "string",
+            "title": "S3 Key"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In",
+            "default": 3600
+          }
+        },
+        "type": "object",
+        "required": [
+          "upload_url",
+          "s3_key"
+        ],
+        "title": "DocumentPresignResponse"
+      },
+      "DocumentType": {
+        "type": "string",
+        "enum": [
+          "medical_reg_cert",
+          "degree_cert",
+          "clinic_reg",
+          "identity_proof"
+        ],
+        "title": "DocumentType"
+      },
+      "DrugMasterResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "brand_name": {
+            "type": "string",
+            "title": "Brand Name"
+          },
+          "generic_name": {
+            "type": "string",
+            "title": "Generic Name"
+          },
+          "dosage_form": {
+            "type": "string",
+            "title": "Dosage Form"
+          },
+          "is_telemedicine_restricted": {
+            "type": "boolean",
+            "title": "Is Telemedicine Restricted"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "brand_name",
+          "generic_name",
+          "dosage_form",
+          "is_telemedicine_restricted"
+        ],
+        "title": "DrugMasterResponse"
+      },
+      "FirebaseBindPhoneRequest": {
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "title": "Phone Number",
+            "description": "E.164 phone number to bind to the user profile"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phone_number"
+        ],
+        "title": "FirebaseBindPhoneRequest"
+      },
+      "FirebaseLoginRequest": {
+        "properties": {
+          "id_token": {
+            "type": "string",
+            "title": "Id Token",
+            "description": "Firebase ID Token (JWT) acquired from Firebase Client SDK"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserRole",
+            "description": "Target role (patient, doctor, chemist)",
+            "default": "patient"
+          },
+          "full_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Name",
+            "description": "Display name for new patient/user creation"
+          },
+          "consent_version": {
+            "type": "string",
+            "title": "Consent Version",
+            "description": "DPDP Act patient consent policy version",
+            "default": "v1.0"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id_token"
+        ],
+        "title": "FirebaseLoginRequest"
+      },
+      "FirebaseLoginResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          },
+          "firebase_uid": {
+            "type": "string",
+            "title": "Firebase Uid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserRole"
+          },
+          "phone_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone Number"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "is_new_user": {
+            "type": "boolean",
+            "title": "Is New User"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "firebase_uid",
+          "user_id",
+          "role",
+          "is_new_user"
+        ],
+        "title": "FirebaseLoginResponse"
+      },
+      "FirebaseVerifyTokenRequest": {
+        "properties": {
+          "id_token": {
+            "type": "string",
+            "title": "Id Token",
+            "description": "Firebase ID Token to decode and verify"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id_token"
+        ],
+        "title": "FirebaseVerifyTokenRequest"
+      },
+      "FirebaseVerifyTokenResponse": {
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "title": "Valid"
+          },
+          "uid": {
+            "type": "string",
+            "title": "Uid"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "phone_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone Number"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "valid",
+          "uid"
+        ],
+        "title": "FirebaseVerifyTokenResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LeaveCreate": {
+        "properties": {
+          "leave_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Leave Date"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "leave_date"
+        ],
+        "title": "LeaveCreate"
+      },
+      "LeaveResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "leave_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Leave Date"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "doctor_id",
+          "leave_date",
+          "created_at"
+        ],
+        "title": "LeaveResponse"
+      },
+      "OTPRequest": {
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "pattern": "^\\+?[1-9]\\d{9,14}$",
+            "title": "Phone Number"
+          },
+          "purpose": {
+            "type": "string",
+            "title": "Purpose",
+            "description": "login or registration",
+            "default": "login"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phone_number"
+        ],
+        "title": "OTPRequest"
+      },
+      "OTPVerifyRequest": {
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "pattern": "^\\+?[1-9]\\d{9,14}$",
+            "title": "Phone Number"
+          },
+          "otp_code": {
+            "type": "string",
+            "maxLength": 6,
+            "minLength": 6,
+            "title": "Otp Code"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserRole",
+            "default": "patient"
+          },
+          "consent_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Consent Version",
+            "default": "1.0"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phone_number",
+          "otp_code"
+        ],
+        "title": "OTPVerifyRequest"
+      },
+      "PatientAuthResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          },
+          "patient": {
+            "$ref": "#/components/schemas/PatientProfileRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "patient"
+        ],
+        "title": "PatientAuthResponse"
+      },
+      "PatientDocumentResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "doc_type": {
+            "type": "string",
+            "title": "Doc Type"
+          },
+          "file_name": {
+            "type": "string",
+            "title": "File Name"
+          },
+          "file_size_bytes": {
+            "type": "integer",
+            "title": "File Size Bytes"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "download_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Download Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "patient_id",
+          "doc_type",
+          "file_name",
+          "file_size_bytes",
+          "created_at"
+        ],
+        "title": "PatientDocumentResponse"
+      },
+      "PatientProfileRead": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "phone_number": {
+            "type": "string",
+            "title": "Phone Number"
+          },
+          "full_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Name"
+          },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "date_of_birth": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date Of Birth"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "phone_number"
+        ],
+        "title": "PatientProfileRead"
+      },
+      "PatientProfileUpdate": {
+        "properties": {
+          "full_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Name"
+          },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "date_of_birth": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date Of Birth"
+          }
+        },
+        "type": "object",
+        "title": "PatientProfileUpdate"
+      },
+      "PatientVaultResponse": {
+        "properties": {
+          "uploaded_documents": {
+            "items": {
+              "$ref": "#/components/schemas/PatientDocumentResponse"
+            },
+            "type": "array",
+            "title": "Uploaded Documents"
+          },
+          "prescriptions": {
+            "items": {
+              "$ref": "#/components/schemas/PrescriptionResponse"
+            },
+            "type": "array",
+            "title": "Prescriptions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "uploaded_documents",
+          "prescriptions"
+        ],
+        "title": "PatientVaultResponse"
+      },
+      "PaymentCreateOrderRequest": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id"
+        ],
+        "title": "PaymentCreateOrderRequest"
+      },
+      "PaymentCreateOrderResponse": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "order_id": {
+            "type": "string",
+            "title": "Order Id"
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "default": "INR"
+          },
+          "key_id": {
+            "type": "string",
+            "title": "Key Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "order_id",
+          "amount",
+          "key_id"
+        ],
+        "title": "PaymentCreateOrderResponse"
+      },
+      "PaymentStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "captured",
+          "refunded",
+          "failed"
+        ],
+        "title": "PaymentStatus"
+      },
+      "PaymentVerifyRequest": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "gateway_order_id": {
+            "type": "string",
+            "title": "Gateway Order Id"
+          },
+          "gateway_payment_id": {
+            "type": "string",
+            "title": "Gateway Payment Id"
+          },
+          "gateway_signature": {
+            "type": "string",
+            "title": "Gateway Signature"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "gateway_order_id",
+          "gateway_payment_id",
+          "gateway_signature"
+        ],
+        "title": "PaymentVerifyRequest"
+      },
+      "PlatformTelemetryResponse": {
+        "properties": {
+          "total_verified_doctors": {
+            "type": "integer",
+            "title": "Total Verified Doctors"
+          },
+          "total_confirmed_bookings": {
+            "type": "integer",
+            "title": "Total Confirmed Bookings"
+          },
+          "total_completed_consultations": {
+            "type": "integer",
+            "title": "Total Completed Consultations"
+          },
+          "gross_transaction_value": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Gross Transaction Value"
+          },
+          "total_registered_chemists": {
+            "type": "integer",
+            "title": "Total Registered Chemists",
+            "default": 0
+          },
+          "total_patient_documents": {
+            "type": "integer",
+            "title": "Total Patient Documents",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_verified_doctors",
+          "total_confirmed_bookings",
+          "total_completed_consultations",
+          "gross_transaction_value"
+        ],
+        "title": "PlatformTelemetryResponse"
+      },
+      "PrescriptionCreate": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "diagnosis": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Diagnosis"
+          },
+          "clinical_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinical Notes"
+          },
+          "chemist_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chemist Id"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PrescriptionItemCreate"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "diagnosis",
+          "items"
+        ],
+        "title": "PrescriptionCreate"
+      },
+      "PrescriptionItemCreate": {
+        "properties": {
+          "drug_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Drug Name"
+          },
+          "dosage": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Dosage"
+          },
+          "frequency": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Frequency"
+          },
+          "duration_days": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Duration Days"
+          },
+          "instructions": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instructions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "drug_name",
+          "dosage",
+          "frequency",
+          "duration_days"
+        ],
+        "title": "PrescriptionItemCreate"
+      },
+      "PrescriptionItemResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "drug_name": {
+            "type": "string",
+            "title": "Drug Name"
+          },
+          "dosage": {
+            "type": "string",
+            "title": "Dosage"
+          },
+          "frequency": {
+            "type": "string",
+            "title": "Frequency"
+          },
+          "duration_days": {
+            "type": "integer",
+            "title": "Duration Days"
+          },
+          "instructions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instructions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "drug_name",
+          "dosage",
+          "frequency",
+          "duration_days"
+        ],
+        "title": "PrescriptionItemResponse"
+      },
+      "PrescriptionResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "diagnosis": {
+            "type": "string",
+            "title": "Diagnosis"
+          },
+          "clinical_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinical Notes"
+          },
+          "pdf_s3_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pdf S3 Key"
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Issued At"
+          },
+          "chemist_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chemist Id"
+          },
+          "digital_signature": {
+            "type": "string",
+            "title": "Digital Signature"
+          },
+          "digital_signature_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Digital Signature Timestamp"
+          },
+          "dispense_status": {
+            "type": "string",
+            "title": "Dispense Status",
+            "default": "pending"
+          },
+          "dispensed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dispensed At"
+          },
+          "dispensed_by_chemist_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dispensed By Chemist Id"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PrescriptionItemResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "download_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Download Url"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "appointment_id",
+          "doctor_id",
+          "patient_id",
+          "diagnosis",
+          "issued_at",
+          "digital_signature",
+          "digital_signature_timestamp",
+          "items",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "PrescriptionResponse"
+      },
+      "PrescriptionVerificationResponse": {
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "title": "Valid"
+          },
+          "prescription_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Prescription Id"
+          },
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "doctor_reg_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doctor Reg Number"
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Issued At"
+          },
+          "digital_signature": {
+            "type": "string",
+            "title": "Digital Signature"
+          },
+          "dispense_status": {
+            "type": "string",
+            "title": "Dispense Status"
+          },
+          "dispensed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dispensed At"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "valid",
+          "prescription_id",
+          "doctor_id",
+          "patient_id",
+          "appointment_id",
+          "issued_at",
+          "digital_signature",
+          "dispense_status",
+          "message"
+        ],
+        "title": "PrescriptionVerificationResponse"
+      },
+      "QueueAppointmentResponse": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "patient_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Patient Name"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/AppointmentMode"
+          },
+          "slot_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot Start"
+          },
+          "slot_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Slot End"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatus"
+          },
+          "payment_status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "fee_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Fee Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "patient_id",
+          "mode",
+          "slot_start",
+          "slot_end",
+          "status",
+          "payment_status",
+          "fee_amount"
+        ],
+        "title": "QueueAppointmentResponse"
+      },
+      "ReminderDispatchResponse": {
+        "properties": {
+          "dispatched_count": {
+            "type": "integer",
+            "title": "Dispatched Count"
+          },
+          "timestamp": {
+            "type": "string",
+            "title": "Timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dispatched_count",
+          "timestamp"
+        ],
+        "title": "ReminderDispatchResponse"
+      },
+      "ReviewCreate": {
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "rating": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Rating"
+          },
+          "review_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appointment_id",
+          "rating"
+        ],
+        "title": "ReviewCreate"
+      },
+      "ReviewModerationAction": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "pattern": "^(hide|remove|approve)$",
+            "title": "Action"
+          },
+          "reason_text": {
+            "type": "string",
+            "minLength": 3,
+            "title": "Reason Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "reason_text"
+        ],
+        "title": "ReviewModerationAction"
+      },
+      "ReviewRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Appointment Id"
+          },
+          "doctor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Doctor Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "rating": {
+            "type": "integer",
+            "title": "Rating"
+          },
+          "review_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review Text"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReviewStatus"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "appointment_id",
+          "doctor_id",
+          "patient_id",
+          "rating",
+          "review_text",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ReviewRead"
+      },
+      "ReviewStatus": {
+        "type": "string",
+        "enum": [
+          "published",
+          "flagged",
+          "hidden",
+          "removed"
+        ],
+        "title": "ReviewStatus"
+      },
+      "SendOTPRequest": {
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "title": "Phone Number"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phone_number"
+        ],
+        "title": "SendOTPRequest"
+      },
+      "SlotResponse": {
+        "properties": {
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "End Time"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode"
+          },
+          "clinic_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clinic Id"
+          },
+          "fee_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Fee Amount"
+          },
+          "is_available": {
+            "type": "boolean",
+            "title": "Is Available",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_time",
+          "end_time",
+          "mode",
+          "fee_amount"
+        ],
+        "title": "SlotResponse"
+      },
+      "ToggleListingRequest": {
+        "properties": {
+          "listing_online": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Listing Online"
+          }
+        },
+        "type": "object",
+        "title": "ToggleListingRequest"
+      },
+      "ToggleVideoRequest": {
+        "properties": {
+          "video_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Video Enabled"
+          }
+        },
+        "type": "object",
+        "title": "ToggleVideoRequest"
+      },
+      "TokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "user"
+        ],
+        "title": "TokenResponse"
+      },
+      "UserRead": {
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "pattern": "^\\+?[1-9]\\d{9,14}$",
+            "title": "Phone Number",
+            "description": "E.164 or Indian mobile format"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserRole",
+            "default": "patient"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phone_number",
+          "id",
+          "is_active",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "UserRead"
+      },
+      "UserRole": {
+        "type": "string",
+        "enum": [
+          "patient",
+          "doctor",
+          "verification_reviewer",
+          "super_admin",
+          "chemist"
+        ],
+        "title": "UserRole"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VerificationQueueItemRead": {
+        "properties": {
+          "doctor": {
+            "$ref": "#/components/schemas/DoctorRead"
+          },
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/DoctorDocumentRead"
+            },
+            "type": "array",
+            "title": "Documents",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "doctor"
+        ],
+        "title": "VerificationQueueItemRead"
+      },
+      "VerificationStatus": {
+        "type": "string",
+        "enum": [
+          "submitted",
+          "under_review",
+          "info_requested",
+          "verified",
+          "rejected",
+          "suspended"
+        ],
+        "title": "VerificationStatus",
+        "description": "PRD Section 2D: 6-state doctor verification pipeline"
+      },
+      "VerificationTransitionRequest": {
+        "properties": {
+          "new_status": {
+            "$ref": "#/components/schemas/VerificationStatus"
+          },
+          "reason_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason Text",
+            "description": "Mandatory when status is rejected or suspended"
+          },
+          "review_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "new_status"
+        ],
+        "title": "VerificationTransitionRequest"
+      },
+      "VerifyOTPRequest": {
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "title": "Phone Number"
+          },
+          "otp_code": {
+            "type": "string",
+            "title": "Otp Code"
+          },
+          "full_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Name"
+          },
+          "consent_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Consent Version",
+            "default": "v1.0"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phone_number",
+          "otp_code"
+        ],
+        "title": "VerifyOTPRequest"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

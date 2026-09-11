@@ -6,11 +6,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 ENV_FILE = ROOT_DIR / ".env"
 
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=ENV_FILE if ENV_FILE.exists() else None,
         env_file_encoding="utf-8",
-        extra="ignore"
+        extra="ignore",
     )
 
     ENVIRONMENT: str = "development"
@@ -26,7 +27,9 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
 
     # JWT Security
-    JWT_SECRET_KEY: str = "dev_insecure_jwt_secret_healthcare_platform_2026_change_in_prod"
+    JWT_SECRET_KEY: str = (
+        "dev_insecure_jwt_secret_healthcare_platform_2026_change_in_prod"
+    )
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
 
@@ -62,5 +65,6 @@ class Settings(BaseSettings):
     FIREBASE_PROJECT_ID: str = "healthcare-platform-dev"
     FIREBASE_CREDENTIALS_PATH: str | None = None
     FIREBASE_MOCK_AUTH: bool = True
+
 
 settings = Settings()

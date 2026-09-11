@@ -3,7 +3,6 @@ import uuid
 from backend.app.core.redis import lock_manager
 from backend.app.models.appointment import (
     Appointment,
-    AppointmentMode,
     AppointmentStatus,
     PaymentStatus,
 )
@@ -121,10 +120,14 @@ async def confirm_appointment(
 
     if appt.doctor_id != doctor_user_id:
         from backend.app.models.user import User, UserRole
+
         caller = (
             await session.execute(select(User).where(User.id == doctor_user_id))
         ).scalar_one_or_none()
-        if not caller or caller.role not in {UserRole.SUPER_ADMIN, UserRole.VERIFICATION_REVIEWER}:
+        if not caller or caller.role not in {
+            UserRole.SUPER_ADMIN,
+            UserRole.VERIFICATION_REVIEWER,
+        }:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Not authorized to confirm this appointment",
@@ -203,7 +206,10 @@ async def confirm_booking(
             detail="Payment transaction not found for this appointment/order",
         )
 
-    if txn.status == PaymentTransactionStatus.CAPTURED and appt.status == AppointmentStatus.CONFIRMED:
+    if (
+        txn.status == PaymentTransactionStatus.CAPTURED
+        and appt.status == AppointmentStatus.CONFIRMED
+    ):
         return appt
 
     txn.status = PaymentTransactionStatus.CAPTURED

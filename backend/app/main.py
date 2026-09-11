@@ -26,12 +26,13 @@ async def lifespan(app: FastAPI):
     # Shutdown
     await engine.dispose()
 
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version="1.0.0",
     lifespan=lifespan,
     openapi_url="/api/openapi.json",
-    docs_url="/docs"
+    docs_url="/docs",
 )
 
 app.add_middleware(
@@ -42,70 +43,79 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/health", tags=["Health"])
 async def health_check(session: AsyncSession = Depends(get_db)):
     await session.execute(text("SELECT 1"))
     return {
         "status": "healthy",
         "environment": settings.ENVIRONMENT,
-        "database": "connected"
+        "database": "connected",
     }
+
 
 @app.post(f"{settings.API_V1_STR}/auth/request-otp", tags=["Auth"])
 async def request_otp(req: OTPRequest):
     success, message = await identity_service.request_otp(req.phone_number, req.purpose)
     if not success:
-        raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=message)
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=message
+        )
     return {"success": True, "message": message}
 
-@app.post(f"{settings.API_V1_STR}/auth/verify-otp", response_model=TokenResponse, tags=["Auth"])
-async def verify_otp(
-    req: OTPVerifyRequest,
-    session: AsyncSession = Depends(get_db)
-):
+
+@app.post(
+    f"{settings.API_V1_STR}/auth/verify-otp",
+    response_model=TokenResponse,
+    tags=["Auth"],
+)
+async def verify_otp(req: OTPVerifyRequest, session: AsyncSession = Depends(get_db)):
     try:
         token_response = await identity_service.verify_otp(
             phone_number=req.phone_number,
             otp_code=req.otp_code,
             role=req.role,
             session=session,
-            consent_version=req.consent_version
+            consent_version=req.consent_version,
         )
         return token_response
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
+
 @app.get(f"{settings.API_V1_STR}/auth/me", response_model=UserRead, tags=["Auth"])
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
+
 # Mount Phase 02 / 03 routers
+from backend.app.api.v1.admin_dashboard import router as admin_dashboard_router
+from backend.app.api.v1.admin_moderation import router as admin_moderation_router
 from backend.app.api.v1.admin_verification import router as admin_verification_router
+
+# Mount Phase 07 routers
+from backend.app.api.v1.appointments import router as appointments_router
 from backend.app.api.v1.bookings import router as bookings_router
 from backend.app.api.v1.cancellations import router as cancellations_router
+from backend.app.api.v1.chemists import router as chemists_router
 from backend.app.api.v1.doctor_onboarding import router as doctor_router
 from backend.app.api.v1.doctor_profile import router as doctor_profile_router
+from backend.app.api.v1.doctor_queue import router as doctor_queue_router
+from backend.app.api.v1.firebase_auth import router as firebase_auth_router
 from backend.app.api.v1.patient_auth import router as patient_auth_router
+from backend.app.api.v1.patient_records import router as patient_records_router
+from backend.app.api.v1.patient_vault import router as patient_vault_router
 from backend.app.api.v1.payments import router as payments_router
+from backend.app.api.v1.prescriptions import router as prescriptions_router
+
+# Teleconsultation disabled for Clinic-First Architecture pivot
+# from backend.app.api.v1.teleconsultation import router as teleconsultation_router
+from backend.app.api.v1.reviews import router as reviews_router
 
 # Mount Phase 04 routers
 from backend.app.api.v1.schedules import router as schedules_router
 from backend.app.api.v1.schedules import slots_router
 from backend.app.api.v1.search import router as search_router
-# Teleconsultation disabled for Clinic-First Architecture pivot
-# from backend.app.api.v1.teleconsultation import router as teleconsultation_router
-from backend.app.api.v1.reviews import router as reviews_router
-from backend.app.api.v1.admin_dashboard import router as admin_dashboard_router
-from backend.app.api.v1.admin_moderation import router as admin_moderation_router
-
-# Mount Phase 07 routers
-from backend.app.api.v1.appointments import router as appointments_router
-from backend.app.api.v1.doctor_queue import router as doctor_queue_router
-from backend.app.api.v1.patient_records import router as patient_records_router
-from backend.app.api.v1.prescriptions import router as prescriptions_router
-from backend.app.api.v1.chemists import router as chemists_router
-from backend.app.api.v1.patient_vault import router as patient_vault_router
-from backend.app.api.v1.firebase_auth import router as firebase_auth_router
 
 app.include_router(firebase_auth_router, prefix=settings.API_V1_STR)
 app.include_router(doctor_router, prefix=settings.API_V1_STR)

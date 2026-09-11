@@ -11,43 +11,23 @@ class ConsentRecord(Base):
     __tablename__ = "consent_records"
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid.uuid4
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
-        index=True
+        index=True,
     )
-    purpose: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False,
-        index=True
-    )
+    purpose: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     consent_version: Mapped[str] = mapped_column(
-        String(20),
-        nullable=False,
-        default="1.0"
+        String(20), nullable=False, default="1.0"
     )
-    is_granted: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        default=True
-    )
-    ip_address: Mapped[str | None] = mapped_column(
-        String(50),
-        nullable=True
-    )
-    user_agent: Mapped[str | None] = mapped_column(
-        String(255),
-        nullable=True
-    )
+    is_granted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    ip_address: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    user_agent: Mapped[str | None] = mapped_column(String(255), nullable=True)
     granted_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False
+        DateTime(timezone=True), server_default=func.now(), nullable=False
     )
 
     def __repr__(self) -> str:

@@ -54,7 +54,6 @@ class PrescriptionResponse(BaseModel):
     updated_at: datetime
 
 
-
 class DrugMasterResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
