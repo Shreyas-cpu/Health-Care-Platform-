@@ -1,0 +1,77 @@
+import enum
+import uuid
+from typing import Optional
+from sqlalchemy import Boolean, Enum, ForeignKey, Integer, String, Text
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from backend.app.models.base import Base, TimestampMixin
+
+class VerificationStatus(str, enum.Enum):
+    """
+    PRD Section 2D: 6-state doctor verification pipeline
+    """
+    SUBMITTED = "submitted"
+    UNDER_REVIEW = "under_review"
+    INFO_REQUESTED = "info_requested"
+    VERIFIED = "verified"
+    REJECTED = "rejected"
+    SUSPENDED = "suspended"
+
+class Doctor(Base, TimestampMixin):
+    __tablename__ = "doctors"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        primary_key=True
+    )
+    full_name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
+    medical_reg_number: Mapped[str] = mapped_column(
+        String(100),
+        unique=True,
+        index=True,
+        nullable=False
+    )
+    council_name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
+    specialty: Mapped[str] = mapped_column(
+        String(100),
+        index=True,
+        nullable=False
+    )
+    years_experience: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0
+    )
+    bio: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable=True
+    )
+    verification_status: Mapped[VerificationStatus] = mapped_column(
+        Enum(VerificationStatus, name="verification_status", native_enum=True),
+        nullable=False,
+        default=VerificationStatus.SUBMITTED,
+        index=True
+    )
+    listing_online: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
+    video_enabled: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
+
+    documents = relationship("DoctorDocument", back_populates="doctor", cascade="all, delete-orphan", lazy="selectin")
+    reviews = relationship("VerificationReview", back_populates="doctor", cascade="all, delete-orphan", lazy="selectin")
+
+    def __repr__(self) -> str:
+        return f"<Doctor {self.user_id} name={self.full_name} status={self.verification_status} online={self.listing_online}>"

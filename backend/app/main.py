@@ -71,3 +71,10 @@ async def verify_otp(
 @app.get(f"{settings.API_V1_STR}/auth/me", response_model=UserRead, tags=["Auth"])
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+# Mount Phase 02 routers
+from backend.app.api.v1.doctor_onboarding import router as doctor_router
+from backend.app.api.v1.admin_verification import router as admin_verification_router
+
+app.include_router(doctor_router, prefix=settings.API_V1_STR)
+app.include_router(admin_verification_router, prefix=settings.API_V1_STR)
