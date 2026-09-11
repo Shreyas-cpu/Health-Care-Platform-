@@ -58,4 +58,9 @@ class Settings(BaseSettings):
     EMAILS_FROM_EMAIL: str = "notifications@healthcare-platform.local"
     EMAILS_FROM_NAME: str = "Healthcare Platform"
 
+    # Firebase Auth
+    FIREBASE_PROJECT_ID: str = "healthcare-platform-dev"
+    FIREBASE_CREDENTIALS_PATH: str | None = None
+    FIREBASE_MOCK_AUTH: bool = True
+
 settings = Settings()

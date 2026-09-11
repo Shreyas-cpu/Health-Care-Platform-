@@ -34,12 +34,13 @@ async def test_clinic_coordinates_and_maps_url(db_session: AsyncSession):
     db_session.add(doc_user)
     await db_session.flush()
 
+    specialty_name = f"Derm_{uuid.uuid4().hex[:6]}"
     doctor = Doctor(
         user_id=doc_user.id,
         full_name="Dr. Map Tester",
         medical_reg_number=f"MCI-{uuid.uuid4().hex[:8]}",
         council_name="Karnataka Medical Council",
-        specialty="Dermatology",
+        specialty=specialty_name,
         years_experience=10,
         in_person_fee=Decimal("600.00"),
         verification_status=VerificationStatus.VERIFIED,
@@ -74,7 +75,7 @@ async def test_clinic_coordinates_and_maps_url(db_session: AsyncSession):
     assert profile.clinic.longitude == pytest.approx(77.6245)
     assert profile.google_maps_url == clinic.google_maps_url
 
-    search_res = await search_doctors(db_session, DoctorSearchFilters(specialty="Dermatology"))
+    search_res = await search_doctors(db_session, DoctorSearchFilters(specialty=specialty_name))
     matching = [item for item in search_res.items if item.doctor_id == doctor.user_id]
     assert len(matching) == 1
     assert matching[0].clinic.latitude == pytest.approx(12.9352)

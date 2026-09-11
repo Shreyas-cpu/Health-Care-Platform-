@@ -3,6 +3,7 @@ import uuid
 from backend.app.core.database import get_db
 from backend.app.core.security import decode_token
 from backend.app.models.user import User, UserRole
+from backend.app.services.firebase_auth import verify_firebase_id_token
 from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
@@ -15,29 +16,36 @@ async def get_current_user(
     session: AsyncSession = Depends(get_db)
 ) -> User:
     token = credentials.credentials
+    user: User | None = None
+
+    # 1. First attempt platform JWT decode
     try:
         payload = decode_token(token)
         user_id_str = payload.get("sub")
-        if not user_id_str:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token missing subject claim"
-            )
-        user_id = uuid.UUID(user_id_str)
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid authentication token: {e}"
-        )
+        if user_id_str:
+            user_id = uuid.UUID(user_id_str)
+            stmt = select(User).where(User.id == user_id)
+            result = await session.execute(stmt)
+            user = result.scalar_one_or_none()
+    except Exception:
+        user = None
 
-    stmt = select(User).where(User.id == user_id)
-    result = await session.execute(stmt)
-    user = result.scalar_one_or_none()
+    # 2. Fallback to direct Firebase ID token verification
+    if not user:
+        try:
+            fb_payload = verify_firebase_id_token(token)
+            uid = fb_payload.get("uid") or fb_payload.get("sub")
+            if uid:
+                stmt = select(User).where(User.firebase_uid == uid)
+                result = await session.execute(stmt)
+                user = result.scalar_one_or_none()
+        except Exception:
+            user = None
 
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found"
+            detail="Invalid or expired authentication token."
         )
     if not user.is_active:
         raise HTTPException(

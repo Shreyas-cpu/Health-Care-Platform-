@@ -105,7 +105,9 @@ from backend.app.api.v1.patient_records import router as patient_records_router
 from backend.app.api.v1.prescriptions import router as prescriptions_router
 from backend.app.api.v1.chemists import router as chemists_router
 from backend.app.api.v1.patient_vault import router as patient_vault_router
+from backend.app.api.v1.firebase_auth import router as firebase_auth_router
 
+app.include_router(firebase_auth_router, prefix=settings.API_V1_STR)
 app.include_router(doctor_router, prefix=settings.API_V1_STR)
 app.include_router(admin_verification_router, prefix=settings.API_V1_STR)
 app.include_router(patient_auth_router, prefix=settings.API_V1_STR)
