@@ -6,11 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.api.deps import get_current_user, require_roles
 from backend.app.core.config import settings
 from backend.app.core.database import get_db
-from backend.app.core.redis import publish_event
 from backend.app.models.doctor import Doctor, VerificationStatus
 from backend.app.models.user import User, UserRole
 from backend.app.models.verification import DoctorDocument
-from backend.app.schemas.doctor import DoctorRead, DoctorRegisterRequest, DoctorVisibilityUpdate
+from backend.app.schemas.doctor import DoctorRead, DoctorRegisterRequest
 from backend.app.schemas.verification import (
     DoctorDocumentRead,
     DocumentConfirmRequest,
@@ -125,53 +124,3 @@ async def list_doctor_documents(
     stmt = select(DoctorDocument).where(DoctorDocument.doctor_id == current_user.id)
     docs = (await session.execute(stmt)).scalars().all()
     return docs
-
-@router.post("/me/toggle-listing", response_model=DoctorRead)
-async def toggle_listing_online(
-    req: DoctorVisibilityUpdate,
-    current_user: User = Depends(require_roles(UserRole.DOCTOR)),
-    session: AsyncSession = Depends(get_db)
-):
-    """
-    Toggles doctor listing online/offline.
-    Enforces Hard Rule: Unverified doctors cannot be published online!
-    """
-    stmt = select(Doctor).where(Doctor.user_id == current_user.id)
-    doctor = (await session.execute(stmt)).scalar_one_or_none()
-    if not doctor:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Doctor profile not found.")
-
-    if req.listing_online is not None:
-        if req.listing_online and doctor.verification_status != VerificationStatus.VERIFIED:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Doctor profile must be 'verified' before going online."
-            )
-        doctor.listing_online = req.listing_online
-
-    if req.video_enabled is not None:
-        if req.video_enabled and doctor.verification_status != VerificationStatus.VERIFIED:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Doctor profile must be 'verified' before offering video consultations."
-            )
-        doctor.video_enabled = req.video_enabled
-
-    await session.commit()
-    await session.refresh(doctor)
-
-    # RUL-02: Broadcast toggle to Redis Pub/Sub for instant search index update
-    try:
-        await publish_event(
-            "doctor:events",
-            "doctor_visibility_toggled",
-            {
-                "doctor_id": str(doctor.user_id),
-                "listing_online": doctor.listing_online,
-                "video_enabled": doctor.video_enabled
-            }
-        )
-    except Exception as e:
-        print(f"[DOCTOR API] Warning: Redis publish failed: {e}")
-
-    return doctor

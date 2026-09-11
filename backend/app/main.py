@@ -75,6 +75,12 @@ async def get_me(current_user: User = Depends(get_current_user)):
 # Mount Phase 02 routers
 from backend.app.api.v1.doctor_onboarding import router as doctor_router
 from backend.app.api.v1.admin_verification import router as admin_verification_router
+from backend.app.api.v1.patient_auth import router as patient_auth_router
+from backend.app.api.v1.doctor_profile import router as doctor_profile_router
+from backend.app.api.v1.search import router as search_router
 
 app.include_router(doctor_router, prefix=settings.API_V1_STR)
 app.include_router(admin_verification_router, prefix=settings.API_V1_STR)
+app.include_router(patient_auth_router, prefix=settings.API_V1_STR)
+app.include_router(doctor_profile_router, prefix=settings.API_V1_STR)
+app.include_router(search_router, prefix=settings.API_V1_STR)

@@ -17,6 +17,8 @@ from backend.app.models.consent import ConsentRecord
 from backend.app.models.audit import AuditLog
 from backend.app.models.appointment import Appointment
 from backend.app.models.doctor import Doctor
+from backend.app.models.patient import Patient
+from backend.app.models.clinic import Clinic
 from backend.app.models.verification import DoctorDocument, VerificationReview
 
 config = context.config

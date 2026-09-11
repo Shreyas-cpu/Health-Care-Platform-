@@ -1,10 +1,12 @@
 import enum
 import uuid
+from decimal import Decimal
 from typing import Optional
-from sqlalchemy import Boolean, Enum, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Enum, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend.app.models.base import Base, TimestampMixin
+from backend.app.models.clinic import Clinic
 
 class VerificationStatus(str, enum.Enum):
     """
@@ -53,6 +55,13 @@ class Doctor(Base, TimestampMixin):
         Text,
         nullable=True
     )
+    gender: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    in_person_fee: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), default=Decimal("500.00"), nullable=False
+    )
+    video_fee: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), default=Decimal("400.00"), nullable=False
+    )
     verification_status: Mapped[VerificationStatus] = mapped_column(
         Enum(VerificationStatus, name="verification_status", native_enum=True),
         nullable=False,
@@ -72,6 +81,7 @@ class Doctor(Base, TimestampMixin):
 
     documents = relationship("DoctorDocument", back_populates="doctor", cascade="all, delete-orphan", lazy="selectin")
     reviews = relationship("VerificationReview", back_populates="doctor", cascade="all, delete-orphan", lazy="selectin")
+    clinic = relationship("Clinic", back_populates="doctor", uselist=False, lazy="selectin", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"<Doctor {self.user_id} name={self.full_name} status={self.verification_status} online={self.listing_online}>"

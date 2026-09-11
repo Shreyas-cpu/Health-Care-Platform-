@@ -1,8 +1,8 @@
 # Project State: Digital Healthcare Services Platform
 
 **Milestone:** Milestone 1 — MVP Core Loop  
-**Current Phase:** Phase 03: Patient Identity Specialization, Catalog & Real-Time Search Sync  
-**Status:** Phase 01 & 02 Complete; Phase 03 Ready to Start  
+**Current Phase:** Phase 04: Scheduling, Atomic Slot Booking, Payments & Cancellation Engine  
+**Status:** Phases 01, 02, 03 Complete; Phase 04 In Progress; Phase 05 Enqueued FIFO  
 **Updated:** 2026-09-11  
 
 ---
@@ -13,9 +13,9 @@
 |---|---|---|---|
 | **Phase 01** | Core Architecture, Unified Identity & Appointment State Machine | **Complete** (2026-09-11) | `cursor` (`composer-2.5`) |
 | **Phase 02** | Doctor Onboarding & Verification Pipeline | **Complete** (2026-09-11) | `cursor` (`claude-opus-5-thinking-high`) |
-| **Phase 03** | Patient Identity Specialization, Catalog & Real-Time Search Sync | Ready to Start | `codex` (`gpt-5.6-terra`) |
-| **Phase 04** | Scheduling, Atomic Slot Booking, Payments & Cancellation Engine | Planned | `cursor` (`composer-2.5`) |
-| **Phase 05** | Node.js Real-Time Gateway & Redis Pub/Sub Bridge | Planned | `codex` (`gpt-5.6-terra`) |
+| **Phase 03** | Patient Identity Specialization, Catalog & Real-Time Search Sync | **Complete** (2026-09-11) | `codex` (`gpt-5.6-terra`) |
+| **Phase 04** | Scheduling, Atomic Slot Booking, Payments & Cancellation Engine | **In Progress** | `cursor` (`composer-2.5`) |
+| **Phase 05** | Node.js Real-Time Gateway & Redis Pub/Sub Bridge | Enqueued FIFO | `codex` (`gpt-5.6-terra`) |
 | **Phase 06** | Teleconsultation Engine & Session Lifecycle | Planned | `cursor` (`claude-opus-5-thinking-high`) |
 | **Phase 07** | Clinical Ops Queue & Structured Digital Prescriptions | Planned | `codex` (`gpt-5.6-terra`) |
 | **Phase 08** | Admin Operations, Content Moderation & Audit Console | Planned | `cursor` (`claude-opus-5-thinking-high`) |
