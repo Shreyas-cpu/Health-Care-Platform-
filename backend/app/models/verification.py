@@ -1,12 +1,13 @@
 import enum
 import uuid
 from datetime import datetime
-from typing import Optional
+
+from backend.app.models.base import Base
+from backend.app.models.doctor import VerificationStatus
 from sqlalchemy import DateTime, Enum, ForeignKey, String, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from backend.app.models.base import Base
-from backend.app.models.doctor import VerificationStatus
+
 
 class DocumentType(str, enum.Enum):
     MEDICAL_REG_CERT = "medical_reg_cert"
@@ -79,11 +80,11 @@ class VerificationReview(Base):
         Enum(VerificationStatus, name="verification_status", native_enum=True),
         nullable=False
     )
-    reason_text: Mapped[Optional[str]] = mapped_column(
+    reason_text: Mapped[str | None] = mapped_column(
         Text,
         nullable=True
     )
-    review_notes: Mapped[Optional[str]] = mapped_column(
+    review_notes: Mapped[str | None] = mapped_column(
         Text,
         nullable=True
     )

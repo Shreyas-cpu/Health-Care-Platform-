@@ -1,17 +1,23 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User, UserRole
 from backend.app.schemas.search import (
-    ClinicCreateOrUpdate, ClinicRead, DoctorPublicProfile, ToggleListingRequest, ToggleVideoRequest,
+    ClinicCreateOrUpdate,
+    ClinicRead,
+    DoctorPublicProfile,
+    ToggleListingRequest,
+    ToggleVideoRequest,
 )
 from backend.app.services.catalog import (
-    get_public_doctor_profile, toggle_doctor_listing, toggle_doctor_video, upsert_doctor_clinic,
+    get_public_doctor_profile,
+    toggle_doctor_listing,
+    toggle_doctor_video,
+    upsert_doctor_clinic,
 )
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/doctors", tags=["Doctor Public Profile & Practice"])
 

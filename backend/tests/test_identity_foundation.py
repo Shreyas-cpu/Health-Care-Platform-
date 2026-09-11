@@ -1,11 +1,17 @@
 import uuid
+
 import pytest
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from backend.app.core.security import create_access_token, decode_token, get_password_hash
+from backend.app.core.security import (
+    create_access_token,
+    decode_token,
+    get_password_hash,
+)
 from backend.app.models.consent import ConsentRecord
 from backend.app.models.user import User, UserRole
 from backend.app.services.identity_service import identity_service
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 @pytest.mark.asyncio
 async def test_user_roles(db_session: AsyncSession):

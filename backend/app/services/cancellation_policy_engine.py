@@ -1,11 +1,6 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
-from typing import Optional, Tuple
-
-from fastapi import HTTPException, status
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.core.redis import lock_manager
 from backend.app.models.appointment import Appointment, AppointmentStatus, PaymentStatus
@@ -14,7 +9,9 @@ from backend.app.models.payment import PaymentTransaction, PaymentTransactionSta
 from backend.app.services.appointment_state import appointment_state_machine
 from backend.app.services.audit import record_audit_log
 from backend.app.services.payment_gateway import payment_gateway
-
+from fastapi import HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 DEFAULT_CUTOFF_HOURS = 2
 DEFAULT_REFUND_PERCENTAGE = Decimal("100.00")
@@ -23,9 +20,9 @@ DEFAULT_FEE_DEDUCTION = Decimal("0.00")
 
 async def evaluate_cancellation(
     appointment: Appointment,
-    policy: Optional[CancellationPolicy] = None,
+    policy: CancellationPolicy | None = None,
     session: AsyncSession = None,
-) -> Tuple[bool, Decimal]:
+) -> tuple[bool, Decimal]:
     """
     Determine refund eligibility based on cutoff hours before slot_start.
 
@@ -44,16 +41,16 @@ async def evaluate_cancellation(
     )
     fee_deduction = policy.fee_deduction if policy else DEFAULT_FEE_DEDUCTION
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     slot_start = appointment.slot_start
     if slot_start.tzinfo is None:
-        slot_start = slot_start.replace(tzinfo=timezone.utc)
+        slot_start = slot_start.replace(tzinfo=UTC)
 
     delta_hours = (slot_start - now).total_seconds() / 3600.0
     if delta_hours >= cutoff_hours:
         refund_amount = max(
             Decimal("0.00"),
-            (appointment.fee_amount * (refund_percentage / Decimal("100")))
+            (appointment.fee_amount * (refund_percentage / Decimal(100)))
             - fee_deduction,
         )
         return True, refund_amount.quantize(Decimal("0.01"))
@@ -103,7 +100,7 @@ async def process_cancellation(
     eligible, refund_amount = await evaluate_cancellation(appt, policy=policy, session=session)
 
     is_refunded = False
-    refund_id: Optional[str] = None
+    refund_id: str | None = None
     message = "Appointment cancelled. Not eligible for refund under current policy."
 
     if eligible and appt.payment_status == PaymentStatus.CAPTURED and refund_amount > 0:

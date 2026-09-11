@@ -1,8 +1,8 @@
 # Project State: Digital Healthcare Services Platform
 
 **Milestone:** Milestone 1 — MVP Core Loop  
-**Current Phase:** Phase 06: Teleconsultation Engine & Session Lifecycle  
-**Status:** Phases 01, 02, 03, 04, and 05 Complete; Phase 06 Ready to Start  
+**Current Phase:** Phase 08: Admin Operations, Content Moderation & Audit Console  
+**Status:** Phases 01 through 07 Complete; Phase 08 Ready to Start  
 **Updated:** 2026-09-11  
 
 ---
@@ -16,9 +16,9 @@
 | **Phase 03** | Patient Identity Specialization, Catalog & Real-Time Search Sync | **Complete** (2026-09-11) | `codex` (`gpt-5.6-terra`) |
 | **Phase 04** | Scheduling, Atomic Slot Booking, Payments & Cancellation Engine | **Complete** (2026-09-11) | `cursor` (`composer-2.5`) |
 | **Phase 05** | Node.js Real-Time Gateway & Redis Pub/Sub Bridge | **Complete** (2026-09-11) | `codex` (`gpt-5.6-terra`) |
-| **Phase 06** | Teleconsultation Engine & Session Lifecycle | Planned | `cursor` (`claude-opus-5-thinking-high`) |
-| **Phase 07** | Clinical Ops Queue & Structured Digital Prescriptions | Planned | `codex` (`gpt-5.6-terra`) |
-| **Phase 08** | Admin Operations, Content Moderation & Audit Console | Planned | `cursor` (`claude-opus-5-thinking-high`) |
+| **Phase 06** | Teleconsultation Engine & Session Lifecycle | **Complete** (2026-09-11) | `codex` (`gpt-5.6-terra`) |
+| **Phase 07** | Clinical Ops Queue & Structured Digital Prescriptions | **Complete** (2026-09-11) | `cursor` (`composer-2.5`) |
+| **Phase 08** | Admin Operations, Content Moderation & Audit Console | Planned | `codex` (`gpt-5.6-terra`) / `cursor` |
 | **Phase 09** | End-to-End MVP Golden Loop Verification & Hardening | Planned | **09-01**: `cursor` (`claude-opus-5-thinking-high`)<br>**09-02**: `devin` (`SWE-1.6 Slow`) |
 
 ---

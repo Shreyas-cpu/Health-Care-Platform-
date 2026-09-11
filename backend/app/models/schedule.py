@@ -1,12 +1,10 @@
 import uuid
 from datetime import date, time
-from typing import Optional
 
+from backend.app.models.base import Base, TimestampMixin
 from sqlalchemy import Boolean, Date, ForeignKey, Integer, String, Text, Time
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
-
-from backend.app.models.base import Base, TimestampMixin
 
 
 class DoctorAvailability(Base, TimestampMixin):
@@ -23,7 +21,7 @@ class DoctorAvailability(Base, TimestampMixin):
         nullable=False,
         index=True,
     )
-    clinic_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    clinic_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("clinics.id", ondelete="SET NULL"),
         nullable=True,
@@ -59,7 +57,7 @@ class DoctorLeave(Base, TimestampMixin):
         index=True,
     )
     leave_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
-    reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    reason: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     def __repr__(self) -> str:
         return f"<DoctorLeave {self.id} doctor={self.doctor_id} date={self.leave_date}>"

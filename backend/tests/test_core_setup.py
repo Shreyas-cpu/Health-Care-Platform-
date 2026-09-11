@@ -1,8 +1,9 @@
 import pytest
-from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.core.config import settings
 from backend.app.core.redis import lock_manager
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 @pytest.mark.asyncio
 async def test_settings_loaded():

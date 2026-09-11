@@ -1,12 +1,13 @@
 import uuid
-from datetime import datetime, timezone
-from typing import Dict, Optional, Set
-from fastapi import HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import UTC, datetime
+
 from backend.app.core.redis import publish_event
 from backend.app.models.doctor import Doctor, VerificationStatus
 from backend.app.models.verification import VerificationReview
 from backend.app.services.audit import record_audit_log
+from fastapi import HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 class InvalidVerificationTransitionError(HTTPException):
     def __init__(self, from_status: VerificationStatus, to_status: VerificationStatus, reason: str = ""):
@@ -28,7 +29,7 @@ class VerificationStateMachine:
     5. Rejected
     6. Suspended
     """
-    TRANSITIONS: Dict[VerificationStatus, Set[VerificationStatus]] = {
+    TRANSITIONS: dict[VerificationStatus, set[VerificationStatus]] = {
         VerificationStatus.SUBMITTED: {
             VerificationStatus.UNDER_REVIEW
         },
@@ -64,7 +65,7 @@ class VerificationStateMachine:
         cls,
         from_status: VerificationStatus,
         to_status: VerificationStatus,
-        reason_text: Optional[str] = None
+        reason_text: str | None = None
     ) -> None:
         if not cls.can_transition(from_status, to_status):
             raise InvalidVerificationTransitionError(from_status, to_status)
@@ -83,9 +84,9 @@ class VerificationStateMachine:
         new_status: VerificationStatus,
         admin_user_id: uuid.UUID,
         session: AsyncSession,
-        reason_text: Optional[str] = None,
-        review_notes: Optional[str] = None,
-        ip_address: Optional[str] = None
+        reason_text: str | None = None,
+        review_notes: str | None = None,
+        ip_address: str | None = None
     ) -> VerificationReview:
         """
         Executes atomic transition on doctor verification status.
@@ -96,7 +97,7 @@ class VerificationStateMachine:
 
         # Update doctor model
         doctor.verification_status = new_status
-        doctor.updated_at = datetime.now(timezone.utc)
+        doctor.updated_at = datetime.now(UTC)
 
         # If taking offline from verified (e.g. suspended, rejected)
         if new_status != VerificationStatus.VERIFIED:

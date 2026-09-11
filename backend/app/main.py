@@ -1,14 +1,21 @@
 from contextlib import asynccontextmanager
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import get_current_user
 from backend.app.core.config import settings
 from backend.app.core.database import engine, get_db
 from backend.app.models.user import User
-from backend.app.schemas.user import OTPRequest, OTPVerifyRequest, TokenResponse, UserRead
+from backend.app.schemas.user import (
+    OTPRequest,
+    OTPVerifyRequest,
+    TokenResponse,
+    UserRead,
+)
 from backend.app.services.identity_service import identity_service
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -73,26 +80,45 @@ async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 # Mount Phase 02 / 03 routers
-from backend.app.api.v1.doctor_onboarding import router as doctor_router
 from backend.app.api.v1.admin_verification import router as admin_verification_router
-from backend.app.api.v1.patient_auth import router as patient_auth_router
+from backend.app.api.v1.bookings import router as bookings_router
+from backend.app.api.v1.cancellations import router as cancellations_router
+from backend.app.api.v1.doctor_onboarding import router as doctor_router
 from backend.app.api.v1.doctor_profile import router as doctor_profile_router
-from backend.app.api.v1.search import router as search_router
+from backend.app.api.v1.patient_auth import router as patient_auth_router
+from backend.app.api.v1.payments import router as payments_router
 
 # Mount Phase 04 routers
 from backend.app.api.v1.schedules import router as schedules_router
 from backend.app.api.v1.schedules import slots_router
-from backend.app.api.v1.bookings import router as bookings_router
-from backend.app.api.v1.payments import router as payments_router
-from backend.app.api.v1.cancellations import router as cancellations_router
+from backend.app.api.v1.search import router as search_router
+from backend.app.api.v1.teleconsultation import router as teleconsultation_router
+
+# Mount Phase 07 routers
+from backend.app.api.v1.doctor_queue import router as doctor_queue_router
+from backend.app.api.v1.patient_records import router as patient_records_router
+from backend.app.api.v1.prescriptions import router as prescriptions_router
 
 app.include_router(doctor_router, prefix=settings.API_V1_STR)
 app.include_router(admin_verification_router, prefix=settings.API_V1_STR)
 app.include_router(patient_auth_router, prefix=settings.API_V1_STR)
 app.include_router(doctor_profile_router, prefix=settings.API_V1_STR)
 app.include_router(search_router, prefix=settings.API_V1_STR)
+app.include_router(teleconsultation_router, prefix=settings.API_V1_STR)
 app.include_router(schedules_router, prefix=settings.API_V1_STR)
 app.include_router(slots_router, prefix=settings.API_V1_STR)
 app.include_router(bookings_router, prefix=settings.API_V1_STR)
 app.include_router(payments_router, prefix=settings.API_V1_STR)
 app.include_router(cancellations_router, prefix=settings.API_V1_STR)
+app.include_router(doctor_queue_router, prefix=settings.API_V1_STR)
+app.include_router(prescriptions_router, prefix=settings.API_V1_STR)
+app.include_router(patient_records_router, prefix=settings.API_V1_STR)
+
+# Mount Phase 07 routers
+from backend.app.api.v1.doctor_queue import router as doctor_queue_router
+from backend.app.api.v1.patient_records import router as patient_records_router
+from backend.app.api.v1.prescriptions import router as prescriptions_router
+
+app.include_router(doctor_queue_router, prefix=settings.API_V1_STR)
+app.include_router(prescriptions_router, prefix=settings.API_V1_STR)
+app.include_router(patient_records_router, prefix=settings.API_V1_STR)

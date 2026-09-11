@@ -1,6 +1,5 @@
 from pathlib import Path
-from typing import Optional
-from pydantic import Field
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Find root .env
@@ -53,8 +52,8 @@ class Settings(BaseSettings):
     # Email
     SMTP_HOST: str = "localhost"
     SMTP_PORT: int = 1025
-    SMTP_USER: Optional[str] = None
-    SMTP_PASSWORD: Optional[str] = None
+    SMTP_USER: str | None = None
+    SMTP_PASSWORD: str | None = None
     EMAILS_FROM_EMAIL: str = "notifications@healthcare-platform.local"
     EMAILS_FROM_NAME: str = "Healthcare Platform"
 

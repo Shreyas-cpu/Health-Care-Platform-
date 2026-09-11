@@ -1,13 +1,12 @@
 import uuid
 from datetime import date, datetime, time
 from decimal import Decimal
-from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class AvailabilityCreate(BaseModel):
-    clinic_id: Optional[uuid.UUID] = None
+    clinic_id: uuid.UUID | None = None
     day_of_week: int = Field(..., ge=0, le=6)
     start_time: time
     end_time: time
@@ -21,7 +20,7 @@ class AvailabilityResponse(BaseModel):
 
     id: uuid.UUID
     doctor_id: uuid.UUID
-    clinic_id: Optional[uuid.UUID] = None
+    clinic_id: uuid.UUID | None = None
     day_of_week: int
     start_time: time
     end_time: time
@@ -37,14 +36,14 @@ class SlotResponse(BaseModel):
     start_time: datetime
     end_time: datetime
     mode: str
-    clinic_id: Optional[uuid.UUID] = None
+    clinic_id: uuid.UUID | None = None
     fee_amount: Decimal
     is_available: bool = True
 
 
 class LeaveCreate(BaseModel):
     leave_date: date
-    reason: Optional[str] = None
+    reason: str | None = None
 
 
 class LeaveResponse(BaseModel):
@@ -53,5 +52,5 @@ class LeaveResponse(BaseModel):
     id: uuid.UUID
     doctor_id: uuid.UUID
     leave_date: date
-    reason: Optional[str] = None
+    reason: str | None = None
     created_at: datetime

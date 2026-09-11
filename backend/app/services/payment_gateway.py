@@ -1,8 +1,8 @@
-import hmac
 import hashlib
+import hmac
 import uuid
 from decimal import Decimal
-from typing import Any, Dict, Optional
+from typing import Any
 
 from backend.app.core.config import settings
 
@@ -32,7 +32,7 @@ class PaymentGateway:
         amount: Decimal,
         currency: str = "INR",
         receipt: str = "",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         amount_paise = int(Decimal(amount) * 100)
         if self.is_mock_mode:
             return {
@@ -90,8 +90,8 @@ class PaymentGateway:
         self,
         payment_id: str,
         amount: Decimal,
-        notes: Optional[dict] = None,
-    ) -> Dict[str, Any]:
+        notes: dict | None = None,
+    ) -> dict[str, Any]:
         amount_paise = int(Decimal(amount) * 100)
         if self.is_mock_mode:
             return {
@@ -106,7 +106,7 @@ class PaymentGateway:
             import razorpay  # type: ignore
 
             client = razorpay.Client(auth=(self.key_id, self.key_secret))
-            payload: Dict[str, Any] = {"amount": amount_paise}
+            payload: dict[str, Any] = {"amount": amount_paise}
             if notes:
                 payload["notes"] = notes
             return client.payment.refund(payment_id, payload)
@@ -120,7 +120,7 @@ class PaymentGateway:
             }
 
     def _compute_signature(self, order_id: str, payment_id: str) -> str:
-        message = f"{order_id}|{payment_id}".encode("utf-8")
+        message = f"{order_id}|{payment_id}".encode()
         digest = hmac.new(
             self.key_secret.encode("utf-8"),
             message,

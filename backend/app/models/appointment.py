@@ -2,7 +2,8 @@ import enum
 import uuid
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
+
+from backend.app.models.base import Base, TimestampMixin
 from sqlalchemy import (
     DateTime,
     Enum,
@@ -14,7 +15,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
-from backend.app.models.base import Base, TimestampMixin
+
 
 class AppointmentMode(str, enum.Enum):
     IN_PERSON = "in_person"
@@ -59,7 +60,7 @@ class Appointment(Base, TimestampMixin):
         nullable=False,
         index=True
     )
-    clinic_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    clinic_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         nullable=True,
         index=True
@@ -95,16 +96,16 @@ class Appointment(Base, TimestampMixin):
         default=PaymentStatus.PENDING,
         index=True
     )
-    cancellation_reason: Mapped[Optional[str]] = mapped_column(
+    cancellation_reason: Mapped[str | None] = mapped_column(
         Text,
         nullable=True
     )
-    rescheduled_from_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    rescheduled_from_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("appointments.id", ondelete="SET NULL"),
         nullable=True
     )
-    lock_token: Mapped[Optional[str]] = mapped_column(
+    lock_token: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True
     )

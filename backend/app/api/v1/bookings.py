@@ -1,6 +1,3 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User, UserRole
@@ -11,6 +8,8 @@ from backend.app.schemas.booking import (
     BookingReserveResponse,
 )
 from backend.app.services.booking_service import confirm_booking, reserve_slot
+from fastapi import APIRouter, Depends, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/bookings", tags=["Atomic Booking"])
 

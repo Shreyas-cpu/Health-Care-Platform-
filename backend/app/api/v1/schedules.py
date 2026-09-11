@@ -1,10 +1,5 @@
 import uuid
 from datetime import date
-from typing import List, Optional
-
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
@@ -19,6 +14,9 @@ from backend.app.schemas.schedule import (
     SlotResponse,
 )
 from backend.app.services.schedule_engine import generate_slots
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/schedules", tags=["Schedules & Availability"])
 slots_router = APIRouter(prefix="/doctors", tags=["Schedules & Availability"])
@@ -67,7 +65,7 @@ async def create_availability(
     return availability
 
 
-@router.get("/availability", response_model=List[AvailabilityResponse])
+@router.get("/availability", response_model=list[AvailabilityResponse])
 async def list_availability(
     current_user: User = Depends(require_roles(UserRole.DOCTOR)),
     session: AsyncSession = Depends(get_db),
@@ -108,11 +106,11 @@ async def create_leave(
     return leave
 
 
-@slots_router.get("/{doctor_id}/slots", response_model=List[SlotResponse])
+@slots_router.get("/{doctor_id}/slots", response_model=list[SlotResponse])
 async def get_doctor_slots(
     doctor_id: uuid.UUID,
     date: date = Query(..., description="Date to query slots for (YYYY-MM-DD)"),
-    mode: Optional[str] = Query(None, pattern="^(in_person|video)$"),
+    mode: str | None = Query(None, pattern="^(in_person|video)$"),
     session: AsyncSession = Depends(get_db),
 ):
     return await generate_slots(

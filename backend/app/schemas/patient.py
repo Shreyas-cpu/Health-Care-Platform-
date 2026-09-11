@@ -1,6 +1,5 @@
 import uuid
 from datetime import date, datetime
-from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -12,8 +11,8 @@ class SendOTPRequest(BaseModel):
 class VerifyOTPRequest(BaseModel):
     phone_number: str
     otp_code: str
-    full_name: Optional[str] = None
-    consent_version: Optional[str] = "v1.0"
+    full_name: str | None = None
+    consent_version: str | None = "v1.0"
 
 
 class PatientProfileRead(BaseModel):
@@ -21,10 +20,10 @@ class PatientProfileRead(BaseModel):
 
     user_id: uuid.UUID
     phone_number: str
-    full_name: Optional[str] = None
-    gender: Optional[str] = None
-    date_of_birth: Optional[date] = None
-    created_at: Optional[datetime] = None
+    full_name: str | None = None
+    gender: str | None = None
+    date_of_birth: date | None = None
+    created_at: datetime | None = None
 
 
 class PatientAuthResponse(BaseModel):
@@ -34,6 +33,6 @@ class PatientAuthResponse(BaseModel):
 
 
 class PatientProfileUpdate(BaseModel):
-    full_name: Optional[str] = None
-    gender: Optional[str] = None
-    date_of_birth: Optional[date] = None
+    full_name: str | None = None
+    gender: str | None = None
+    date_of_birth: date | None = None

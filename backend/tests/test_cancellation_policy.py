@@ -1,11 +1,8 @@
 import uuid
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import UTC, datetime, time, timedelta
 from decimal import Decimal
 
 import pytest
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.app.models.appointment import (
     Appointment,
     AppointmentMode,
@@ -26,6 +23,8 @@ from backend.app.services.cancellation_policy_engine import (
 from backend.app.services.payment_gateway import payment_gateway
 from backend.app.services.schedule_engine import generate_slots
 from backend.tests.conftest import random_digits
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def _setup_confirmed_paid_appointment(
@@ -63,7 +62,7 @@ async def _setup_confirmed_paid_appointment(
     )
     session.add(doctor)
 
-    slot_start = datetime.now(timezone.utc) + timedelta(hours=hours_until_slot)
+    slot_start = datetime.now(UTC) + timedelta(hours=hours_until_slot)
     # Align to the 30-minute grid used by full-day availability seeding
     # so cancelled slots reappear in generate_slots()
     slot_start = slot_start.replace(second=0, microsecond=0)

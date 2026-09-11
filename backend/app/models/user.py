@@ -1,10 +1,11 @@
 import enum
 import uuid
-from typing import Optional
+
+from backend.app.models.base import Base, TimestampMixin
 from sqlalchemy import Boolean, Enum, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
-from backend.app.models.base import Base, TimestampMixin
+
 
 class UserRole(str, enum.Enum):
     PATIENT = "patient"
@@ -26,7 +27,7 @@ class User(Base, TimestampMixin):
         index=True,
         nullable=False
     )
-    email: Mapped[Optional[str]] = mapped_column(
+    email: Mapped[str | None] = mapped_column(
         String(255),
         unique=True,
         index=True,
@@ -42,7 +43,7 @@ class User(Base, TimestampMixin):
         default=True,
         nullable=False
     )
-    hashed_password: Mapped[Optional[str]] = mapped_column(
+    hashed_password: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True
     )

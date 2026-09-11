@@ -1,11 +1,10 @@
 import uuid
 from decimal import Decimal
 
+from backend.app.models.base import Base, TimestampMixin
 from sqlalchemy import Boolean, Integer, Numeric, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
-
-from backend.app.models.base import Base, TimestampMixin
 
 
 class CancellationPolicy(Base, TimestampMixin):

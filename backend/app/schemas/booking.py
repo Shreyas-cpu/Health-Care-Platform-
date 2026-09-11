@@ -1,16 +1,18 @@
 import uuid
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
 
-from pydantic import BaseModel, Field
-
-from backend.app.models.appointment import AppointmentMode, AppointmentStatus, PaymentStatus
+from backend.app.models.appointment import (
+    AppointmentMode,
+    AppointmentStatus,
+    PaymentStatus,
+)
+from pydantic import BaseModel
 
 
 class BookingReserveRequest(BaseModel):
     doctor_id: uuid.UUID
-    clinic_id: Optional[uuid.UUID] = None
+    clinic_id: uuid.UUID | None = None
     slot_start: datetime
     slot_end: datetime
     mode: AppointmentMode
@@ -27,7 +29,7 @@ class BookingReserveResponse(BaseModel):
     status: AppointmentStatus
     payment_status: PaymentStatus
     lock_token: str
-    order_id: Optional[str] = None
+    order_id: str | None = None
 
 
 class BookingConfirmRequest(BaseModel):

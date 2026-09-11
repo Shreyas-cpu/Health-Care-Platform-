@@ -1,13 +1,11 @@
 import enum
 import uuid
 from decimal import Decimal
-from typing import Optional
 
+from backend.app.models.base import Base, TimestampMixin
 from sqlalchemy import Enum, ForeignKey, Numeric, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
-
-from backend.app.models.base import Base, TimestampMixin
 
 
 class PaymentTransactionStatus(str, enum.Enum):
@@ -32,7 +30,7 @@ class PaymentTransaction(Base, TimestampMixin):
         index=True,
     )
     gateway_order_id: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
-    gateway_payment_id: Mapped[Optional[str]] = mapped_column(
+    gateway_payment_id: Mapped[str | None] = mapped_column(
         String(100), nullable=True, index=True
     )
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
@@ -43,9 +41,9 @@ class PaymentTransaction(Base, TimestampMixin):
         default=PaymentTransactionStatus.PENDING,
         index=True,
     )
-    method: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    refund_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    refund_amount: Mapped[Optional[Decimal]] = mapped_column(Numeric(10, 2), nullable=True)
+    method: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    refund_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    refund_amount: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
 
     def __repr__(self) -> str:
         return (

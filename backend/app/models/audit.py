@@ -1,10 +1,12 @@
 import uuid
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any
+
+from backend.app.models.base import Base
 from sqlalchemy import DateTime, ForeignKey, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
-from backend.app.models.base import Base
+
 
 class AuditLog(Base):
     """
@@ -39,11 +41,11 @@ class AuditLog(Base):
         nullable=False,
         index=True
     )
-    previous_state: Mapped[Optional[Dict[str, Any]]] = mapped_column(
+    previous_state: Mapped[dict[str, Any] | None] = mapped_column(
         JSONB,
         nullable=True
     )
-    new_state: Mapped[Optional[Dict[str, Any]]] = mapped_column(
+    new_state: Mapped[dict[str, Any] | None] = mapped_column(
         JSONB,
         nullable=True
     )
@@ -51,7 +53,7 @@ class AuditLog(Base):
         Text,
         nullable=False
     )
-    ip_address: Mapped[Optional[str]] = mapped_column(
+    ip_address: Mapped[str | None] = mapped_column(
         String(50),
         nullable=True
     )

@@ -1,9 +1,6 @@
 import uuid
-from typing import List
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from backend.app.api.deps import get_current_user, require_roles
+
+from backend.app.api.deps import require_roles
 from backend.app.core.config import settings
 from backend.app.core.database import get_db
 from backend.app.models.doctor import Doctor, VerificationStatus
@@ -17,6 +14,9 @@ from backend.app.schemas.verification import (
     DocumentPresignResponse,
 )
 from backend.app.services.storage import storage_service
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/doctors", tags=["Doctor Onboarding & Practice Management"])
 
@@ -116,7 +116,7 @@ async def get_doctor_profile(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Doctor profile not found.")
     return doctor
 
-@router.get("/me/documents", response_model=List[DoctorDocumentRead])
+@router.get("/me/documents", response_model=list[DoctorDocumentRead])
 async def list_doctor_documents(
     current_user: User = Depends(require_roles(UserRole.DOCTOR)),
     session: AsyncSession = Depends(get_db)

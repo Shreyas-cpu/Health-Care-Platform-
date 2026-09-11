@@ -1,12 +1,12 @@
 import enum
 import uuid
 from decimal import Decimal
-from typing import Optional
+
+from backend.app.models.base import Base, TimestampMixin
 from sqlalchemy import Boolean, Enum, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from backend.app.models.base import Base, TimestampMixin
-from backend.app.models.clinic import Clinic
+
 
 class VerificationStatus(str, enum.Enum):
     """
@@ -51,11 +51,11 @@ class Doctor(Base, TimestampMixin):
         nullable=False,
         default=0
     )
-    bio: Mapped[Optional[str]] = mapped_column(
+    bio: Mapped[str | None] = mapped_column(
         Text,
         nullable=True
     )
-    gender: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    gender: Mapped[str | None] = mapped_column(String(20), nullable=True)
     in_person_fee: Mapped[Decimal] = mapped_column(
         Numeric(10, 2), default=Decimal("500.00"), nullable=False
     )
@@ -85,3 +85,7 @@ class Doctor(Base, TimestampMixin):
 
     def __repr__(self) -> str:
         return f"<Doctor {self.user_id} name={self.full_name} status={self.verification_status} online={self.listing_online}>"
+
+
+import backend.app.models.clinic  # noqa: F401, E402
+import backend.app.models.verification  # noqa: F401, E402

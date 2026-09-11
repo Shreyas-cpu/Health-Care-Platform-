@@ -1,10 +1,11 @@
 import uuid
 from datetime import datetime
-from typing import Optional
+
+from backend.app.models.base import Base
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
-from backend.app.models.base import Base
+
 
 class ConsentRecord(Base):
     __tablename__ = "consent_records"
@@ -35,11 +36,11 @@ class ConsentRecord(Base):
         nullable=False,
         default=True
     )
-    ip_address: Mapped[Optional[str]] = mapped_column(
+    ip_address: Mapped[str | None] = mapped_column(
         String(50),
         nullable=True
     )
-    user_agent: Mapped[Optional[str]] = mapped_column(
+    user_agent: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True
     )

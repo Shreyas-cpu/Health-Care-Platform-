@@ -1,13 +1,14 @@
 import random
 import uuid
-from typing import Optional, Tuple
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.core.redis import get_redis_client
 from backend.app.core.security import create_access_token, verify_password
 from backend.app.models.consent import ConsentRecord
 from backend.app.models.user import User, UserRole
 from backend.app.schemas.user import TokenResponse, UserRead
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 class IdentityService:
     OTP_TTL_SECONDS = 300  # 5 minutes
@@ -21,7 +22,7 @@ class IdentityService:
     def _otp_rate_limit_key(phone_number: str) -> str:
         return f"otp:ratelimit:{phone_number}"
 
-    async def request_otp(self, phone_number: str, purpose: str = "login") -> Tuple[bool, str]:
+    async def request_otp(self, phone_number: str, purpose: str = "login") -> tuple[bool, str]:
         """
         Generates and stores a 6-digit OTP code in Redis.
         Returns (success, message).
@@ -47,8 +48,8 @@ class IdentityService:
         otp_code: str,
         role: UserRole,
         session: AsyncSession,
-        ip_address: Optional[str] = None,
-        consent_version: Optional[str] = "1.0"
+        ip_address: str | None = None,
+        consent_version: str | None = "1.0"
     ) -> TokenResponse:
         """
         Verifies OTP code from Redis.

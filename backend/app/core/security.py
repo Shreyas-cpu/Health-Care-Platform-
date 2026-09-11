@@ -1,8 +1,10 @@
-from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, Optional
+from datetime import UTC, datetime, timedelta
+from typing import Any
+
 import bcrypt
-from jose import JWTError, jwt
 from backend.app.core.config import settings
+from jose import JWTError, jwt
+
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
@@ -20,16 +22,16 @@ def get_password_hash(password: str) -> str:
 def create_access_token(
     subject: str,
     role: str,
-    expires_delta: Optional[timedelta] = None,
-    extra_claims: Optional[Dict[str, Any]] = None
+    expires_delta: timedelta | None = None,
+    extra_claims: dict[str, Any] | None = None
 ) -> str:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     if expires_delta:
         expire = now + expires_delta
     else:
         expire = now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
-    payload: Dict[str, Any] = {
+    payload: dict[str, Any] = {
         "sub": str(subject),
         "role": role,
         "iat": int(now.timestamp()),
@@ -41,7 +43,7 @@ def create_access_token(
     encoded_jwt = jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
     return encoded_jwt
 
-def decode_token(token: str) -> Dict[str, Any]:
+def decode_token(token: str) -> dict[str, Any]:
     try:
         payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
         return payload

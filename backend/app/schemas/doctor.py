@@ -1,8 +1,9 @@
 import uuid
 from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel, ConfigDict, Field
+
 from backend.app.models.doctor import VerificationStatus
+from pydantic import BaseModel, ConfigDict, Field
+
 
 class DoctorRegisterRequest(BaseModel):
     full_name: str = Field(..., min_length=2, max_length=255)
@@ -10,7 +11,7 @@ class DoctorRegisterRequest(BaseModel):
     council_name: str = Field(..., min_length=3, max_length=255)
     specialty: str = Field(..., min_length=2, max_length=100)
     years_experience: int = Field(default=0, ge=0, le=70)
-    bio: Optional[str] = None
+    bio: str | None = None
 
 class DoctorRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -21,7 +22,7 @@ class DoctorRead(BaseModel):
     council_name: str
     specialty: str
     years_experience: int
-    bio: Optional[str]
+    bio: str | None
     verification_status: VerificationStatus
     listing_online: bool
     video_enabled: bool
@@ -29,5 +30,5 @@ class DoctorRead(BaseModel):
     updated_at: datetime
 
 class DoctorVisibilityUpdate(BaseModel):
-    listing_online: Optional[bool] = None
-    video_enabled: Optional[bool] = None
+    listing_online: bool | None = None
+    video_enabled: bool | None = None

@@ -19,10 +19,14 @@ from backend.app.models.appointment import Appointment
 from backend.app.models.doctor import Doctor
 from backend.app.models.patient import Patient
 from backend.app.models.clinic import Clinic
+from backend.app.models.teleconsultation import TeleconsultationSession
+from backend.app.models.chat import ChatMessage
 from backend.app.models.verification import DoctorDocument, VerificationReview
 from backend.app.models.schedule import DoctorAvailability, DoctorLeave
 from backend.app.models.payment import PaymentTransaction
 from backend.app.models.cancellation_policy import CancellationPolicy
+from backend.app.models.drug import DrugMaster
+from backend.app.models.prescription import Prescription, PrescriptionItem
 
 config = context.config
 

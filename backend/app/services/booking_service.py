@@ -1,10 +1,5 @@
 import uuid
 
-from fastapi import HTTPException, status
-from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.app.core.redis import lock_manager
 from backend.app.models.appointment import (
     Appointment,
@@ -21,6 +16,10 @@ from backend.app.schemas.booking import (
 )
 from backend.app.services.appointment_state import appointment_state_machine
 from backend.app.services.payment_gateway import payment_gateway
+from fastapi import HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 SLOT_LOCK_TTL_SECONDS = 600
 

@@ -1,15 +1,14 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.app.api.deps import get_current_user
 from backend.app.core.database import get_db
 from backend.app.models.appointment import Appointment
 from backend.app.models.user import User, UserRole
 from backend.app.schemas.cancellation import CancellationRequest, CancellationResponse
 from backend.app.services.cancellation_policy_engine import process_cancellation
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/appointments", tags=["Cancellations"])
 

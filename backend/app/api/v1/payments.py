@@ -1,6 +1,3 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User, UserRole
@@ -15,6 +12,8 @@ from backend.app.services.booking_service import (
     confirm_booking,
     create_payment_order_for_appointment,
 )
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/payments", tags=["Payments"])
 

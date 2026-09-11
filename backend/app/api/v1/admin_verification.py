@@ -1,28 +1,25 @@
 import uuid
-from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+
 from backend.app.api.deps import require_roles
-from backend.app.core.config import settings
 from backend.app.core.database import get_db
 from backend.app.models.doctor import Doctor, VerificationStatus
 from backend.app.models.user import User, UserRole
-from backend.app.models.verification import DoctorDocument
 from backend.app.schemas.verification import (
     DoctorDocumentRead,
     VerificationQueueItemRead,
     VerificationTransitionRequest,
 )
-from backend.app.services.storage import storage_service
 from backend.app.services.verification_state import verification_state_machine
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 router = APIRouter(prefix="/admin/verification", tags=["Admin Doctor Verification Pipeline"])
 
-@router.get("/queue", response_model=List[VerificationQueueItemRead])
+@router.get("/queue", response_model=list[VerificationQueueItemRead])
 async def get_verification_queue(
-    filter_status: Optional[VerificationStatus] = None,
+    filter_status: VerificationStatus | None = None,
     current_admin: User = Depends(require_roles(UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN)),
     session: AsyncSession = Depends(get_db)
 ):

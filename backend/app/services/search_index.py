@@ -3,14 +3,18 @@ import hashlib
 import json
 from typing import Any
 
-from sqlalchemy import func, select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
-
 from backend.app.core.redis import get_redis_client
 from backend.app.models.clinic import Clinic
 from backend.app.models.doctor import Doctor, VerificationStatus
-from backend.app.schemas.search import ClinicRead, DoctorSearchFilters, DoctorSearchResponse, DoctorSearchResult
+from backend.app.schemas.search import (
+    ClinicRead,
+    DoctorSearchFilters,
+    DoctorSearchResponse,
+    DoctorSearchResult,
+)
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 CACHE_PREFIX = "cache:search:query:"
 CACHE_TTL_SECONDS = 300

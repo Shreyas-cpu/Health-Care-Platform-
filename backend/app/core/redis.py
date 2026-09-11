@@ -1,8 +1,10 @@
 import json
 import uuid
-from typing import Any, Dict, Optional
+from typing import Any
+
 import redis.asyncio as aioredis
 from backend.app.core.config import settings
+
 
 def get_redis_client() -> aioredis.Redis:
     return aioredis.from_url(
@@ -15,7 +17,7 @@ class DistributedLockManager:
     def format_slot_key(doctor_id: str, slot_iso: str) -> str:
         return f"lock:doctor:{doctor_id}:slot:{slot_iso}"
 
-    async def acquire_lock(self, key: str, ttl_seconds: int = 600) -> Optional[str]:
+    async def acquire_lock(self, key: str, ttl_seconds: int = 600) -> str | None:
         """
         Attempts to acquire a distributed lock using Redis SETNX with TTL.
         Returns unique token string if acquired, None if lock is already held.
@@ -49,7 +51,7 @@ class DistributedLockManager:
         finally:
             await client.aclose()
 
-    async def acquire_slot_lock(self, doctor_id: str, slot_iso: str, ttl_seconds: int = 600) -> Optional[str]:
+    async def acquire_slot_lock(self, doctor_id: str, slot_iso: str, ttl_seconds: int = 600) -> str | None:
         key = self.format_slot_key(doctor_id, slot_iso)
         return await self.acquire_lock(key, ttl_seconds=ttl_seconds)
 
@@ -57,7 +59,7 @@ class DistributedLockManager:
         key = self.format_slot_key(doctor_id, slot_iso)
         return await self.release_lock(key, token)
 
-async def publish_event(channel: str, event_type: str, data: Dict[str, Any]) -> int:
+async def publish_event(channel: str, event_type: str, data: dict[str, Any]) -> int:
     """
     Publishes an event to a Redis Pub/Sub channel for the Node.js real-time gateway.
     """

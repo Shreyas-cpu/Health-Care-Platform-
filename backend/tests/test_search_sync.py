@@ -1,24 +1,26 @@
 """Phase 03 catalog, visibility, and patient identity integration tests."""
-import uuid
 import time
+import uuid
 from decimal import Decimal
 
 import pytest
-from starlette.requests import Request
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from backend.app.models.clinic import Clinic
+from backend.app.api.v1 import patient_auth
 from backend.app.models.consent import ConsentRecord
 from backend.app.models.doctor import Doctor, VerificationStatus
 from backend.app.models.patient import Patient
 from backend.app.models.user import User, UserRole
-from backend.app.models.verification import DoctorDocument, VerificationReview
-from backend.app.schemas.search import ClinicCreateOrUpdate, DoctorSearchFilters
 from backend.app.schemas.patient import SendOTPRequest, VerifyOTPRequest
-from backend.app.api.v1 import patient_auth
-from backend.app.services.catalog import get_public_doctor_profile, toggle_doctor_listing, toggle_doctor_video, upsert_doctor_clinic
+from backend.app.schemas.search import ClinicCreateOrUpdate, DoctorSearchFilters
+from backend.app.services.catalog import (
+    get_public_doctor_profile,
+    toggle_doctor_listing,
+    toggle_doctor_video,
+    upsert_doctor_clinic,
+)
 from backend.app.services.search_index import search_doctors
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.requests import Request
 
 
 async def _doctor(
@@ -89,7 +91,7 @@ async def test_search_filters_and_rul02_verification_gate(db_session: AsyncSessi
     offline = await _doctor(db_session, specialty=spec, verified=True, online=False)
     
     response = await search_doctors(db_session, DoctorSearchFilters(
-        specialty=spec, city="Bengaluru", min_fee=Decimal("700"), max_fee=Decimal("800"), gender="female",
+        specialty=spec, city="Bengaluru", min_fee=Decimal(700), max_fee=Decimal(800), gender="female",
     ))
     result_ids = [item.doctor_id for item in response.items]
     assert result_ids == [visible.user_id]

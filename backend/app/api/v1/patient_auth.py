@@ -1,9 +1,5 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.core.redis import get_redis_client
@@ -12,9 +8,16 @@ from backend.app.models.consent import ConsentRecord
 from backend.app.models.patient import Patient
 from backend.app.models.user import User, UserRole
 from backend.app.schemas.patient import (
-    PatientAuthResponse, PatientProfileRead, PatientProfileUpdate, SendOTPRequest, VerifyOTPRequest,
+    PatientAuthResponse,
+    PatientProfileRead,
+    PatientProfileUpdate,
+    SendOTPRequest,
+    VerifyOTPRequest,
 )
 from backend.app.services.identity_service import identity_service
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/auth/patient", tags=["Patient Authentication & Profile"])
 

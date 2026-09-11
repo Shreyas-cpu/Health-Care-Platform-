@@ -1,10 +1,11 @@
-import uuid
-from datetime import datetime, timezone
-from typing import Any, Dict, Optional, Set
-from fastapi import HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import UTC, datetime
+from typing import Any
+
 from backend.app.core.redis import publish_event
-from backend.app.models.appointment import Appointment, AppointmentStatus, PaymentStatus
+from backend.app.models.appointment import Appointment, AppointmentStatus
+from fastapi import HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 class InvalidStateTransitionError(HTTPException):
     def __init__(self, from_status: AppointmentStatus, to_status: AppointmentStatus, reason: str = ""):
@@ -30,7 +31,7 @@ class AppointmentStateMachine:
       8. NoShow
     """
 
-    TRANSITIONS: Dict[AppointmentStatus, Set[AppointmentStatus]] = {
+    TRANSITIONS: dict[AppointmentStatus, set[AppointmentStatus]] = {
         AppointmentStatus.REQUESTED: {
             AppointmentStatus.CONFIRMED,
             AppointmentStatus.CANCELLED,
@@ -74,8 +75,8 @@ class AppointmentStateMachine:
         appointment: Appointment,
         target_status: AppointmentStatus,
         session: AsyncSession,
-        reason: Optional[str] = None,
-        extra_data: Optional[Dict[str, Any]] = None
+        reason: str | None = None,
+        extra_data: dict[str, Any] | None = None
     ) -> Appointment:
         """
         Executes an atomic transition on the appointment record.
@@ -86,7 +87,7 @@ class AppointmentStateMachine:
         self.validate_transition(current_status, target_status)
 
         # Transition specific actions
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         appointment.status = target_status
         appointment.updated_at = now
 

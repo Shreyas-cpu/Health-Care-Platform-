@@ -1,7 +1,9 @@
 import uuid
-from typing import Any, Dict, Optional
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Any
+
 from backend.app.models.audit import AuditLog
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 async def record_audit_log(
     admin_user_id: uuid.UUID,
@@ -10,9 +12,9 @@ async def record_audit_log(
     action: str,
     reason: str,
     session: AsyncSession,
-    previous_state: Optional[Dict[str, Any]] = None,
-    new_state: Optional[Dict[str, Any]] = None,
-    ip_address: Optional[str] = None
+    previous_state: dict[str, Any] | None = None,
+    new_state: dict[str, Any] | None = None,
+    ip_address: str | None = None
 ) -> AuditLog:
     """
     RUL-04: Immutable audit logging.

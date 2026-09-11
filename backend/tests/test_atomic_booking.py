@@ -1,17 +1,12 @@
 import asyncio
 import uuid
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import UTC, date, datetime, time, timedelta
 from decimal import Decimal
 
 import pytest
-from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.pool import NullPool
-
 from backend.app.core.config import settings
 from backend.app.core.redis import lock_manager
 from backend.app.models.appointment import (
-    Appointment,
     AppointmentMode,
     AppointmentStatus,
     PaymentStatus,
@@ -25,6 +20,9 @@ from backend.app.services.booking_service import confirm_booking, reserve_slot
 from backend.app.services.payment_gateway import payment_gateway
 from backend.app.services.schedule_engine import generate_slots
 from backend.tests.conftest import random_digits
+from fastapi import HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.pool import NullPool
 
 
 async def _seed_doctor_with_availability(
@@ -122,7 +120,7 @@ async def test_redis_locking_concurrent_booking_conflict(db_session: AsyncSessio
         db_session, query_date, start=time(10, 0), end=time(11, 0), duration=30, buffer=0
     )
 
-    slot_start = datetime.combine(query_date, time(10, 0), tzinfo=timezone.utc)
+    slot_start = datetime.combine(query_date, time(10, 0), tzinfo=UTC)
     slot_end = slot_start + timedelta(minutes=30)
 
     patients = []
@@ -190,7 +188,7 @@ async def test_payment_capture_confirms_appointment_and_releases_lock(
         db_session, query_date, start=time(14, 0), end=time(15, 0), duration=30, buffer=0
     )
 
-    slot_start = datetime.combine(query_date, time(14, 0), tzinfo=timezone.utc)
+    slot_start = datetime.combine(query_date, time(14, 0), tzinfo=UTC)
     slot_end = slot_start + timedelta(minutes=30)
 
     reserved = await reserve_slot(

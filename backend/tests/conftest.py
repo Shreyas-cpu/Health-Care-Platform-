@@ -1,14 +1,12 @@
-import asyncio
-import os
 import random
 import uuid
-import pytest
+
 import pytest_asyncio
-import redis.asyncio as aioredis
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.pool import NullPool
 from backend.app.core.config import settings
 from backend.app.models.user import User, UserRole
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.pool import NullPool
+
 
 def random_digits(n: int) -> str:
     return "".join(str(random.randint(0, 9)) for _ in range(n))

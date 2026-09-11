@@ -1,12 +1,12 @@
 import uuid
-from typing import AsyncGenerator
+
+from backend.app.core.database import get_db
+from backend.app.core.security import decode_token
+from backend.app.models.user import User, UserRole
 from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.app.core.database import get_db
-from backend.app.core.security import decode_token
-from backend.app.models.user import User, UserRole
 
 security_scheme = HTTPBearer(auto_error=True)
 

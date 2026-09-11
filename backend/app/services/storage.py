@@ -1,6 +1,7 @@
 import boto3
-from botocore.client import Config
 from backend.app.core.config import settings
+from botocore.client import Config
+
 
 def get_s3_client():
     return boto3.client(
@@ -48,5 +49,30 @@ class StorageService:
             ExpiresIn=expires_in
         )
         return url
+
+    def upload_bytes(
+        self,
+        bucket_name: str,
+        s3_key: str,
+        data: bytes,
+        content_type: str = "application/pdf",
+    ) -> str:
+        """Upload raw bytes to S3/MinIO and return the object key."""
+        client = get_s3_client()
+        # Ensure bucket exists in local/dev MinIO environments.
+        try:
+            client.head_bucket(Bucket=bucket_name)
+        except Exception:
+            try:
+                client.create_bucket(Bucket=bucket_name)
+            except Exception:
+                pass
+        client.put_object(
+            Bucket=bucket_name,
+            Key=s3_key,
+            Body=data,
+            ContentType=content_type,
+        )
+        return s3_key
 
 storage_service = StorageService()

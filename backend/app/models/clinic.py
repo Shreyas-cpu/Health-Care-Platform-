@@ -1,11 +1,9 @@
 import uuid
-from typing import Optional
 
+from backend.app.models.base import Base, TimestampMixin
 from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from backend.app.models.base import Base, TimestampMixin
 
 
 class Clinic(Base, TimestampMixin):
@@ -23,6 +21,6 @@ class Clinic(Base, TimestampMixin):
     city: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     locality: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     pincode: Mapped[str] = mapped_column(String(10), nullable=False)
-    contact_number: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    contact_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     doctor = relationship("Doctor", back_populates="clinic")

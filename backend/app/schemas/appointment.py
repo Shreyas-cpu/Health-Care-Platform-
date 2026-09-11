@@ -1,13 +1,18 @@
 import uuid
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
+
+from backend.app.models.appointment import (
+    AppointmentMode,
+    AppointmentStatus,
+    PaymentStatus,
+)
 from pydantic import BaseModel, ConfigDict, Field
-from backend.app.models.appointment import AppointmentMode, AppointmentStatus, PaymentStatus
+
 
 class AppointmentBase(BaseModel):
     doctor_id: uuid.UUID
-    clinic_id: Optional[uuid.UUID] = None
+    clinic_id: uuid.UUID | None = None
     mode: AppointmentMode
     slot_start: datetime
     slot_end: datetime
@@ -23,14 +28,14 @@ class AppointmentRead(AppointmentBase):
     patient_id: uuid.UUID
     status: AppointmentStatus
     payment_status: PaymentStatus
-    cancellation_reason: Optional[str] = None
-    rescheduled_from_id: Optional[uuid.UUID] = None
+    cancellation_reason: str | None = None
+    rescheduled_from_id: uuid.UUID | None = None
     created_at: datetime
     updated_at: datetime
 
 class AppointmentTransitionRequest(BaseModel):
     target_status: AppointmentStatus
-    reason: Optional[str] = None
+    reason: str | None = None
 
 class AppointmentCancelRequest(BaseModel):
     reason: str = Field(..., min_length=3, description="Mandatory cancellation reason")

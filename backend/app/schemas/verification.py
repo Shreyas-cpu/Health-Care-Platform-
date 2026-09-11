@@ -1,10 +1,11 @@
 import uuid
 from datetime import datetime
-from typing import List, Optional
-from pydantic import BaseModel, ConfigDict, Field
+
 from backend.app.models.doctor import VerificationStatus
 from backend.app.models.verification import DocumentType
 from backend.app.schemas.doctor import DoctorRead
+from pydantic import BaseModel, ConfigDict, Field
+
 
 class DocumentPresignRequest(BaseModel):
     doc_type: DocumentType
@@ -33,9 +34,9 @@ class DoctorDocumentRead(BaseModel):
 
 class VerificationTransitionRequest(BaseModel):
     new_status: VerificationStatus
-    reason_text: Optional[str] = Field(None, description="Mandatory when status is rejected or suspended")
-    review_notes: Optional[str] = None
+    reason_text: str | None = Field(None, description="Mandatory when status is rejected or suspended")
+    review_notes: str | None = None
 
 class VerificationQueueItemRead(BaseModel):
     doctor: DoctorRead
-    documents: List[DoctorDocumentRead] = []
+    documents: list[DoctorDocumentRead] = []

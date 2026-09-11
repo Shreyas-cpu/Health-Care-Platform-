@@ -1,24 +1,26 @@
 import uuid
-from typing import Optional
-
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from backend.app.core.redis import publish_event
 from backend.app.models.clinic import Clinic
 from backend.app.models.doctor import Doctor, VerificationStatus
-from backend.app.schemas.search import ClinicCreateOrUpdate, ClinicRead, DoctorPublicProfile
+from backend.app.schemas.search import (
+    ClinicCreateOrUpdate,
+    ClinicRead,
+    DoctorPublicProfile,
+)
 from backend.app.services.search_index import invalidate_search_cache
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 
-def _clinic_read(clinic: Optional[Clinic]) -> Optional[ClinicRead]:
+def _clinic_read(clinic: Clinic | None) -> ClinicRead | None:
     return ClinicRead.model_validate(clinic) if clinic else None
 
 
 async def get_public_doctor_profile(
     session: AsyncSession, doctor_id: uuid.UUID
-) -> Optional[DoctorPublicProfile]:
+) -> DoctorPublicProfile | None:
     """Load a doctor profile and its clinic for public presentation."""
     doctor = (await session.execute(
         select(Doctor).options(selectinload(Doctor.clinic)).where(Doctor.user_id == doctor_id)
@@ -70,7 +72,7 @@ async def _publish_visibility(doctor: Doctor) -> None:
 
 
 async def toggle_doctor_listing(
-    session: AsyncSession, doctor_id: uuid.UUID, listing_online: Optional[bool] = None
+    session: AsyncSession, doctor_id: uuid.UUID, listing_online: bool | None = None
 ) -> Doctor:
     doctor = await _doctor_or_raise(session, doctor_id)
     target = not doctor.listing_online if listing_online is None else listing_online
@@ -85,7 +87,7 @@ async def toggle_doctor_listing(
 
 
 async def toggle_doctor_video(
-    session: AsyncSession, doctor_id: uuid.UUID, video_enabled: Optional[bool] = None
+    session: AsyncSession, doctor_id: uuid.UUID, video_enabled: bool | None = None
 ) -> Doctor:
     doctor = await _doctor_or_raise(session, doctor_id)
     target = not doctor.video_enabled if video_enabled is None else video_enabled

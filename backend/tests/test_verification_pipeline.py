@@ -1,17 +1,22 @@
 import uuid
+
 import pytest
-from fastapi import HTTPException
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.models.audit import AuditLog
 from backend.app.models.doctor import Doctor, VerificationStatus
 from backend.app.models.user import User, UserRole
-from backend.app.models.verification import DocumentType, DoctorDocument, VerificationReview
+from backend.app.models.verification import (
+    DoctorDocument,
+    DocumentType,
+)
 from backend.app.services.storage import storage_service
 from backend.app.services.verification_state import (
     InvalidVerificationTransitionError,
     verification_state_machine,
 )
+from fastapi import HTTPException
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 @pytest.fixture
 def sample_doctor_user():

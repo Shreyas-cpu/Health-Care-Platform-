@@ -1,16 +1,17 @@
 import uuid
 from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
 from backend.app.models.user import UserRole
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
 
 class UserBase(BaseModel):
     phone_number: str = Field(..., pattern=r"^\+?[1-9]\d{9,14}$", description="E.164 or Indian mobile format")
-    email: Optional[EmailStr] = None
+    email: EmailStr | None = None
     role: UserRole = UserRole.PATIENT
 
 class UserCreate(UserBase):
-    password: Optional[str] = None
+    password: str | None = None
 
 class UserRead(UserBase):
     model_config = ConfigDict(from_attributes=True)
@@ -33,4 +34,4 @@ class OTPVerifyRequest(BaseModel):
     phone_number: str = Field(..., pattern=r"^\+?[1-9]\d{9,14}$")
     otp_code: str = Field(..., min_length=6, max_length=6)
     role: UserRole = UserRole.PATIENT
-    consent_version: Optional[str] = "1.0"
+    consent_version: str | None = "1.0"

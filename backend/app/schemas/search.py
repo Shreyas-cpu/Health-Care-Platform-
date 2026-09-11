@@ -1,6 +1,5 @@
 import uuid
 from decimal import Decimal
-from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -11,7 +10,7 @@ class ClinicCreateOrUpdate(BaseModel):
     city: str
     locality: str
     pincode: str
-    contact_number: Optional[str] = None
+    contact_number: str | None = None
 
 
 class ClinicRead(ClinicCreateOrUpdate):
@@ -25,15 +24,15 @@ class DoctorPublicProfile(BaseModel):
     full_name: str
     specialty: str
     years_experience: int
-    bio: Optional[str] = None
-    gender: Optional[str] = None
+    bio: str | None = None
+    gender: str | None = None
     in_person_fee: Decimal
     video_fee: Decimal
     listing_online: bool
     video_enabled: bool
     rating: float = 4.8
-    qualifications: List[str] = Field(default_factory=lambda: ["MBBS"])
-    clinic: Optional[ClinicRead] = None
+    qualifications: list[str] = Field(default_factory=lambda: ["MBBS"])
+    clinic: ClinicRead | None = None
 
 
 class DoctorSearchResult(BaseModel):
@@ -41,37 +40,37 @@ class DoctorSearchResult(BaseModel):
     full_name: str
     specialty: str
     years_experience: int
-    bio: Optional[str] = None
-    gender: Optional[str] = None
+    bio: str | None = None
+    gender: str | None = None
     in_person_fee: Decimal
     video_fee: Decimal
     listing_online: bool
     video_enabled: bool
     rating: float = 4.8
-    clinic: Optional[ClinicRead] = None
+    clinic: ClinicRead | None = None
 
 
 class DoctorSearchResponse(BaseModel):
-    items: List[DoctorSearchResult]
+    items: list[DoctorSearchResult]
     total: int
 
 
 class DoctorSearchFilters(BaseModel):
-    specialty: Optional[str] = None
-    locality: Optional[str] = None
-    city: Optional[str] = None
-    min_fee: Optional[Decimal] = None
-    max_fee: Optional[Decimal] = None
-    gender: Optional[str] = None
-    video_available: Optional[bool] = None
-    available_today: Optional[bool] = None
+    specialty: str | None = None
+    locality: str | None = None
+    city: str | None = None
+    min_fee: Decimal | None = None
+    max_fee: Decimal | None = None
+    gender: str | None = None
+    video_available: bool | None = None
+    available_today: bool | None = None
     page: int = Field(default=1, ge=1)
     limit: int = Field(default=20, ge=1, le=100)
 
 
 class ToggleListingRequest(BaseModel):
-    listing_online: Optional[bool] = None
+    listing_online: bool | None = None
 
 
 class ToggleVideoRequest(BaseModel):
-    video_enabled: Optional[bool] = None
+    video_enabled: bool | None = None

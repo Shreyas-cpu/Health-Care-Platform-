@@ -1,24 +1,21 @@
 import uuid
-from datetime import date, datetime, timedelta, timezone
-from decimal import Decimal
-from typing import List, Optional
-
-from sqlalchemy import and_, select
-from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import UTC, date, datetime, timedelta
 
 from backend.app.core.redis import get_redis_client, lock_manager
 from backend.app.models.appointment import Appointment, AppointmentStatus
 from backend.app.models.doctor import Doctor
 from backend.app.models.schedule import DoctorAvailability, DoctorLeave
 from backend.app.schemas.schedule import SlotResponse
+from sqlalchemy import and_, select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def generate_slots(
     doctor_id: uuid.UUID,
     query_date: date,
-    mode: Optional[str] = None,
+    mode: str | None = None,
     session: AsyncSession = None,
-) -> List[SlotResponse]:
+) -> list[SlotResponse]:
     """
     Generate available discrete slots for a doctor on a given date.
 
@@ -58,14 +55,14 @@ async def generate_slots(
     video_fee = doctor.video_fee
 
     # 4. Generate candidate slot intervals
-    candidates: List[SlotResponse] = []
+    candidates: list[SlotResponse] = []
     for window in windows:
         slot_modes = _modes_for_window(window.mode, mode)
         if not slot_modes:
             continue
 
-        current = datetime.combine(query_date, window.start_time, tzinfo=timezone.utc)
-        window_end = datetime.combine(query_date, window.end_time, tzinfo=timezone.utc)
+        current = datetime.combine(query_date, window.start_time, tzinfo=UTC)
+        window_end = datetime.combine(query_date, window.end_time, tzinfo=UTC)
         duration = timedelta(minutes=window.slot_duration_minutes)
         step = timedelta(minutes=window.slot_duration_minutes + window.buffer_minutes)
 
@@ -88,7 +85,7 @@ async def generate_slots(
         return []
 
     # 5. Active appointments that block inventory
-    day_start = datetime.combine(query_date, datetime.min.time(), tzinfo=timezone.utc)
+    day_start = datetime.combine(query_date, datetime.min.time(), tzinfo=UTC)
     day_end = day_start + timedelta(days=1)
     blocked_statuses = {AppointmentStatus.CANCELLED, AppointmentStatus.NO_SHOW}
     appt_stmt = select(Appointment).where(
@@ -109,7 +106,7 @@ async def generate_slots(
         return False
 
     # 6 & 7. Filter booked and Redis-locked slots
-    available: List[SlotResponse] = []
+    available: list[SlotResponse] = []
     redis = get_redis_client()
     try:
         for slot in candidates:
@@ -128,7 +125,7 @@ async def generate_slots(
     return available
 
 
-def _modes_for_window(window_mode: str, requested_mode: Optional[str]) -> List[str]:
+def _modes_for_window(window_mode: str, requested_mode: str | None) -> list[str]:
     available = ["in_person", "video"] if window_mode == "both" else [window_mode]
     if requested_mode:
         return [requested_mode] if requested_mode in available else []

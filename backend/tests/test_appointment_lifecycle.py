@@ -1,9 +1,8 @@
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
+
 import pytest
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.core.redis import lock_manager
 from backend.app.models.appointment import (
     Appointment,
@@ -16,6 +15,9 @@ from backend.app.services.appointment_state import (
     InvalidStateTransitionError,
     appointment_state_machine,
 )
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 @pytest.mark.asyncio
 async def test_appointment_full_consultation_lifecycle(
@@ -23,7 +25,7 @@ async def test_appointment_full_consultation_lifecycle(
     sample_patient: User,
     sample_doctor: User
 ):
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     slot_start = now + timedelta(days=1)
     slot_end = slot_start + timedelta(minutes=30)
 
@@ -79,7 +81,7 @@ async def test_appointment_cancellation_lifecycle(
     sample_patient: User,
     sample_doctor: User
 ):
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     slot_start = now + timedelta(days=2)
     slot_end = slot_start + timedelta(minutes=30)
 
@@ -112,7 +114,7 @@ async def test_appointment_reschedule_and_no_show(
     sample_patient: User,
     sample_doctor: User
 ):
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     slot_start = now + timedelta(days=3)
     slot_end = slot_start + timedelta(minutes=30)
 
@@ -148,7 +150,7 @@ async def test_illegal_state_transitions_raise_422(
     sample_patient: User,
     sample_doctor: User
 ):
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     slot_start = now + timedelta(days=4)
     slot_end = slot_start + timedelta(minutes=30)
 
@@ -195,7 +197,7 @@ async def test_slot_double_booking_prevention_redis_and_db(
     1. Redis lock prevents concurrent booking requests.
     2. PostgreSQL exclusion constraint rejects overlapping active slots.
     """
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     slot_start = now + timedelta(days=5)
     slot_end = slot_start + timedelta(minutes=30)
     slot_iso = slot_start.isoformat()
