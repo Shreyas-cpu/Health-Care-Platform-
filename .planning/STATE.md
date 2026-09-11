@@ -39,3 +39,12 @@
    - Telemedicine restricted-drug-category flag requires legal sign-off before launch.
    - DPDP Act auditable consent component must precede public patient onboarding.
 8. **Phase 2 Scope Boundary**: All 16 deferred items from PRD Section 3 are strictly fenced off from Phase 1.
+
+---
+
+## Session Continuity
+
+Last session: 2026-09-10
+Stopped at: Session resumed; Phase 01 ready for execution
+Resume file: .planning/phases/01-core-domain-and-appointment-state-machine/01-01-PLAN.md
+
