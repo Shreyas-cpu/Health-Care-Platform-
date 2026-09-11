@@ -28,3 +28,6 @@ class Review(Base, TimestampMixin):
     doctor = relationship("Doctor", back_populates="patient_reviews")
     appointment = relationship("Appointment")
     patient = relationship("User")
+
+
+import backend.app.models.appointment  # noqa: F401, E402

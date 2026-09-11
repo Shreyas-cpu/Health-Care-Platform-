@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 
 from backend.app.core.config import settings
 from backend.app.models.appointment import Appointment
+from backend.app.models.clinic import Clinic
 from backend.app.models.doctor import Doctor
 from backend.app.models.patient import Patient
 from backend.app.models.prescription import Prescription
@@ -23,8 +24,10 @@ from reportlab.platypus import (
     Table,
     TableStyle,
 )
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
 
 
 async def compile_prescription_pdf(
@@ -40,7 +43,11 @@ async def compile_prescription_pdf(
     if prescription is None:
         raise ValueError(f"Prescription {prescription_id} not found")
 
-    doctor = await session.get(Doctor, prescription.doctor_id)
+    doctor = await session.get(
+        Doctor,
+        prescription.doctor_id,
+        options=[selectinload(Doctor.clinic)],
+    )
     patient = await session.get(Patient, prescription.patient_id)
     appointment = await session.get(Appointment, prescription.appointment_id)
 
@@ -88,12 +95,17 @@ async def compile_prescription_pdf(
     council = doctor.council_name if doctor else "—"
     specialty = doctor.specialty if doctor else "—"
     clinic_address = "—"
-    if doctor is not None and doctor.clinic is not None:
-        clinic = doctor.clinic
-        clinic_address = (
-            f"{clinic.name}, {clinic.address}, {clinic.locality}, "
-            f"{clinic.city} - {clinic.pincode}"
+    if doctor is not None:
+        clinic_res = await session.execute(
+            select(Clinic).where(Clinic.doctor_id == doctor.user_id)
         )
+        clinic = clinic_res.scalar_one_or_none()
+        if clinic is not None:
+            clinic_address = (
+                f"{clinic.name}, {clinic.address}, {clinic.locality}, "
+                f"{clinic.city} - {clinic.pincode}"
+            )
+
 
     patient_name = (
         patient.full_name if patient and patient.full_name else str(prescription.patient_id)
@@ -150,6 +162,58 @@ async def compile_prescription_pdf(
         )
     )
     story.append(table)
+    story.append(Spacer(1, 10))
+
+    # Official Cryptographic Digital Signature Seal Box
+    raw_hash = getattr(prescription, "digital_signature", None) or "PROVISIONAL-SIGNATURE"
+    truncated_hash = f"{raw_hash[:16]}...{raw_hash[-16:]}" if len(raw_hash) > 32 else raw_hash
+    sig_time = getattr(prescription, "digital_signature_timestamp", prescription.issued_at)
+    if sig_time.tzinfo is None:
+        sig_time_str = sig_time.strftime("%d %b %Y, %H:%M:%S UTC")
+    else:
+        sig_time_str = sig_time.astimezone(UTC).strftime("%d %b %Y, %H:%M:%S UTC")
+
+    sig_header_style = ParagraphStyle(
+        "RxSigHeader",
+        parent=styles["Normal"],
+        fontSize=9,
+        leading=12,
+        fontName="Helvetica-Bold",
+        textColor=colors.HexColor("#0D5C3A"),
+    )
+    sig_text_style = ParagraphStyle(
+        "RxSigText",
+        parent=styles["Normal"],
+        fontSize=8,
+        leading=11,
+        fontName="Helvetica",
+        textColor=colors.HexColor("#1F2937"),
+    )
+
+    sig_data = [
+        [Paragraph("<b>✓ DIGITALLY SIGNED &amp; VERIFIED</b>", sig_header_style)],
+        [Paragraph(f"<b>Doctor Medical Reg. No:</b> {reg_number} ({council})", sig_text_style)],
+        [Paragraph(f"<b>Cryptographic Hash (SHA-256):</b> {truncated_hash}", sig_text_style)],
+        [Paragraph(f"<b>Signed At:</b> {sig_time_str}", sig_text_style)],
+    ]
+    sig_table = Table(sig_data, colWidths=[160 * mm])
+    sig_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F0FDF4")),
+                ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#16A34A")),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 8),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+                ("TOPPADDING", (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ]
+        )
+    )
+
+    story.append(Spacer(1, 10))
+    story.append(sig_table)
+
     story.append(
         Paragraph(
             "Digitally generated prescription under Indian Telemedicine Practice Guidelines 2020.",

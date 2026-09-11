@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 
 from backend.app.core.config import settings
 from backend.app.models.appointment import Appointment, AppointmentMode, AppointmentStatus
+from backend.app.models.doctor import Doctor
 from backend.app.models.drug import DrugMaster, seed_default_drugs
 from backend.app.models.prescription import Prescription, PrescriptionItem
 from backend.app.schemas.prescription import (
@@ -14,9 +15,11 @@ from backend.app.schemas.prescription import (
     PrescriptionCreate,
     PrescriptionResponse,
 )
+from backend.app.services.digital_signature import generate_prescription_signature
 from backend.app.services.pdf_compiler import compile_and_upload_prescription_pdf
 from backend.app.services.storage import storage_service
 from fastapi import HTTPException, status
+
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -50,6 +53,12 @@ def _to_prescription_response(
         clinical_notes=prescription.clinical_notes,
         pdf_s3_key=prescription.pdf_s3_key,
         issued_at=prescription.issued_at,
+        chemist_id=prescription.chemist_id,
+        digital_signature=prescription.digital_signature,
+        digital_signature_timestamp=prescription.digital_signature_timestamp,
+        dispense_status=prescription.dispense_status,
+        dispensed_at=prescription.dispensed_at,
+        dispensed_by_chemist_id=prescription.dispensed_by_chemist_id,
         items=prescription.items,
         download_url=download_url,
         created_at=prescription.created_at,
@@ -58,19 +67,28 @@ def _to_prescription_response(
 
 
 async def create_prescription(
-    doctor_id: uuid.UUID,
-    req: PrescriptionCreate,
-    session: AsyncSession,
+    doctor_id: uuid.UUID | None = None,
+    req: PrescriptionCreate | None = None,
+    session: AsyncSession | None = None,
+    chemist_id: uuid.UUID | None = None,
+    *,
+    doctor_user_id: uuid.UUID | None = None,
+    payload: PrescriptionCreate | None = None,
 ) -> PrescriptionResponse:
-    """Create a prescription with CMP-01 compliance gating and PDF generation."""
-    appointment = await session.get(Appointment, req.appointment_id)
+    """Create a prescription with CMP-01 compliance gating, digital signature, and PDF generation."""
+    effective_doctor_id = doctor_id if doctor_id is not None else doctor_user_id
+    effective_req = req if req is not None else payload
+    if effective_doctor_id is None or effective_req is None or session is None:
+        raise ValueError("doctor_id, req, and session are required")
+
+    appointment = await session.get(Appointment, effective_req.appointment_id)
     if appointment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Appointment not found.",
         )
 
-    if appointment.doctor_id != doctor_id:
+    if appointment.doctor_id != effective_doctor_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not authorized to prescribe for this appointment.",
@@ -84,7 +102,7 @@ async def create_prescription(
 
     # CMP-01: block telemedicine-restricted drugs on video consultations.
     if appointment.mode == AppointmentMode.VIDEO:
-        for item in req.items:
+        for item in effective_req.items:
             drug = await _find_restricted_drug(item.drug_name, session)
             if drug is not None and drug.is_telemedicine_restricted:
                 raise HTTPException(
@@ -96,7 +114,7 @@ async def create_prescription(
                 )
 
     existing = await session.execute(
-        select(Prescription).where(Prescription.appointment_id == req.appointment_id)
+        select(Prescription).where(Prescription.appointment_id == effective_req.appointment_id)
     )
     if existing.scalar_one_or_none() is not None:
         raise HTTPException(
@@ -104,14 +122,37 @@ async def create_prescription(
             detail="A prescription already exists for this appointment.",
         )
 
+    # Fetch doctor details for digital signature
+    doctor = await session.get(Doctor, effective_doctor_id)
+    medical_reg_number = doctor.medical_reg_number if doctor and doctor.medical_reg_number else "MCI-REG-PROVISIONAL"
+
+    issued_at = datetime.now(UTC)
+    effective_chemist_id = chemist_id or effective_req.chemist_id
+
+    # Compute cryptographic HMAC-SHA256 digital signature
+    signature = generate_prescription_signature(
+        doctor_id=effective_doctor_id,
+        medical_reg_number=medical_reg_number,
+        patient_id=appointment.patient_id,
+        appointment_id=appointment.id,
+        items=effective_req.items,
+        issued_at=issued_at,
+    )
+
     prescription = Prescription(
         id=uuid.uuid4(),
         appointment_id=appointment.id,
-        doctor_id=doctor_id,
+        doctor_id=effective_doctor_id,
         patient_id=appointment.patient_id,
-        diagnosis=req.diagnosis,
-        clinical_notes=req.clinical_notes,
-        issued_at=datetime.now(UTC),
+        diagnosis=effective_req.diagnosis,
+        clinical_notes=effective_req.clinical_notes,
+        issued_at=issued_at,
+        chemist_id=effective_chemist_id,
+        digital_signature=signature,
+        digital_signature_timestamp=issued_at,
+        dispense_status="pending",
+        dispensed_at=None,
+        dispensed_by_chemist_id=None,
         items=[
             PrescriptionItem(
                 id=uuid.uuid4(),
@@ -121,12 +162,13 @@ async def create_prescription(
                 duration_days=item.duration_days,
                 instructions=item.instructions,
             )
-            for item in req.items
+            for item in effective_req.items
         ],
     )
     session.add(prescription)
     await session.commit()
     await session.refresh(prescription)
+
 
     # Generate PDF (sync path for immediate download_url; Celery task also available).
     try:

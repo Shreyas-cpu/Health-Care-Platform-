@@ -31,7 +31,8 @@ async def reserve_slot(
 ) -> BookingReserveResponse:
     """
     Atomically reserve a doctor slot with Redis lock + PostgreSQL appointment insert.
-    Creates a pending gateway order and PaymentTransaction.
+    Clinic-first model: appointment is requested, to be paid in-person at clinic.
+    No online payment requirement.
     """
     slot_iso = req.slot_start.isoformat()
     lock_token = await lock_manager.acquire_slot_lock(
@@ -53,10 +54,7 @@ async def reserve_slot(
             detail="Doctor not found",
         )
 
-    if req.mode == AppointmentMode.VIDEO:
-        fee_amount = doctor.video_fee
-    else:
-        fee_amount = doctor.in_person_fee
+    fee_amount = doctor.in_person_fee
 
     appointment = Appointment(
         id=uuid.uuid4(),
@@ -83,20 +81,6 @@ async def reserve_slot(
             detail="Slot has already been booked",
         ) from None
 
-    order = payment_gateway.create_order(
-        amount=fee_amount,
-        currency="INR",
-        receipt=f"appt_{appointment.id.hex[:12]}",
-    )
-    payment_txn = PaymentTransaction(
-        id=uuid.uuid4(),
-        appointment_id=appointment.id,
-        gateway_order_id=order["id"],
-        amount=fee_amount,
-        currency="INR",
-        status=PaymentTransactionStatus.PENDING,
-    )
-    session.add(payment_txn)
     await session.commit()
     await session.refresh(appointment)
 
@@ -111,8 +95,68 @@ async def reserve_slot(
         status=appointment.status,
         payment_status=appointment.payment_status,
         lock_token=lock_token,
-        order_id=order["id"],
+        order_id=None,
     )
+
+
+async def confirm_appointment(
+    appointment_id: uuid.UUID,
+    doctor_user_id: uuid.UUID,
+    session: AsyncSession,
+) -> Appointment:
+    """
+    Doctor or clinic confirms the appointment (REQUESTED -> CONFIRMED).
+    Releases the Redis slot lock on success.
+    """
+    appt = (
+        await session.execute(
+            select(Appointment).where(Appointment.id == appointment_id)
+        )
+    ).scalar_one_or_none()
+    if appt is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Appointment not found",
+        )
+
+    if appt.doctor_id != doctor_user_id:
+        from backend.app.models.user import User, UserRole
+        caller = (
+            await session.execute(select(User).where(User.id == doctor_user_id))
+        ).scalar_one_or_none()
+        if not caller or caller.role not in {UserRole.SUPER_ADMIN, UserRole.VERIFICATION_REVIEWER}:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not authorized to confirm this appointment",
+            )
+
+    if appt.status == AppointmentStatus.CONFIRMED:
+        return appt
+
+    if appt.status != AppointmentStatus.REQUESTED:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Cannot confirm appointment with status '{appt.status.value}'",
+        )
+
+    await appointment_state_machine.transition(
+        appt, AppointmentStatus.CONFIRMED, session
+    )
+
+    if appt.lock_token:
+        try:
+            await lock_manager.release_slot_lock(
+                str(appt.doctor_id),
+                appt.slot_start.isoformat(),
+                appt.lock_token,
+            )
+        except Exception:
+            pass
+        appt.lock_token = None
+
+    await session.commit()
+    await session.refresh(appt)
+    return appt
 
 
 async def confirm_booking(

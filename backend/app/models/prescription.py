@@ -40,6 +40,33 @@ class Prescription(Base, TimestampMixin):
     clinical_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     pdf_s3_key: Mapped[str | None] = mapped_column(String(255), nullable=True)
     issued_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    chemist_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("chemists.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    digital_signature: Mapped[str] = mapped_column(String(255), nullable=False)
+    digital_signature_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    dispense_status: Mapped[str] = mapped_column(String(50), default="pending", nullable=False)
+    dispensed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    dispensed_by_chemist_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("chemists.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+
+    doctor = relationship("Doctor", foreign_keys=[doctor_id])
+    patient = relationship("User", foreign_keys=[patient_id])
+    chemist = relationship(
+        "Chemist",
+        foreign_keys=[chemist_id],
+        back_populates="prescriptions",
+    )
+    dispensed_by = relationship(
+        "Chemist",
+        foreign_keys=[dispensed_by_chemist_id],
+    )
 
     items: Mapped[list["PrescriptionItem"]] = relationship(
         "PrescriptionItem",
@@ -49,7 +76,8 @@ class Prescription(Base, TimestampMixin):
     )
 
     def __repr__(self) -> str:
-        return f"<Prescription {self.id} appointment={self.appointment_id}>"
+        return f"<Prescription {self.id} appointment={self.appointment_id} status={self.dispense_status}>"
+
 
 
 class PrescriptionItem(Base, TimestampMixin):
@@ -81,3 +109,6 @@ class PrescriptionItem(Base, TimestampMixin):
 
     def __repr__(self) -> str:
         return f"<PrescriptionItem {self.drug_name} {self.dosage} {self.frequency}>"
+
+
+import backend.app.models.chemist  # noqa: F401, E402

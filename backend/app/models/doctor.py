@@ -59,9 +59,9 @@ class Doctor(Base, TimestampMixin):
     in_person_fee: Mapped[Decimal] = mapped_column(
         Numeric(10, 2), default=Decimal("500.00"), nullable=False
     )
-    video_fee: Mapped[Decimal] = mapped_column(
-        Numeric(10, 2), default=Decimal("400.00"), nullable=False
-    )
+    video_fee: Mapped[Decimal | None] = mapped_column(
+        Numeric(10, 2), default=Decimal("0.00"), nullable=True
+    )  # Deprecated in Clinic-First pivot
     verification_status: Mapped[VerificationStatus] = mapped_column(
         Enum(VerificationStatus, name="verification_status", native_enum=True),
         nullable=False,
@@ -77,7 +77,7 @@ class Doctor(Base, TimestampMixin):
         Boolean,
         default=False,
         nullable=False
-    )
+    )  # Deprecated in Clinic-First pivot
     average_rating: Mapped[Decimal] = mapped_column(Numeric(3, 2), default=Decimal("0.00"), nullable=False)
     review_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 

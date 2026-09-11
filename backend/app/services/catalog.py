@@ -1,3 +1,4 @@
+from decimal import Decimal
 import uuid
 
 from backend.app.core.redis import publish_event
@@ -27,12 +28,16 @@ async def get_public_doctor_profile(
     )).scalar_one_or_none()
     if not doctor:
         return None
+    clinic = _clinic_read(doctor.clinic)
     return DoctorPublicProfile(
         doctor_id=doctor.user_id, full_name=doctor.full_name, specialty=doctor.specialty,
         years_experience=doctor.years_experience, bio=doctor.bio, gender=doctor.gender,
-        in_person_fee=doctor.in_person_fee, video_fee=doctor.video_fee,
+        in_person_fee=doctor.in_person_fee, video_fee=doctor.video_fee or Decimal("0.00"),
         listing_online=doctor.listing_online, video_enabled=doctor.video_enabled,
-        clinic=_clinic_read(doctor.clinic),
+        clinic=clinic,
+        latitude=clinic.latitude if clinic else None,
+        longitude=clinic.longitude if clinic else None,
+        google_maps_url=clinic.google_maps_url if clinic else None,
     )
 
 

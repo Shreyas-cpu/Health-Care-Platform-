@@ -1,7 +1,8 @@
+import urllib.parse
 import uuid
 
 from backend.app.models.base import Base, TimestampMixin
-from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy import ForeignKey, Numeric, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -22,5 +23,14 @@ class Clinic(Base, TimestampMixin):
     locality: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     pincode: Mapped[str] = mapped_column(String(10), nullable=False)
     contact_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    latitude: Mapped[float | None] = mapped_column(Numeric(10, 7), nullable=True)
+    longitude: Mapped[float | None] = mapped_column(Numeric(10, 7), nullable=True)
 
     doctor = relationship("Doctor", back_populates="clinic")
+
+    @property
+    def google_maps_url(self) -> str:
+        if self.latitude is not None and self.longitude is not None:
+            return f"https://www.google.com/maps/search/?api=1&query={self.latitude},{self.longitude}"
+        query = urllib.parse.quote(f"{self.name}, {self.address}, {self.city}, {self.pincode}")
+        return f"https://www.google.com/maps/search/?api=1&query={query}"

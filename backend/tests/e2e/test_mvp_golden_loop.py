@@ -233,19 +233,15 @@ async def test_full_mvp_golden_loop(db_session: AsyncSession):
     appt_id = reserve_resp.appointment_id
 
     # -------------------------------------------------------------------------
-    # STAGE 7: Razorpay Payment Capture & Booking Confirmation (PAT-08, RUL-03)
+    # STAGE 7: Clinic-First Booking Confirmation (PAT-04, RUL-01)
     # -------------------------------------------------------------------------
-    payment_id = f"pay_{uuid.uuid4().hex[:14]}"
-    signature = payment_gateway.generate_test_signature(reserve_resp.order_id, payment_id)
-    confirm_req = BookingConfirmRequest(
+    from backend.app.services.booking_service import confirm_appointment
+    confirmed_appt = await confirm_appointment(
         appointment_id=appt_id,
-        gateway_order_id=reserve_resp.order_id,
-        gateway_payment_id=payment_id,
-        gateway_signature=signature,
+        doctor_user_id=doctor.user_id,
+        session=db_session,
     )
-    confirmed_appt = await confirm_booking(confirm_req, db_session)
     assert confirmed_appt.status == AppointmentStatus.CONFIRMED
-    assert confirmed_appt.payment_status == PaymentStatus.CAPTURED
 
     # -------------------------------------------------------------------------
     # STAGE 8: Automated Reminder Dispatch (PAT-05)

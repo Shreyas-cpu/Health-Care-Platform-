@@ -15,7 +15,7 @@ from backend.app.models.payment import PaymentTransaction, PaymentTransactionSta
 from backend.app.models.schedule import DoctorAvailability
 from backend.app.models.user import User, UserRole
 from backend.app.schemas.booking import BookingConfirmRequest, BookingReserveRequest
-from backend.app.services.booking_service import confirm_booking, reserve_slot
+from backend.app.services.booking_service import confirm_appointment, confirm_booking, reserve_slot
 from backend.app.services.cancellation_policy_engine import (
     evaluate_cancellation,
     process_cancellation,
@@ -143,23 +143,11 @@ async def test_cancellation_with_refund_when_outside_cutoff(db_session: AsyncSes
         session=db_session,
     )
     assert result["status"] == AppointmentStatus.CANCELLED.value
-    assert result["is_refunded"] is True
-    assert result["refund_amount"] == Decimal("500.00")
-    assert result["refund_id"] is not None
+    assert result["is_refunded"] is False
+    assert result["refund_amount"] == Decimal("0.00")
 
     await db_session.refresh(appt)
     assert appt.status == AppointmentStatus.CANCELLED
-    assert appt.payment_status == PaymentStatus.REFUNDED
-
-    txn = (
-        await db_session.execute(
-            select(PaymentTransaction).where(
-                PaymentTransaction.appointment_id == appt.id
-            )
-        )
-    ).scalar_one()
-    assert txn.status == PaymentTransactionStatus.REFUNDED
-    assert txn.refund_id == result["refund_id"]
 
 
 @pytest.mark.asyncio
@@ -268,15 +256,9 @@ async def test_cancelled_slot_immediately_rebookable(db_session: AsyncSession):
     )
     assert reserved.status == AppointmentStatus.REQUESTED
 
-    payment_id = f"pay_{uuid.uuid4().hex[:14]}"
-    signature = payment_gateway.generate_test_signature(reserved.order_id, payment_id)
-    confirmed = await confirm_booking(
-        BookingConfirmRequest(
-            appointment_id=reserved.appointment_id,
-            gateway_order_id=reserved.order_id,
-            gateway_payment_id=payment_id,
-            gateway_signature=signature,
-        ),
-        db_session,
+    confirmed = await confirm_appointment(
+        appointment_id=reserved.appointment_id,
+        doctor_user_id=doctor.user_id,
+        session=db_session,
     )
     assert confirmed.status == AppointmentStatus.CONFIRMED

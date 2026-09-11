@@ -1,6 +1,7 @@
 """PostgreSQL-backed doctor catalog with a short Redis query cache."""
 import hashlib
 import json
+from decimal import Decimal
 from typing import Any
 
 from backend.app.core.redis import get_redis_client
@@ -31,8 +32,11 @@ def _result(doctor: Doctor) -> DoctorSearchResult:
     return DoctorSearchResult(
         doctor_id=doctor.user_id, full_name=doctor.full_name, specialty=doctor.specialty,
         years_experience=doctor.years_experience, bio=doctor.bio, gender=doctor.gender,
-        in_person_fee=doctor.in_person_fee, video_fee=doctor.video_fee,
+        in_person_fee=doctor.in_person_fee, video_fee=doctor.video_fee or Decimal("0.00"),
         listing_online=doctor.listing_online, video_enabled=doctor.video_enabled, clinic=clinic,
+        latitude=clinic.latitude if clinic else None,
+        longitude=clinic.longitude if clinic else None,
+        google_maps_url=clinic.google_maps_url if clinic else None,
     )
 
 
@@ -84,8 +88,6 @@ async def search_doctors(session: AsyncSession, filters: DoctorSearchFilters) ->
         predicates.append(Doctor.in_person_fee <= filters.max_fee)
     if filters.gender:
         predicates.append(Doctor.gender.ilike(filters.gender))
-    if filters.video_available is True:
-        predicates.append(Doctor.video_enabled.is_(True))
 
     if predicates:
         statement = statement.where(*predicates)

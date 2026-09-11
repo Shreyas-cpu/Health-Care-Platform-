@@ -12,6 +12,8 @@ class UserRole(str, enum.Enum):
     DOCTOR = "doctor"
     VERIFICATION_REVIEWER = "verification_reviewer"
     SUPER_ADMIN = "super_admin"
+    CHEMIST = "chemist"
+
 
 class User(Base, TimestampMixin):
     __tablename__ = "users"

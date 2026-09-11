@@ -16,7 +16,7 @@ from backend.app.models.payment import PaymentTransaction, PaymentTransactionSta
 from backend.app.models.schedule import DoctorAvailability, DoctorLeave
 from backend.app.models.user import User, UserRole
 from backend.app.schemas.booking import BookingConfirmRequest, BookingReserveRequest
-from backend.app.services.booking_service import confirm_booking, reserve_slot
+from backend.app.services.booking_service import confirm_appointment, confirm_booking, reserve_slot
 from backend.app.services.payment_gateway import payment_gateway
 from backend.app.services.schedule_engine import generate_slots
 from backend.tests.conftest import random_digits
@@ -182,7 +182,7 @@ async def test_payment_capture_confirms_appointment_and_releases_lock(
     db_session: AsyncSession,
     sample_patient: User,
 ):
-    """RUL-03: Reserve + verify-and-capture atomically confirms and releases Redis lock."""
+    """Clinic-first: Reserve + doctor confirmation confirms and releases Redis lock."""
     query_date = date.today() + timedelta(days=9)
     doctor = await _seed_doctor_with_availability(
         db_session, query_date, start=time(14, 0), end=time(15, 0), duration=30, buffer=0
@@ -197,13 +197,13 @@ async def test_payment_capture_confirms_appointment_and_releases_lock(
             doctor_id=doctor.user_id,
             slot_start=slot_start,
             slot_end=slot_end,
-            mode=AppointmentMode.VIDEO,
+            mode=AppointmentMode.IN_PERSON,
         ),
         db_session,
     )
     assert reserved.status == AppointmentStatus.REQUESTED
     assert reserved.payment_status == PaymentStatus.PENDING
-    assert reserved.order_id is not None
+    assert reserved.order_id is None
     assert reserved.lock_token is not None
 
     # Lock must be held
@@ -212,20 +212,14 @@ async def test_payment_capture_confirms_appointment_and_releases_lock(
     )
     assert second is None
 
-    payment_id = f"pay_{uuid.uuid4().hex[:14]}"
-    signature = payment_gateway.generate_test_signature(reserved.order_id, payment_id)
-
-    confirmed = await confirm_booking(
-        BookingConfirmRequest(
-            appointment_id=reserved.appointment_id,
-            gateway_order_id=reserved.order_id,
-            gateway_payment_id=payment_id,
-            gateway_signature=signature,
-        ),
-        db_session,
+    # Doctor confirms appointment
+    confirmed = await confirm_appointment(
+        appointment_id=reserved.appointment_id,
+        doctor_user_id=doctor.user_id,
+        session=db_session,
     )
     assert confirmed.status == AppointmentStatus.CONFIRMED
-    assert confirmed.payment_status == PaymentStatus.CAPTURED
+    assert confirmed.payment_status == PaymentStatus.PENDING
     assert confirmed.lock_token is None
 
     # Redis lock released — can acquire again
@@ -236,16 +230,3 @@ async def test_payment_capture_confirms_appointment_and_releases_lock(
     await lock_manager.release_slot_lock(
         str(doctor.user_id), slot_start.isoformat(), token
     )
-
-    # PaymentTransaction captured
-    from sqlalchemy import select
-
-    txn = (
-        await db_session.execute(
-            select(PaymentTransaction).where(
-                PaymentTransaction.appointment_id == reserved.appointment_id
-            )
-        )
-    ).scalar_one()
-    assert txn.status == PaymentTransactionStatus.CAPTURED
-    assert txn.gateway_payment_id == payment_id

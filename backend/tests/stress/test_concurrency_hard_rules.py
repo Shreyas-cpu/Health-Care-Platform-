@@ -356,19 +356,14 @@ async def test_rul03_atomic_slot_reservation_payment_rollback(db_session: AsyncS
     assert res2.status == AppointmentStatus.REQUESTED
     assert res2.appointment_id != res1.appointment_id
 
-    # 5. Patient 2 completes payment verification and capture
-    valid_sig = payment_gateway.generate_test_signature(res2.order_id, "pay_success_789")
-    confirm_req_p2 = BookingConfirmRequest(
+    # 5. Doctor/clinic confirms the appointment in clinic-first booking flow
+    from backend.app.services.booking_service import confirm_appointment
+    confirmed_appt = await confirm_appointment(
         appointment_id=res2.appointment_id,
-        gateway_order_id=res2.order_id,
-        gateway_payment_id="pay_success_789",
-        gateway_signature=valid_sig,
+        doctor_user_id=doctor.user_id,
+        session=db_session,
     )
-    confirmed_appt = await confirm_booking(confirm_req_p2, db_session)
-    await db_session.commit()
-
     assert confirmed_appt.status == AppointmentStatus.CONFIRMED
-    assert confirmed_appt.payment_status == PaymentStatus.CAPTURED
 
 
 @pytest.mark.asyncio

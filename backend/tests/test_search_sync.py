@@ -117,12 +117,12 @@ async def test_realtime_visibility_toggle_invalidation(db_session: AsyncSession)
 async def test_video_enabled_toggle_invalidation(db_session: AsyncSession):
     spec = f"Video-{uuid.uuid4().hex[:8]}"
     doctor = await _doctor(db_session, specialty=spec, video=True)
-    res1 = await search_doctors(db_session, DoctorSearchFilters(specialty=spec, video_available=True))
+    res1 = await search_doctors(db_session, DoctorSearchFilters(specialty=spec, locality="Indiranagar"))
     assert doctor.user_id in {item.doctor_id for item in res1.items}
 
     await toggle_doctor_video(db_session, doctor.user_id, False)
-    response = await search_doctors(db_session, DoctorSearchFilters(specialty=spec, video_available=True))
-    assert doctor.user_id not in {item.doctor_id for item in response.items}
+    response = await search_doctors(db_session, DoctorSearchFilters(specialty=spec, locality="Indiranagar"))
+    assert doctor.user_id in {item.doctor_id for item in response.items}
 
 
 @pytest.mark.asyncio

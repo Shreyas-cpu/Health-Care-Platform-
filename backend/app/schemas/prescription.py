@@ -27,6 +27,7 @@ class PrescriptionCreate(BaseModel):
     appointment_id: uuid.UUID
     diagnosis: str = Field(..., min_length=1)
     clinical_notes: str | None = None
+    chemist_id: uuid.UUID | None = None
     items: list[PrescriptionItemCreate] = Field(..., min_length=1)
 
 
@@ -41,10 +42,17 @@ class PrescriptionResponse(BaseModel):
     clinical_notes: str | None = None
     pdf_s3_key: str | None = None
     issued_at: datetime
+    chemist_id: uuid.UUID | None = None
+    digital_signature: str
+    digital_signature_timestamp: datetime
+    dispense_status: str = "pending"
+    dispensed_at: datetime | None = None
+    dispensed_by_chemist_id: uuid.UUID | None = None
     items: list[PrescriptionItemResponse]
     download_url: str | None = None
     created_at: datetime
     updated_at: datetime
+
 
 
 class DrugMasterResponse(BaseModel):

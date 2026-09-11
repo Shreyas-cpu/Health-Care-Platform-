@@ -3,6 +3,7 @@ import uuid
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User, UserRole
+from backend.app.schemas.chemist import PrescriptionVerificationResponse
 from backend.app.schemas.prescription import (
     DrugMasterResponse,
     PrescriptionCreate,
@@ -59,3 +60,14 @@ async def get_prescription_endpoint(
         requester_id=current_user.id,
         require_doctor=True,
     )
+
+
+@router.get("/{prescription_id}/verify", response_model=PrescriptionVerificationResponse)
+async def verify_prescription_endpoint(
+    prescription_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db),
+):
+    """Verify digital signature and integrity of any prescription."""
+    from backend.app.api.v1.chemists import verify_prescription_signature_endpoint
+    return await verify_prescription_signature_endpoint(prescription_id, session)
+

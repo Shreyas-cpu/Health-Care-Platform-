@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     S3_REGION: str = "ap-south-1"
     S3_BUCKET_DOCUMENTS: str = "doctor-documents"
     S3_BUCKET_PRESCRIPTIONS: str = "prescriptions"
+    S3_BUCKET_PATIENT_DOCUMENTS: str = "patient-documents"
     S3_USE_SSL: bool = False
 
     # LiveKit
