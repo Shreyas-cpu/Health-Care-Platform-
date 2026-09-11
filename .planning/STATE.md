@@ -1,9 +1,9 @@
 # Project State: Digital Healthcare Services Platform
 
 **Milestone:** Milestone 1 — MVP Core Loop  
-**Current Phase:** Phase 01: Core Architecture, Unified Identity & Appointment State Machine Foundation  
-**Status:** Planning Updated & Refined, Ready for Execution  
-**Updated:** 2026-09-10  
+**Current Phase:** Phase 02: Doctor Onboarding & Verification Pipeline  
+**Status:** Phase 01 Complete; Phase 02 Ready to Start  
+**Updated:** 2026-09-11  
 
 ---
 
@@ -11,8 +11,8 @@
 
 | Phase | Description | Status | Subagent Assigned |
 |---|---|---|---|
-| **Phase 01** | Core Architecture, Unified Identity & Appointment State Machine | Ready to Start | `cursor` (`composer-2.5`) |
-| **Phase 02** | Doctor Onboarding & Verification Pipeline | Planned | `cursor` (`claude-opus-5-thinking-high`) |
+| **Phase 01** | Core Architecture, Unified Identity & Appointment State Machine | **Complete** (2026-09-11) | `cursor` (`composer-2.5`) |
+| **Phase 02** | Doctor Onboarding & Verification Pipeline | Ready to Start | `cursor` (`claude-opus-5-thinking-high`) |
 | **Phase 03** | Patient Identity Specialization, Catalog & Real-Time Search Sync | Planned | `codex` (`gpt-5.6-terra`) |
 | **Phase 04** | Scheduling, Atomic Slot Booking, Payments & Cancellation Engine | Planned | `cursor` (`composer-2.5`) |
 | **Phase 05** | Node.js Real-Time Gateway & Redis Pub/Sub Bridge | Planned | `codex` (`gpt-5.6-terra`) |
@@ -25,11 +25,11 @@
 
 ## Key Locked Architectural Decisions
 
-1. **Unified Identity Moved to Phase 01**: Foundational User model, JWT signing/verification, and passwordless OTP mechanics reside in Phase 01, eliminating backwards auth dependencies for Doctor Onboarding (Phase 02) and Patient Portal (Phase 03).
-2. **Cancellation & Refund Policy Engine Housed in Phase 04**: Automated, policy-driven cancellation eligibility (e.g. >= 2 hour cutoff) and automated Razorpay refunds are explicitly built into the Phase 04 booking & payment engine.
-3. **Phase 09 Concurrency Split**: Concurrency stress testing (RUL-01..04) and race condition validation routed to `cursor` (`claude-opus-5-thinking-high`), while final docstrings, linting, and OpenAPI spec export are handled by `devin` (`SWE-1.6 Slow`).
-4. **State Machine Precedence**: 8-state Appointment Lifecycle is the central relational and state anchor; Teleconsultation (5-state) and Verification (6-state) interlock with it.
-5. **Architecture Split**: FastAPI modular monolith for core transactions; Node.js gateway for WebSockets and chat relay; Redis Pub/Sub as bridge.
+1. **Unified Identity Active**: Foundational User model, JWT signing/verification, and passwordless OTP mechanics reside in Phase 01; Doctor Onboarding (Phase 02) builds directly upon it.
+2. **PostgreSQL Exclusion Constraint Active**: Constraint `no_overlapping_doctor_appointments` using `btree_gist` enforced at database engine level.
+3. **8-State Appointment State Machine Verified**: 100% test pass rate for all transitions and 422 guard rejections.
+4. **Cancellation & Refund Policy Engine Housed in Phase 04**: Automated, policy-driven cancellation eligibility (e.g. >= 2 hour cutoff) and automated Razorpay refunds are explicitly built into the Phase 04 booking & payment engine.
+5. **Phase 09 Concurrency Split**: Concurrency stress testing (RUL-01..04) and race condition validation routed to `cursor` (`claude-opus-5-thinking-high`), while final docstrings, linting, and OpenAPI spec export are handled by `devin` (`SWE-1.6 Slow`).
 6. **Hard Rule Enforcements**:
    - Zero double-booking enforced via Redis locks and PostgreSQL exclusion constraints.
    - Real-time search propagation on doctor visibility toggles.
@@ -39,12 +39,3 @@
    - Telemedicine restricted-drug-category flag requires legal sign-off before launch.
    - DPDP Act auditable consent component must precede public patient onboarding.
 8. **Phase 2 Scope Boundary**: All 16 deferred items from PRD Section 3 are strictly fenced off from Phase 1.
-
----
-
-## Session Continuity
-
-Last session: 2026-09-10
-Stopped at: Session resumed; Phase 01 ready for execution
-Resume file: .planning/phases/01-core-domain-and-appointment-state-machine/01-01-PLAN.md
-

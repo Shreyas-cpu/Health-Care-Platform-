@@ -1,0 +1,51 @@
+import enum
+import uuid
+from typing import Optional
+from sqlalchemy import Boolean, Enum, String
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column
+from backend.app.models.base import Base, TimestampMixin
+
+class UserRole(str, enum.Enum):
+    PATIENT = "patient"
+    DOCTOR = "doctor"
+    VERIFICATION_REVIEWER = "verification_reviewer"
+    SUPER_ADMIN = "super_admin"
+
+class User(Base, TimestampMixin):
+    __tablename__ = "users"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4
+    )
+    phone_number: Mapped[str] = mapped_column(
+        String(20),
+        unique=True,
+        index=True,
+        nullable=False
+    )
+    email: Mapped[Optional[str]] = mapped_column(
+        String(255),
+        unique=True,
+        index=True,
+        nullable=True
+    )
+    role: Mapped[UserRole] = mapped_column(
+        Enum(UserRole, name="user_role", native_enum=True),
+        nullable=False,
+        default=UserRole.PATIENT
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False
+    )
+    hashed_password: Mapped[Optional[str]] = mapped_column(
+        String(255),
+        nullable=True
+    )
+
+    def __repr__(self) -> str:
+        return f"<User {self.id} phone={self.phone_number} role={self.role}>"
