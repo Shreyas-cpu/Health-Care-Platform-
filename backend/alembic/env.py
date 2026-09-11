@@ -20,6 +20,9 @@ from backend.app.models.doctor import Doctor
 from backend.app.models.patient import Patient
 from backend.app.models.clinic import Clinic
 from backend.app.models.verification import DoctorDocument, VerificationReview
+from backend.app.models.schedule import DoctorAvailability, DoctorLeave
+from backend.app.models.payment import PaymentTransaction
+from backend.app.models.cancellation_policy import CancellationPolicy
 
 config = context.config
 
