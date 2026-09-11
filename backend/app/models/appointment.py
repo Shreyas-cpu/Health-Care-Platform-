@@ -5,7 +5,7 @@ from decimal import Decimal
 
 from backend.app.models.base import Base, TimestampMixin
 from sqlalchemy import (
-    DateTime,
+    Boolean, DateTime,
     Enum,
     ForeignKey,
     Index,
@@ -109,6 +109,7 @@ class Appointment(Base, TimestampMixin):
         String(100),
         nullable=True
     )
+    reminder_sent: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, index=True)
 
     __table_args__ = (
         Index("ix_appointments_doctor_slot", "doctor_id", "slot_start", "slot_end"),

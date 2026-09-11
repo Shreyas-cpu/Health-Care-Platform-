@@ -93,6 +93,9 @@ from backend.app.api.v1.schedules import router as schedules_router
 from backend.app.api.v1.schedules import slots_router
 from backend.app.api.v1.search import router as search_router
 from backend.app.api.v1.teleconsultation import router as teleconsultation_router
+from backend.app.api.v1.reviews import router as reviews_router
+from backend.app.api.v1.admin_dashboard import router as admin_dashboard_router
+from backend.app.api.v1.admin_moderation import router as admin_moderation_router
 
 # Mount Phase 07 routers
 from backend.app.api.v1.doctor_queue import router as doctor_queue_router
@@ -105,20 +108,14 @@ app.include_router(patient_auth_router, prefix=settings.API_V1_STR)
 app.include_router(doctor_profile_router, prefix=settings.API_V1_STR)
 app.include_router(search_router, prefix=settings.API_V1_STR)
 app.include_router(teleconsultation_router, prefix=settings.API_V1_STR)
+app.include_router(reviews_router, prefix=settings.API_V1_STR)
+app.include_router(admin_dashboard_router, prefix=settings.API_V1_STR)
+app.include_router(admin_moderation_router, prefix=settings.API_V1_STR)
 app.include_router(schedules_router, prefix=settings.API_V1_STR)
 app.include_router(slots_router, prefix=settings.API_V1_STR)
 app.include_router(bookings_router, prefix=settings.API_V1_STR)
 app.include_router(payments_router, prefix=settings.API_V1_STR)
 app.include_router(cancellations_router, prefix=settings.API_V1_STR)
-app.include_router(doctor_queue_router, prefix=settings.API_V1_STR)
-app.include_router(prescriptions_router, prefix=settings.API_V1_STR)
-app.include_router(patient_records_router, prefix=settings.API_V1_STR)
-
-# Mount Phase 07 routers
-from backend.app.api.v1.doctor_queue import router as doctor_queue_router
-from backend.app.api.v1.patient_records import router as patient_records_router
-from backend.app.api.v1.prescriptions import router as prescriptions_router
-
 app.include_router(doctor_queue_router, prefix=settings.API_V1_STR)
 app.include_router(prescriptions_router, prefix=settings.API_V1_STR)
 app.include_router(patient_records_router, prefix=settings.API_V1_STR)

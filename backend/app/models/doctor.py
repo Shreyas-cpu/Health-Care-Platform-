@@ -78,13 +78,18 @@ class Doctor(Base, TimestampMixin):
         default=False,
         nullable=False
     )
+    average_rating: Mapped[Decimal] = mapped_column(Numeric(3, 2), default=Decimal("0.00"), nullable=False)
+    review_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     documents = relationship("DoctorDocument", back_populates="doctor", cascade="all, delete-orphan", lazy="selectin")
     reviews = relationship("VerificationReview", back_populates="doctor", cascade="all, delete-orphan", lazy="selectin")
     clinic = relationship("Clinic", back_populates="doctor", uselist=False, lazy="selectin", cascade="all, delete-orphan")
+    patient_reviews = relationship("Review", back_populates="doctor", cascade="all, delete-orphan", lazy="selectin")
 
     def __repr__(self) -> str:
         return f"<Doctor {self.user_id} name={self.full_name} status={self.verification_status} online={self.listing_online}>"
+
+import backend.app.models.review  # noqa: F401, E402
 
 
 import backend.app.models.clinic  # noqa: F401, E402

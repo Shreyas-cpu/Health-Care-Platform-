@@ -55,3 +55,6 @@ def require_roles(*allowed_roles: UserRole):
             )
         return user
     return role_checker
+
+require_super_admin = require_roles(UserRole.SUPER_ADMIN)
+require_verification_reviewer = require_roles(UserRole.VERIFICATION_REVIEWER, UserRole.SUPER_ADMIN)

@@ -27,6 +27,8 @@ from backend.app.models.payment import PaymentTransaction
 from backend.app.models.cancellation_policy import CancellationPolicy
 from backend.app.models.drug import DrugMaster
 from backend.app.models.prescription import Prescription, PrescriptionItem
+from backend.app.models.review import Review
+from backend.app.models.notification import Notification
 
 config = context.config
 

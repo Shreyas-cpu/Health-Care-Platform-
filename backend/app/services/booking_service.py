@@ -33,20 +33,6 @@ async def reserve_slot(
     Atomically reserve a doctor slot with Redis lock + PostgreSQL appointment insert.
     Creates a pending gateway order and PaymentTransaction.
     """
-    doctor = (
-        await session.execute(select(Doctor).where(Doctor.user_id == req.doctor_id))
-    ).scalar_one_or_none()
-    if doctor is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Doctor not found",
-        )
-
-    if req.mode == AppointmentMode.VIDEO:
-        fee_amount = doctor.video_fee
-    else:
-        fee_amount = doctor.in_person_fee
-
     slot_iso = req.slot_start.isoformat()
     lock_token = await lock_manager.acquire_slot_lock(
         str(req.doctor_id), slot_iso, ttl_seconds=SLOT_LOCK_TTL_SECONDS
@@ -56,6 +42,21 @@ async def reserve_slot(
             status_code=status.HTTP_409_CONFLICT,
             detail="Slot is currently being booked by another patient",
         )
+
+    doctor = (
+        await session.execute(select(Doctor).where(Doctor.user_id == req.doctor_id))
+    ).scalar_one_or_none()
+    if doctor is None:
+        await lock_manager.release_slot_lock(str(req.doctor_id), slot_iso, lock_token)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Doctor not found",
+        )
+
+    if req.mode == AppointmentMode.VIDEO:
+        fee_amount = doctor.video_fee
+    else:
+        fee_amount = doctor.in_person_fee
 
     appointment = Appointment(
         id=uuid.uuid4(),
