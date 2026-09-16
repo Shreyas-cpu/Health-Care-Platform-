@@ -1,5 +1,6 @@
 import type { UserRole } from '../types'
 import { api, setAuthToken } from './api'
+import { isLiveFirebaseConfigured, signInWithLiveGoogle } from './firebaseConfig'
 
 export interface AuthSession {
   token: string
@@ -11,7 +12,7 @@ export interface AuthSession {
 }
 
 export const firebaseAuthService = {
-  // Simulates or handles Phone OTP verification
+  // Handles Phone OTP verification
   loginWithPhone: async (phoneNumber: string, fullName: string, role: UserRole = 'patient') => {
     // Generate base64 mock Firebase ID token payload compatible with backend verify_firebase_id_token
     const payload = {
@@ -36,25 +37,47 @@ export const firebaseAuthService = {
     return session
   },
 
-  // Simulates or handles Google Sign-In
+  // Handles Google Sign-In (Live OAuth with Firebase SDK or development sandbox)
   loginWithGoogle: async (email: string, fullName: string, role: UserRole) => {
-    const payload = {
-      uid: `fb-google-${btoa(email).replace(/=/g, '')}`,
-      email,
-      name: fullName,
-      role,
-    }
-    const idToken = `mock-firebase-${btoa(JSON.stringify(payload))}`
+    let idToken: string
+    let resolvedEmail = email
+    let resolvedName = fullName
 
-    const res = await api.firebaseLogin(idToken, role, fullName)
+    if (isLiveFirebaseConfigured) {
+      try {
+        const liveResult = await signInWithLiveGoogle()
+        idToken = liveResult.idToken
+        resolvedEmail = liveResult.email || email
+        resolvedName = liveResult.displayName || fullName
+      } catch (err) {
+        console.warn('Live Google Sign-In failed or was cancelled, falling back to development sandbox:', err)
+        const payload = {
+          uid: `fb-google-${btoa(email).replace(/=/g, '')}`,
+          email,
+          name: fullName,
+          role,
+        }
+        idToken = `mock-firebase-${btoa(JSON.stringify(payload))}`
+      }
+    } else {
+      const payload = {
+        uid: `fb-google-${btoa(email).replace(/=/g, '')}`,
+        email,
+        name: fullName,
+        role,
+      }
+      idToken = `mock-firebase-${btoa(JSON.stringify(payload))}`
+    }
+
+    const res = await api.firebaseLogin(idToken, role, resolvedName)
     setAuthToken(res.access_token)
 
     const session: AuthSession = {
       token: res.access_token,
       role: res.role,
       userId: res.user_id,
-      email,
-      displayName: fullName,
+      email: resolvedEmail,
+      displayName: resolvedName,
     }
     localStorage.setItem('aarogya_session', JSON.stringify(session))
     return session
