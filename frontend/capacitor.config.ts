@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'AarogyaCare Healthcare',
   webDir: 'dist',
   server: {
-    androidScheme: 'https',
+    androidScheme: 'http',
     cleartext: true, // Allows dev HTTP connections to local backend (10.0.2.2 / LAN IP)
   },
 }
