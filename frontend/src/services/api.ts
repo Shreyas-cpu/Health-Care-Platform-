@@ -9,8 +9,8 @@ import type {
   UserRole,
 } from '../types'
 
-// Automatically detect host: 10.0.2.2 for Android Studio Emulator, localhost for desktop browser
-const isAndroidEmulator =
+// Automatically detect host: LAN IP for physical device over Wi-Fi or emulator, localhost for desktop browser
+const isAndroid =
   typeof window !== 'undefined' &&
   window.navigator &&
   /android/i.test(window.navigator.userAgent)
@@ -19,7 +19,7 @@ const getStoredBaseUrl = () => {
   if (typeof window !== 'undefined') {
     return (
       localStorage.getItem('aarogya_api_base_url') ||
-      (isAndroidEmulator ? 'http://10.0.2.2:8000/api/v1' : 'http://localhost:8000/api/v1')
+      (isAndroid ? 'http://192.168.10.39:8000/api/v1' : 'http://localhost:8000/api/v1')
     )
   }
   return 'http://localhost:8000/api/v1'
