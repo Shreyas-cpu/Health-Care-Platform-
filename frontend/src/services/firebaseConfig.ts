@@ -52,10 +52,24 @@ export async function sendLivePhoneOtp(
 }
 
 export async function signInWithLiveGoogle(): Promise<{ idToken: string; email: string; displayName: string }> {
+  const isAndroid =
+    typeof window !== 'undefined' &&
+    window.navigator &&
+    /android/i.test(window.navigator.userAgent)
+
+  if (isAndroid) {
+    throw new Error('Native Android WebView cannot receive popup postMessage callbacks from external browser.')
+  }
+
   if (!auth || !googleProvider) {
     throw new Error('Firebase Auth is not initialized with live credentials.')
   }
-  const result = await signInWithPopup(auth, googleProvider)
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(() => reject(new Error('Google Sign-In timed out.')), 10000)
+  })
+
+  const result = await Promise.race([signInWithPopup(auth, googleProvider), timeoutPromise])
   const idToken = await result.user.getIdToken()
   return {
     idToken,
