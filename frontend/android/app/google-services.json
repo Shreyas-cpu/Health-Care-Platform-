@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "364667500884",
+    "project_id": "healthcare-application-501f4",
+    "storage_bucket": "healthcare-application-501f4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364667500884:android:8590e31a863af90125f0c1",
+        "android_client_info": {
+          "package_name": "com.aarogyacare.health"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "364667500884-a9ogn4lun7d1r03euv1trog5rmp5hib3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aarogyacare.health",
+            "certificate_hash": "f30b59d85a3a115d6f1fd5e0d4654767a789bae2"
+          }
+        },
+        {
+          "client_id": "364667500884-0d873p88nnefqdtj15pnqpplvri4i8cj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh318lqTybQF8cL61F2IKttOuxhgrr6XQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "364667500884-0d873p88nnefqdtj15pnqpplvri4i8cj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
