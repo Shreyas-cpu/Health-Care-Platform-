@@ -4,4 +4,5 @@
     <string name="title_activity_main">AarogyaCare Healthcare</string>
     <string name="package_name">com.aarogyacare.health</string>
     <string name="custom_url_scheme">com.aarogyacare.health</string>
+    <string name="server_client_id">364667500884-0d873p88nnefqdtj15pnqpplvri4i8cj.apps.googleusercontent.com</string>
 </resources>

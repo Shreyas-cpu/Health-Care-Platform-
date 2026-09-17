@@ -25,6 +25,7 @@ class PatientVaultResponse(BaseModel):
 
 
 class AppointmentHistoryItem(BaseModel):
+    id: uuid.UUID | None = None
     appointment_id: uuid.UUID
     doctor_id: uuid.UUID
     doctor_name: str

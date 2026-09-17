@@ -3,11 +3,14 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithCredential,
   RecaptchaVerifier,
   signInWithPhoneNumber,
   type Auth,
   type ConfirmationResult,
 } from 'firebase/auth'
+import { Capacitor } from '@capacitor/core'
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
@@ -51,22 +54,69 @@ export async function sendLivePhoneOtp(
   return signInWithPhoneNumber(auth, phoneNumber, appVerifier)
 }
 
-export async function signInWithLiveGoogle(): Promise<{ idToken: string; email: string; displayName: string }> {
-  const isAndroid =
-    typeof window !== 'undefined' &&
-    window.navigator &&
-    /android/i.test(window.navigator.userAgent)
+const SERVER_CLIENT_ID = '364667500884-0d873p88nnefqdtj15pnqpplvri4i8cj.apps.googleusercontent.com'
 
-  if (isAndroid) {
-    throw new Error('Native Android WebView cannot receive popup postMessage callbacks from external browser.')
+let isNativeGoogleAuthReady = false
+
+export async function initNativeGoogleAuth(): Promise<void> {
+  if (isNativeGoogleAuthReady) return
+  try {
+    await GoogleAuth.initialize({
+      clientId: SERVER_CLIENT_ID,
+      scopes: ['profile', 'email'],
+      grantOfflineAccess: true,
+    })
+    isNativeGoogleAuthReady = true
+  } catch (err) {
+    console.warn('Native GoogleAuth.initialize notice:', err)
+  }
+}
+
+export async function signInWithNativeGoogle(): Promise<{ idToken: string; email: string; displayName: string }> {
+  await initNativeGoogleAuth()
+  const googleUser = await GoogleAuth.signIn()
+
+  const rawIdToken = googleUser.authentication?.idToken
+  if (!rawIdToken) {
+    throw new Error('Google Sign-In completed on device, but no ID token was returned.')
   }
 
+  // If Firebase Auth instance is active in the WebView, link Google credentials with Firebase
+  if (auth) {
+    try {
+      const credential = GoogleAuthProvider.credential(rawIdToken)
+      const userCredential = await signInWithCredential(auth, credential)
+      const firebaseIdToken = await userCredential.user.getIdToken()
+      return {
+        idToken: firebaseIdToken,
+        email: userCredential.user.email || googleUser.email || '',
+        displayName: userCredential.user.displayName || googleUser.name || '',
+      }
+    } catch (fbErr) {
+      console.warn('Direct Firebase credential exchange fallback; using Google OAuth ID token directly:', fbErr)
+    }
+  }
+
+  return {
+    idToken: rawIdToken,
+    email: googleUser.email || '',
+    displayName: googleUser.name || '',
+  }
+}
+
+export async function signInWithLiveGoogle(): Promise<{ idToken: string; email: string; displayName: string }> {
+  // Check if running on Android native platform or Capacitor native environment
+  if (Capacitor.isNativePlatform() || (typeof window !== 'undefined' && (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.())) {
+    return signInWithNativeGoogle()
+  }
+
+  // Web Browser Fallback: standard Firebase popup
   if (!auth || !googleProvider) {
     throw new Error('Firebase Auth is not initialized with live credentials.')
   }
 
   const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => reject(new Error('Google Sign-In timed out.')), 10000)
+    setTimeout(() => reject(new Error('Google Sign-In timed out.')), 15000)
   })
 
   const result = await Promise.race([signInWithPopup(auth, googleProvider), timeoutPromise])

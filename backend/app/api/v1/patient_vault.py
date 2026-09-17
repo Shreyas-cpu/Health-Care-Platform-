@@ -259,6 +259,7 @@ async def get_appointment_history(
 
         history.append(
             AppointmentHistoryItem(
+                id=appt.id,
                 appointment_id=appt.id,
                 doctor_id=appt.doctor_id,
                 doctor_name=doctor_name,

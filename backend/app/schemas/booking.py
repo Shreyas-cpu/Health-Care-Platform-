@@ -15,7 +15,9 @@ class BookingReserveRequest(BaseModel):
     clinic_id: uuid.UUID | None = None
     slot_start: datetime
     slot_end: datetime
-    mode: AppointmentMode
+    mode: AppointmentMode = AppointmentMode.IN_PERSON
+    patient_name: str | None = None
+    notes: str | None = None
 
 
 class BookingReserveResponse(BaseModel):

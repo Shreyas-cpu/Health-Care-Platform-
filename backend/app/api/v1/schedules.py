@@ -111,13 +111,20 @@ async def create_leave(
 @slots_router.get("/{doctor_id}/slots", response_model=list[SlotResponse])
 async def get_doctor_slots(
     doctor_id: uuid.UUID,
-    date: date = Query(..., description="Date to query slots for (YYYY-MM-DD)"),
+    date: date | None = Query(None, description="Date to query slots for (YYYY-MM-DD)"),
+    query_date: date | None = Query(None, description="Alternative date query parameter"),
     mode: str | None = Query(None, pattern="^(in_person|video)$"),
     session: AsyncSession = Depends(get_db),
 ):
+    target_date = date or query_date
+    if not target_date:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Date query parameter ('date' or 'query_date') is required.",
+        )
     return await generate_slots(
         doctor_id=doctor_id,
-        query_date=date,
+        query_date=target_date,
         mode=mode,
         session=session,
     )

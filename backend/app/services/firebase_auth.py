@@ -121,6 +121,20 @@ def verify_firebase_id_token(id_token: str) -> dict[str, Any]:
             return verified_claims
     except Exception as live_err:
         logger.debug("Live Firebase token verification failed: %s", live_err)
+        # Try verifying as Google OAuth2 ID token directly (Google Play Services on Android)
+        try:
+            from google.oauth2 import id_token as google_id_token
+            from google.auth.transport import requests as google_requests
+
+            google_claims = google_id_token.verify_oauth2_token(
+                id_token, google_requests.Request()
+            )
+            if "uid" not in google_claims and "sub" in google_claims:
+                google_claims["uid"] = google_claims["sub"]
+            return google_claims
+        except Exception as google_err:
+            logger.debug("Google OAuth2 ID token verification failed: %s", google_err)
+
         # 3. Fallback to mock decode if permitted
         if settings.FIREBASE_MOCK_AUTH and id_token.count(".") == 2:
             try:
@@ -138,7 +152,7 @@ def verify_firebase_id_token(id_token: str) -> dict[str, Any]:
 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid or expired Firebase ID token: {live_err}",
+            detail=f"Invalid or expired Firebase/Google ID token: {live_err}",
         )
 
     # Fallback if no firebase app and mock auth allowed

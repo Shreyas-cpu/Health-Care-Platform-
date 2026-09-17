@@ -1,4 +1,5 @@
 import type { UserRole } from '../types'
+import { Capacitor } from '@capacitor/core'
 import { api, setAuthToken } from './api'
 import { isLiveFirebaseConfigured, signInWithLiveGoogle } from './firebaseConfig'
 
@@ -37,20 +38,31 @@ export const firebaseAuthService = {
     return session
   },
 
-  // Handles Google Sign-In (Live OAuth with Firebase SDK or development sandbox)
-  loginWithGoogle: async (email: string, fullName: string, role: UserRole) => {
+  // Handles Google Sign-In (Live OAuth with Firebase SDK, native Android Google Play Services, or sandbox)
+  loginWithGoogle: async (email: string = '', fullName: string = '', role: UserRole = 'patient') => {
     let idToken: string
     let resolvedEmail = email
     let resolvedName = fullName
 
-    if (isLiveFirebaseConfigured) {
+    const isNative =
+      Capacitor.isNativePlatform() ||
+      Boolean((window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.())
+
+    if (isNative || isLiveFirebaseConfigured) {
       try {
         const liveResult = await signInWithLiveGoogle()
         idToken = liveResult.idToken
         resolvedEmail = liveResult.email || email
-        resolvedName = liveResult.displayName || fullName
-      } catch (err) {
-        console.info('Using direct Google identity verification on mobile platform:', err)
+        resolvedName = liveResult.displayName || fullName || 'Google User'
+      } catch (err: unknown) {
+        const errMsg = err instanceof Error ? err.message : String(err)
+        if (errMsg.includes('12501') || errMsg.toLowerCase().includes('cancel')) {
+          throw new Error('Google Sign-In was cancelled.')
+        }
+        if (isNative) {
+          throw new Error(`Google Authentication failed on device: ${errMsg}`)
+        }
+        console.warn('Google Live Auth error, falling back to sandbox:', err)
         const safeEmail = email.trim() || 'user@gmail.com'
         const payload = {
           uid: `fb-google-${btoa(safeEmail).replace(/=/g, '')}`,

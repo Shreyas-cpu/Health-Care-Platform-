@@ -1,0 +1,994 @@
+{
+  "metadata": {
+    "city": "Chhatrapati Sambhaji Nagar (Aurangabad)",
+    "state": "Maharashtra",
+    "country": "India",
+    "pincodes": [
+      "431001",
+      "431003",
+      "431005",
+      "431009",
+      "431010"
+    ],
+    "total_doctors": 12,
+    "total_clinics": 12,
+    "total_chemists": 8,
+    "total_patients": 5,
+    "total_appointments": 10,
+    "total_prescriptions": 5,
+    "total_reviews": 5
+  },
+  "users": [
+    {
+      "id": "aa1f5f9a-2485-48f4-99cb-78668de2e0f0",
+      "phone_number": "+919422700001",
+      "email": "rahul.waghmare.csn@healthcare.local",
+      "role": "patient",
+      "is_active": true
+    },
+    {
+      "id": "4b54e18c-b79e-4aa7-94c2-8f24260083c5",
+      "phone_number": "+919422700002",
+      "email": "sunita.salve.csn@healthcare.local",
+      "role": "patient",
+      "is_active": true
+    },
+    {
+      "id": "9124cc5b-4932-4fff-838d-d7613acb7a83",
+      "phone_number": "+919422700003",
+      "email": "prashant.shinde.csn@healthcare.local",
+      "role": "patient",
+      "is_active": true
+    },
+    {
+      "id": "6ed866ed-1f1a-4d51-b8c3-f8a7a4524896",
+      "phone_number": "+919422700004",
+      "email": "kavita.kulkarni.csn@healthcare.local",
+      "role": "patient",
+      "is_active": true
+    },
+    {
+      "id": "7a8451fb-179b-4d4a-a752-c375a88ec0f2",
+      "phone_number": "+919422700005",
+      "email": "ganesh.muley.csn@healthcare.local",
+      "role": "patient",
+      "is_active": true
+    },
+    {
+      "id": "a4f08ef7-31b4-4632-b9ab-5f4ba5f7db8c",
+      "phone_number": "+919422000001",
+      "email": "dr.sachin.kulkarni.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "fdb9c70a-49ec-4083-91e2-9a57ffeed151",
+      "phone_number": "+919422000002",
+      "email": "dr.neha.deshmukh.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "439d6e37-4047-45a3-9cfe-b940bc8bb733",
+      "phone_number": "+919422000003",
+      "email": "dr.rohan.bhalerao.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "c1e575d9-78e9-4bc7-876c-c9866534013d",
+      "phone_number": "+919422000004",
+      "email": "dr.pooja.shinde.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "6dc8aa35-706b-4d90-9dde-619996d2caf7",
+      "phone_number": "+919422000005",
+      "email": "dr.amit.patil.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "df122ea8-ad78-4448-bf92-eb47b4a0538a",
+      "phone_number": "+919422000006",
+      "email": "dr.snehal.kadam.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "315180df-cae6-4c7b-8648-abb8371d8021",
+      "phone_number": "+919422000007",
+      "email": "dr.vikram.jadhav.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "4e3c0355-ecc5-4dc6-8e24-4d9a51245e09",
+      "phone_number": "+919422000008",
+      "email": "dr.rajeshwari.joshi.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "193e1c40-93ca-4433-ad46-2b1c9714c0c5",
+      "phone_number": "+919422000009",
+      "email": "dr.anand.kale.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "f7ede5ed-2959-4bcd-a03c-5515cd1d0b24",
+      "phone_number": "+919422000010",
+      "email": "dr.priya.more.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "0954f4e2-ec1f-47d8-9513-b96c49e13f46",
+      "phone_number": "+919422000011",
+      "email": "dr.sandeep.gaikwad.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "48431095-69b9-4375-805a-ba206500cc69",
+      "phone_number": "+919422000012",
+      "email": "dr.manisha.rathi.csn@healthcare.local",
+      "role": "doctor",
+      "is_active": true
+    },
+    {
+      "id": "3d9a957f-a540-4174-8a0e-7c26b8093c06",
+      "phone_number": "+919422180001",
+      "email": "sambhaji.medical@healthcare.local",
+      "role": "chemist",
+      "is_active": true
+    },
+    {
+      "id": "49a3f286-76da-4032-a492-8821214f2adc",
+      "phone_number": "+919422180002",
+      "email": "apollo.cidco@healthcare.local",
+      "role": "chemist",
+      "is_active": true
+    },
+    {
+      "id": "9119c43a-ba77-4697-9cd6-9141164b5784",
+      "phone_number": "+919422180003",
+      "email": "wellness.sevenhills@healthcare.local",
+      "role": "chemist",
+      "is_active": true
+    },
+    {
+      "id": "261f4f50-96b4-40b7-8513-dfc5f45d4671",
+      "phone_number": "+919422180004",
+      "email": "city.medico@healthcare.local",
+      "role": "chemist",
+      "is_active": true
+    },
+    {
+      "id": "303fffc9-fefb-4927-ae86-31b8bf67ec2b",
+      "phone_number": "+919422180005",
+      "email": "sanjeevani.garkheda@healthcare.local",
+      "role": "chemist",
+      "is_active": true
+    },
+    {
+      "id": "ed47668c-a71e-4b8a-80c4-d410b8b35847",
+      "phone_number": "+919422180006",
+      "email": "mgm.chemist@healthcare.local",
+      "role": "chemist",
+      "is_active": true
+    },
+    {
+      "id": "7f93b3f7-c25e-4c5c-b4bc-76c9f1fe1458",
+      "phone_number": "+919422180007",
+      "email": "bajaj.chemist@healthcare.local",
+      "role": "chemist",
+      "is_active": true
+    },
+    {
+      "id": "a5157873-f2c2-4f43-b3c8-295419a3d8bf",
+      "phone_number": "+919422180008",
+      "email": "balaji.medicals@healthcare.local",
+      "role": "chemist",
+      "is_active": true
+    }
+  ],
+  "doctors": [
+    {
+      "user_id": "a4f08ef7-31b4-4632-b9ab-5f4ba5f7db8c",
+      "full_name": "Dr. Sachin Kulkarni",
+      "medical_reg_number": "MMC/2008/04/1120",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "General Physician",
+      "years_experience": 16,
+      "bio": "Senior Consultant Physician specializing in lifestyle disease management, diabetes mellitus, hypertension, and infectious diseases in Marathwada region.",
+      "gender": "Male",
+      "in_person_fee": 500.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.9,
+      "review_count": 38
+    },
+    {
+      "user_id": "fdb9c70a-49ec-4083-91e2-9a57ffeed151",
+      "full_name": "Dr. Neha Deshmukh",
+      "medical_reg_number": "MMC/2012/06/1842",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "Pediatrics",
+      "years_experience": 12,
+      "bio": "Consultant Pediatrician and Neonatologist. Dedicated to child growth monitoring, vaccinations, infant nutrition, and acute pediatric care.",
+      "gender": "Female",
+      "in_person_fee": 600.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.85,
+      "review_count": 29
+    },
+    {
+      "user_id": "439d6e37-4047-45a3-9cfe-b940bc8bb733",
+      "full_name": "Dr. Rohan Bhalerao",
+      "medical_reg_number": "MMC/2006/03/0951",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "Cardiology",
+      "years_experience": 18,
+      "bio": "Interventional Cardiologist with extensive experience in preventive cardiology, ECG, Echocardiography, post-angioplasty rehab, and coronary risk assessment.",
+      "gender": "Male",
+      "in_person_fee": 900.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.95,
+      "review_count": 46
+    },
+    {
+      "user_id": "c1e575d9-78e9-4bc7-876c-c9866534013d",
+      "full_name": "Dr. Pooja Shinde",
+      "medical_reg_number": "MMC/2014/09/2718",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "Dermatology",
+      "years_experience": 10,
+      "bio": "Consultant Dermatologist and Trichologist specializing in clinical dermatology, acne scarring, eczema, psoriasis, and medical hair restoration.",
+      "gender": "Female",
+      "in_person_fee": 700.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.8,
+      "review_count": 24
+    },
+    {
+      "user_id": "6dc8aa35-706b-4d90-9dde-619996d2caf7",
+      "full_name": "Dr. Amit V. Patil",
+      "medical_reg_number": "MMC/2009/02/0644",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "Orthopedics",
+      "years_experience": 15,
+      "bio": "Orthopedic Surgeon specializing in arthroscopy, sports trauma, joint pain management, fracture treatment, and arthritis rehabilitation.",
+      "gender": "Male",
+      "in_person_fee": 750.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.88,
+      "review_count": 33
+    },
+    {
+      "user_id": "df122ea8-ad78-4448-bf92-eb47b4a0538a",
+      "full_name": "Dr. Snehal Kadam",
+      "medical_reg_number": "MMC/2010/05/1330",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "Gynecology",
+      "years_experience": 14,
+      "bio": "Obstetrician and Gynecologist focused on antenatal maternal care, high-risk pregnancy monitoring, PCOS/PCOD management, and menopause health.",
+      "gender": "Female",
+      "in_person_fee": 650.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.92,
+      "review_count": 41
+    },
+    {
+      "user_id": "315180df-cae6-4c7b-8648-abb8371d8021",
+      "full_name": "Dr. Vikramaditya Jadhav",
+      "medical_reg_number": "DCI/MAH/2015/0821",
+      "council_name": "Maharashtra Dental Council",
+      "specialty": "Dentistry",
+      "years_experience": 9,
+      "bio": "Dental Surgeon & Endodontist providing painless root canal treatments, cosmetic teeth whitening, crown/bridge installations, and routine scaling.",
+      "gender": "Male",
+      "in_person_fee": 400.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.75,
+      "review_count": 21
+    },
+    {
+      "user_id": "4e3c0355-ecc5-4dc6-8e24-4d9a51245e09",
+      "full_name": "Dr. Rajeshwari Joshi",
+      "medical_reg_number": "MMC/2011/08/2155",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "ENT",
+      "years_experience": 13,
+      "bio": "ENT Specialist treating chronic sinusitis, allergic rhinitis, tonsillitis, vertigo, tinnitus, and pediatric ear infections.",
+      "gender": "Female",
+      "in_person_fee": 600.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.82,
+      "review_count": 26
+    },
+    {
+      "user_id": "193e1c40-93ca-4433-ad46-2b1c9714c0c5",
+      "full_name": "Dr. Anand Kale",
+      "medical_reg_number": "MMC/2007/01/0432",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "Ophthalmology",
+      "years_experience": 17,
+      "bio": "Consultant Ophthalmologist and Phaco Surgeon specializing in cataract surgery, glaucoma detection, dry eye disease, and computerized vision testing.",
+      "gender": "Male",
+      "in_person_fee": 500.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.89,
+      "review_count": 35
+    },
+    {
+      "user_id": "f7ede5ed-2959-4bcd-a03c-5515cd1d0b24",
+      "full_name": "Dr. Priyadarshini More",
+      "medical_reg_number": "MMC/2016/11/3890",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "General Physician",
+      "years_experience": 8,
+      "bio": "Family Physician focused on routine health screenings, geriatric monitoring, preventive medicine, seasonal viral syndromes, and metabolic health.",
+      "gender": "Female",
+      "in_person_fee": 450.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.78,
+      "review_count": 19
+    },
+    {
+      "user_id": "0954f4e2-ec1f-47d8-9513-b96c49e13f46",
+      "full_name": "Dr. Sandeep Gaikwad",
+      "medical_reg_number": "MMC/2005/07/0812",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "Neurology",
+      "years_experience": 19,
+      "bio": "Senior Consultant Neurologist handling migraine management, post-stroke recovery, neuropathy, Parkinson's disease, and epileptic disorders.",
+      "gender": "Male",
+      "in_person_fee": 1000.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.96,
+      "review_count": 52
+    },
+    {
+      "user_id": "48431095-69b9-4375-805a-ba206500cc69",
+      "full_name": "Dr. Manisha Rathi",
+      "medical_reg_number": "MMC/2013/04/1560",
+      "council_name": "Maharashtra Medical Council",
+      "specialty": "Dermatology",
+      "years_experience": 11,
+      "bio": "Specialist in dermatopathology, pediatric skin conditions, allergic contact dermatitis, fungal skin infections, and vitiligo care.",
+      "gender": "Female",
+      "in_person_fee": 650.0,
+      "verification_status": "verified",
+      "listing_online": true,
+      "average_rating": 4.83,
+      "review_count": 27
+    }
+  ],
+  "clinics": [
+    {
+      "id": "51011d08-72b6-46ab-8086-af40ec1ce002",
+      "doctor_id": "a4f08ef7-31b4-4632-b9ab-5f4ba5f7db8c",
+      "name": "Kulkarni Care Clinic & Diagnostic Centre",
+      "address": "Plot 14, Station Road, Opp. Divisional Commissioner Office, Kranti Chowk",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Kranti Chowk",
+      "pincode": "431001",
+      "contact_number": "+912402334001",
+      "latitude": 19.8736,
+      "longitude": 75.3245,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8736000,75.3245000"
+    },
+    {
+      "id": "8689e845-8ecf-4683-a5cc-a7b058c8217c",
+      "doctor_id": "fdb9c70a-49ec-4083-91e2-9a57ffeed151",
+      "name": "Little Smiles Pediatric Clinic",
+      "address": "Sector N-4, Near Cidco Bus Stand & Cannaught Garden, CIDCO",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "CIDCO",
+      "pincode": "431003",
+      "contact_number": "+912402482002",
+      "latitude": 19.8824,
+      "longitude": 75.3619,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8824000,75.3619000"
+    },
+    {
+      "id": "cd92d8a7-983a-4bbf-82c2-0dfb6ed12f55",
+      "doctor_id": "439d6e37-4047-45a3-9cfe-b940bc8bb733",
+      "name": "Hridayam Heart & Chest Clinic",
+      "address": "3rd Floor, Metro Square, Jalna Road, Seven Hills",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Seven Hills",
+      "pincode": "431005",
+      "contact_number": "+912402356003",
+      "latitude": 19.8741,
+      "longitude": 75.3524,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8741000,75.3524000"
+    },
+    {
+      "id": "83a3aa9f-6c06-4ce0-a863-bd691376567c",
+      "doctor_id": "c1e575d9-78e9-4bc7-876c-c9866534013d",
+      "name": "Aura Skin & Hair Clinic",
+      "address": "Shop 102, City Centre Complex, Main Road, Nirala Bazar",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Nirala Bazar",
+      "pincode": "431001",
+      "contact_number": "+912402321004",
+      "latitude": 19.8821,
+      "longitude": 75.3278,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8821000,75.3278000"
+    },
+    {
+      "id": "9494bc92-ffd4-4f6f-9cb6-3d8c88ab6b30",
+      "doctor_id": "6dc8aa35-706b-4d90-9dde-619996d2caf7",
+      "name": "Sanjivani Bone & Joint Clinic",
+      "address": "Row House 3, Behind Varad Ganesh Mandir, Samarth Nagar",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Samarth Nagar",
+      "pincode": "431001",
+      "contact_number": "+912402345005",
+      "latitude": 19.8845,
+      "longitude": 75.3312,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8845000,75.3312000"
+    },
+    {
+      "id": "d5950a83-9e11-4279-a5b5-1ddb8d34ae3f",
+      "doctor_id": "df122ea8-ad78-4448-bf92-eb47b4a0538a",
+      "name": "Vatsalya Maternity & Nursing Clinic",
+      "address": "Plot 82, Sutgirni Chowk, Garkheda Parisar",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Garkheda",
+      "pincode": "431009",
+      "contact_number": "+912402451006",
+      "latitude": 19.8632,
+      "longitude": 75.3481,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8632000,75.3481000"
+    },
+    {
+      "id": "8e8078ca-46b9-4741-bddd-6e130db58148",
+      "doctor_id": "315180df-cae6-4c7b-8648-abb8371d8021",
+      "name": "Crown Dental Care & Implant Center",
+      "address": "1st Floor, Tapadiya Pride, Near Sant Eknath Rang Mandir, Osmanpura",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Osmanpura",
+      "pincode": "431005",
+      "contact_number": "+912402360007",
+      "latitude": 19.8692,
+      "longitude": 75.3271,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8692000,75.3271000"
+    },
+    {
+      "id": "d12667ff-0f07-4875-aa0f-eec7abaf1421",
+      "doctor_id": "4e3c0355-ecc5-4dc6-8e24-4d9a51245e09",
+      "name": "Swara ENT & Hearing Solutions",
+      "address": "Office 204, Prozone Trade Hub, Cannaught Place, CIDCO",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Cannaught Place",
+      "pincode": "431003",
+      "contact_number": "+912402488008",
+      "latitude": 19.8835,
+      "longitude": 75.3642,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8835000,75.3642000"
+    },
+    {
+      "id": "b82c4cb5-7fcf-407f-9d00-30c974d85dfb",
+      "doctor_id": "193e1c40-93ca-4433-ad46-2b1c9714c0c5",
+      "name": "Drishti Netralaya & Retina Centre",
+      "address": "Bungalow No. 5, Behind Dargah Road, Shahnoorwadi",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Shahnoorwadi",
+      "pincode": "431005",
+      "contact_number": "+912402341009",
+      "latitude": 19.8685,
+      "longitude": 75.3402,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8685000,75.3402000"
+    },
+    {
+      "id": "5692bad5-4ea9-4c40-9f48-e62441926c2f",
+      "doctor_id": "f7ede5ed-2959-4bcd-a03c-5515cd1d0b24",
+      "name": "Prerana Family Clinic",
+      "address": "Shop 4, Greenfield Enclave, Near Bajaj Hospital, Beed Bypass",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Beed Bypass",
+      "pincode": "431010",
+      "contact_number": "+912402500010",
+      "latitude": 19.8512,
+      "longitude": 75.3418,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8512000,75.3418000"
+    },
+    {
+      "id": "78253f2d-4026-4fc4-81e2-cf3d63b206c5",
+      "doctor_id": "0954f4e2-ec1f-47d8-9513-b96c49e13f46",
+      "name": "NeuroCare Clinic & Diagnostic Lab",
+      "address": "Plot 22, Jalna Road, Near Akashwani Tower, Seven Hills",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Seven Hills",
+      "pincode": "431005",
+      "contact_number": "+912402377011",
+      "latitude": 19.8755,
+      "longitude": 75.3498,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8755000,75.3498000"
+    },
+    {
+      "id": "cfda9cda-95ae-4dec-b31c-d20656c1a2df",
+      "doctor_id": "48431095-69b9-4375-805a-ba206500cc69",
+      "name": "SkinPlus Clinic",
+      "address": "Avishkar Colony, Near N-6 Cricket Stadium, CIDCO",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "CIDCO",
+      "pincode": "431003",
+      "contact_number": "+912402485012",
+      "latitude": 19.886,
+      "longitude": 75.367,
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=19.8860000,75.3670000"
+    }
+  ],
+  "chemists": [
+    {
+      "id": "5ac67da1-270c-4230-8ac8-3bebecac601e",
+      "user_id": "3d9a957f-a540-4174-8a0e-7c26b8093c06",
+      "pharmacy_name": "Sambhaji Medical & General Stores",
+      "license_number": "MH-AUR-2023-20B-10821",
+      "clinic_id": "51011d08-72b6-46ab-8086-af40ec1ce002",
+      "address": "Shop 2, Ground Floor, Station Road, Near Kranti Chowk Flyover",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Kranti Chowk",
+      "pincode": "431001",
+      "contact_number": "+919422180001",
+      "is_active": true
+    },
+    {
+      "id": "3e7bb58c-4d6f-4b31-b63d-c5b26c622564",
+      "user_id": "49a3f286-76da-4032-a492-8821214f2adc",
+      "pharmacy_name": "Apollo Pharmacy CIDCO Cannaught",
+      "license_number": "MH-AUR-2022-20B-11540",
+      "clinic_id": "8689e845-8ecf-4683-a5cc-a7b058c8217c",
+      "address": "Shop 12, Cannaught Shopping Center, CIDCO N-4",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "CIDCO",
+      "pincode": "431003",
+      "contact_number": "+919422180002",
+      "is_active": true
+    },
+    {
+      "id": "3872bd77-79b4-4642-9ba2-361d4f71490c",
+      "user_id": "9119c43a-ba77-4697-9cd6-9141164b5784",
+      "pharmacy_name": "Wellness Forever 24x7 Chemist",
+      "license_number": "MH-AUR-2024-20B-19412",
+      "clinic_id": "cd92d8a7-983a-4bbf-82c2-0dfb6ed12f55",
+      "address": "Plot 18, Jalna Road, Opposite Seven Hills Hotel",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Seven Hills",
+      "pincode": "431005",
+      "contact_number": "+919422180003",
+      "is_active": true
+    },
+    {
+      "id": "dfc7d2d3-cda9-4709-9254-8204bca1ffb9",
+      "user_id": "261f4f50-96b4-40b7-8513-dfc5f45d4671",
+      "pharmacy_name": "City Medico & Surgical Suppliers",
+      "license_number": "MH-AUR-2021-20B-08340",
+      "clinic_id": "83a3aa9f-6c06-4ce0-a863-bd691376567c",
+      "address": "City Market Lane, Near Central Bank, Nirala Bazar",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Nirala Bazar",
+      "pincode": "431001",
+      "contact_number": "+919422180004",
+      "is_active": true
+    },
+    {
+      "id": "e717c5dc-d450-410d-8bba-76b329b10e52",
+      "user_id": "303fffc9-fefb-4927-ae86-31b8bf67ec2b",
+      "pharmacy_name": "Sanjeevani Pharmacy Garkheda",
+      "license_number": "MH-AUR-2023-20B-12933",
+      "clinic_id": "9494bc92-ffd4-4f6f-9cb6-3d8c88ab6b30",
+      "address": "Shop 5, Suyog Complex, Sutgirni Road, Garkheda Parisar",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Garkheda",
+      "pincode": "431009",
+      "contact_number": "+919422180005",
+      "is_active": true
+    },
+    {
+      "id": "c8a3a3af-342b-4f06-874f-9481105ed9ef",
+      "user_id": "ed47668c-a71e-4b8a-80c4-d410b8b35847",
+      "pharmacy_name": "MGM Care Chemist",
+      "license_number": "MH-AUR-2020-20B-06219",
+      "clinic_id": "d5950a83-9e11-4279-a5b5-1ddb8d34ae3f",
+      "address": "Near MGM Medical Campus, Gate 2, N-6 CIDCO",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "CIDCO",
+      "pincode": "431003",
+      "contact_number": "+919422180006",
+      "is_active": true
+    },
+    {
+      "id": "238c3712-9b87-433a-891b-8476ceda1bd0",
+      "user_id": "7f93b3f7-c25e-4c5c-b4bc-76c9f1fe1458",
+      "pharmacy_name": "Bajaj Hospital Care Chemist",
+      "license_number": "MH-AUR-2022-20B-14561",
+      "clinic_id": "8e8078ca-46b9-4741-bddd-6e130db58148",
+      "address": "Opp. Kamalnayan Bajaj Hospital, Beed Bypass Road",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Beed Bypass",
+      "pincode": "431010",
+      "contact_number": "+919422180007",
+      "is_active": true
+    },
+    {
+      "id": "fb6105c9-87f0-46bd-a461-e9982d2ed61b",
+      "user_id": "a5157873-f2c2-4f43-b3c8-295419a3d8bf",
+      "pharmacy_name": "Balaji Medicals & Surgicals",
+      "license_number": "MH-AUR-2023-20B-13890",
+      "clinic_id": "d12667ff-0f07-4875-aa0f-eec7abaf1421",
+      "address": "Main Road, Near Sant Eknath Hall, Osmanpura",
+      "city": "Chhatrapati Sambhaji Nagar",
+      "locality": "Osmanpura",
+      "pincode": "431005",
+      "contact_number": "+919422180008",
+      "is_active": true
+    }
+  ],
+  "patients": [
+    {
+      "user_id": "aa1f5f9a-2485-48f4-99cb-78668de2e0f0",
+      "full_name": "Rahul Waghmare",
+      "gender": "Male",
+      "date_of_birth": "1992-04-15"
+    },
+    {
+      "user_id": "4b54e18c-b79e-4aa7-94c2-8f24260083c5",
+      "full_name": "Sunita Salve",
+      "gender": "Female",
+      "date_of_birth": "1985-08-22"
+    },
+    {
+      "user_id": "9124cc5b-4932-4fff-838d-d7613acb7a83",
+      "full_name": "Prashant Shinde",
+      "gender": "Male",
+      "date_of_birth": "1978-11-03"
+    },
+    {
+      "user_id": "6ed866ed-1f1a-4d51-b8c3-f8a7a4524896",
+      "full_name": "Kavita Kulkarni",
+      "gender": "Female",
+      "date_of_birth": "1996-02-19"
+    },
+    {
+      "user_id": "7a8451fb-179b-4d4a-a752-c375a88ec0f2",
+      "full_name": "Ganesh Muley",
+      "gender": "Male",
+      "date_of_birth": "2001-07-30"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "b0459f6c-3685-45b2-b081-45a327d21aec",
+      "patient_id": "aa1f5f9a-2485-48f4-99cb-78668de2e0f0",
+      "doctor_id": "a4f08ef7-31b4-4632-b9ab-5f4ba5f7db8c",
+      "clinic_id": "51011d08-72b6-46ab-8086-af40ec1ce002",
+      "mode": "in_person",
+      "status": "completed",
+      "slot_start": "2026-09-16T10:00:00+00:00",
+      "slot_end": "2026-09-16T10:15:00+00:00",
+      "fee_amount": 500.0,
+      "payment_status": "captured"
+    },
+    {
+      "id": "38539823-fab5-42db-81a5-4dea966de94e",
+      "patient_id": "aa1f5f9a-2485-48f4-99cb-78668de2e0f0",
+      "doctor_id": "a4f08ef7-31b4-4632-b9ab-5f4ba5f7db8c",
+      "clinic_id": "51011d08-72b6-46ab-8086-af40ec1ce002",
+      "mode": "in_person",
+      "status": "confirmed",
+      "slot_start": "2026-09-18T11:00:00+00:00",
+      "slot_end": "2026-09-18T11:15:00+00:00",
+      "fee_amount": 500.0,
+      "payment_status": "captured"
+    },
+    {
+      "id": "eabe8b90-38c0-44e5-898b-653ff95f641a",
+      "patient_id": "4b54e18c-b79e-4aa7-94c2-8f24260083c5",
+      "doctor_id": "fdb9c70a-49ec-4083-91e2-9a57ffeed151",
+      "clinic_id": "8689e845-8ecf-4683-a5cc-a7b058c8217c",
+      "mode": "in_person",
+      "status": "completed",
+      "slot_start": "2026-09-16T11:00:00+00:00",
+      "slot_end": "2026-09-16T11:15:00+00:00",
+      "fee_amount": 600.0,
+      "payment_status": "captured"
+    },
+    {
+      "id": "a1aab931-583d-4d43-9591-a351989fe9be",
+      "patient_id": "4b54e18c-b79e-4aa7-94c2-8f24260083c5",
+      "doctor_id": "fdb9c70a-49ec-4083-91e2-9a57ffeed151",
+      "clinic_id": "8689e845-8ecf-4683-a5cc-a7b058c8217c",
+      "mode": "in_person",
+      "status": "confirmed",
+      "slot_start": "2026-09-18T12:00:00+00:00",
+      "slot_end": "2026-09-18T12:15:00+00:00",
+      "fee_amount": 600.0,
+      "payment_status": "captured"
+    },
+    {
+      "id": "ec265682-45c7-4d2b-9a9b-fde9af737f8e",
+      "patient_id": "9124cc5b-4932-4fff-838d-d7613acb7a83",
+      "doctor_id": "439d6e37-4047-45a3-9cfe-b940bc8bb733",
+      "clinic_id": "cd92d8a7-983a-4bbf-82c2-0dfb6ed12f55",
+      "mode": "in_person",
+      "status": "completed",
+      "slot_start": "2026-09-16T12:00:00+00:00",
+      "slot_end": "2026-09-16T12:15:00+00:00",
+      "fee_amount": 900.0,
+      "payment_status": "captured"
+    },
+    {
+      "id": "abbba602-87a7-40bf-be0a-f591e1ba7a2a",
+      "patient_id": "9124cc5b-4932-4fff-838d-d7613acb7a83",
+      "doctor_id": "439d6e37-4047-45a3-9cfe-b940bc8bb733",
+      "clinic_id": "cd92d8a7-983a-4bbf-82c2-0dfb6ed12f55",
+      "mode": "in_person",
+      "status": "confirmed",
+      "slot_start": "2026-09-18T13:00:00+00:00",
+      "slot_end": "2026-09-18T13:15:00+00:00",
+      "fee_amount": 900.0,
+      "payment_status": "captured"
+    },
+    {
+      "id": "44a3f708-cd8f-4b60-937b-e7246adccd93",
+      "patient_id": "6ed866ed-1f1a-4d51-b8c3-f8a7a4524896",
+      "doctor_id": "c1e575d9-78e9-4bc7-876c-c9866534013d",
+      "clinic_id": "83a3aa9f-6c06-4ce0-a863-bd691376567c",
+      "mode": "in_person",
+      "status": "completed",
+      "slot_start": "2026-09-16T13:00:00+00:00",
+      "slot_end": "2026-09-16T13:15:00+00:00",
+      "fee_amount": 700.0,
+      "payment_status": "captured"
+    },
+    {
+      "id": "064916fb-7104-4b27-a212-1f258ed0f6d3",
+      "patient_id": "6ed866ed-1f1a-4d51-b8c3-f8a7a4524896",
+      "doctor_id": "c1e575d9-78e9-4bc7-876c-c9866534013d",
+      "clinic_id": "83a3aa9f-6c06-4ce0-a863-bd691376567c",
+      "mode": "in_person",
+      "status": "confirmed",
+      "slot_start": "2026-09-18T14:00:00+00:00",
+      "slot_end": "2026-09-18T14:15:00+00:00",
+      "fee_amount": 700.0,
+      "payment_status": "captured"
+    },
+    {
+      "id": "3887d6cf-6572-49b8-9080-5d095f9f1fde",
+      "patient_id": "7a8451fb-179b-4d4a-a752-c375a88ec0f2",
+      "doctor_id": "6dc8aa35-706b-4d90-9dde-619996d2caf7",
+      "clinic_id": "9494bc92-ffd4-4f6f-9cb6-3d8c88ab6b30",
+      "mode": "in_person",
+      "status": "completed",
+      "slot_start": "2026-09-16T14:00:00+00:00",
+      "slot_end": "2026-09-16T14:15:00+00:00",
+      "fee_amount": 750.0,
+      "payment_status": "captured"
+    },
+    {
+      "id": "36ffe0e8-28db-4ea6-b6cf-7edda24c7fc9",
+      "patient_id": "7a8451fb-179b-4d4a-a752-c375a88ec0f2",
+      "doctor_id": "6dc8aa35-706b-4d90-9dde-619996d2caf7",
+      "clinic_id": "9494bc92-ffd4-4f6f-9cb6-3d8c88ab6b30",
+      "mode": "in_person",
+      "status": "confirmed",
+      "slot_start": "2026-09-18T15:00:00+00:00",
+      "slot_end": "2026-09-18T15:15:00+00:00",
+      "fee_amount": 750.0,
+      "payment_status": "captured"
+    }
+  ],
+  "prescriptions": [
+    {
+      "id": "5b79a024-0958-499d-9a89-d38702205869",
+      "appointment_id": "b0459f6c-3685-45b2-b081-45a327d21aec",
+      "doctor_id": "a4f08ef7-31b4-4632-b9ab-5f4ba5f7db8c",
+      "patient_id": "aa1f5f9a-2485-48f4-99cb-78668de2e0f0",
+      "diagnosis": "Acute upper respiratory tract infection with low-grade pyrexia",
+      "clinical_notes": "Throat congestion noted. Advised warm saline gargles, adequate hydration, and resting for 48 hours.",
+      "issued_at": "2026-09-16T10:15:00+00:00",
+      "chemist_id": "5ac67da1-270c-4230-8ac8-3bebecac601e",
+      "digital_signature": "MMC-EDIG-SIG-b95aac5eecbb23241bb29834",
+      "dispense_status": "dispensed",
+      "items": [
+        {
+          "drug_name": "Crocin 650",
+          "dosage": "650mg",
+          "frequency": "TID",
+          "duration_days": 3,
+          "instructions": "After meals for fever"
+        },
+        {
+          "drug_name": "Pan 40",
+          "dosage": "40mg",
+          "frequency": "OD",
+          "duration_days": 5,
+          "instructions": "Before breakfast"
+        },
+        {
+          "drug_name": "Cetzine",
+          "dosage": "10mg",
+          "frequency": "HS",
+          "duration_days": 5,
+          "instructions": "At bedtime for rhinitis"
+        }
+      ]
+    },
+    {
+      "id": "01b5774e-e86b-499b-967f-326f5c9efac2",
+      "appointment_id": "eabe8b90-38c0-44e5-898b-653ff95f641a",
+      "doctor_id": "fdb9c70a-49ec-4083-91e2-9a57ffeed151",
+      "patient_id": "4b54e18c-b79e-4aa7-94c2-8f24260083c5",
+      "diagnosis": "Pediatric acute viral bronchitis and mild dehydration",
+      "clinical_notes": "Chest clear of wheezing. Encouraged ORS fluids and frequent small meals.",
+      "issued_at": "2026-09-16T11:15:00+00:00",
+      "chemist_id": "3e7bb58c-4d6f-4b31-b63d-c5b26c622564",
+      "digital_signature": "MMC-EDIG-SIG-9f2aa5820aef756c494ac0cb",
+      "dispense_status": "dispensed",
+      "items": [
+        {
+          "drug_name": "Crocin Drops",
+          "dosage": "100mg/ml",
+          "frequency": "SOS",
+          "duration_days": 3,
+          "instructions": "Only if temp exceeds 100 F"
+        },
+        {
+          "drug_name": "Amoxicillin Oral Suspension",
+          "dosage": "125mg/5ml",
+          "frequency": "TID",
+          "duration_days": 5,
+          "instructions": "Complete the 5-day course"
+        }
+      ]
+    },
+    {
+      "id": "5ec67bf6-228c-4d64-9893-3e5768575ac5",
+      "appointment_id": "ec265682-45c7-4d2b-9a9b-fde9af737f8e",
+      "doctor_id": "439d6e37-4047-45a3-9cfe-b940bc8bb733",
+      "patient_id": "9124cc5b-4932-4fff-838d-d7613acb7a83",
+      "diagnosis": "Essential hypertension (Stage 1) and mild hyperlipidemia",
+      "clinical_notes": "Resting BP 142/90 mmHg. Advised 30 mins brisk walking daily and low-sodium diet. Repeat lipid profile in 6 weeks.",
+      "issued_at": "2026-09-16T12:15:00+00:00",
+      "chemist_id": "3872bd77-79b4-4642-9ba2-361d4f71490c",
+      "digital_signature": "MMC-EDIG-SIG-a589704fdfdbb01d7f0ee72f",
+      "dispense_status": "dispensed",
+      "items": [
+        {
+          "drug_name": "Telmisartan",
+          "dosage": "40mg",
+          "frequency": "OD",
+          "duration_days": 30,
+          "instructions": "Morning after breakfast"
+        },
+        {
+          "drug_name": "Atorvastatin",
+          "dosage": "10mg",
+          "frequency": "HS",
+          "duration_days": 30,
+          "instructions": "At bedtime"
+        }
+      ]
+    },
+    {
+      "id": "b821254d-c389-4e62-86c0-49bf5f805d37",
+      "appointment_id": "44a3f708-cd8f-4b60-937b-e7246adccd93",
+      "doctor_id": "c1e575d9-78e9-4bc7-876c-c9866534013d",
+      "patient_id": "6ed866ed-1f1a-4d51-b8c3-f8a7a4524896",
+      "diagnosis": "Grade 2 Acne Vulgaris and post-inflammatory erythema",
+      "clinical_notes": "Prescribed non-comedogenic sunscreen and gentle foaming cleanser. Avoid picking lesions.",
+      "issued_at": "2026-09-16T13:15:00+00:00",
+      "chemist_id": "dfc7d2d3-cda9-4709-9254-8204bca1ffb9",
+      "digital_signature": "MMC-EDIG-SIG-feede48c09a94ac190217651",
+      "dispense_status": "dispensed",
+      "items": [
+        {
+          "drug_name": "Azithral 500",
+          "dosage": "500mg",
+          "frequency": "OD",
+          "duration_days": 3,
+          "instructions": "Pulse therapy for 3 days"
+        },
+        {
+          "drug_name": "Clindamycin Gel",
+          "dosage": "1%",
+          "frequency": "BD",
+          "duration_days": 14,
+          "instructions": "Topical application on active spots"
+        }
+      ]
+    },
+    {
+      "id": "cfea1136-3f69-42e3-b298-9f4fa7aa0819",
+      "appointment_id": "3887d6cf-6572-49b8-9080-5d095f9f1fde",
+      "doctor_id": "6dc8aa35-706b-4d90-9dde-619996d2caf7",
+      "patient_id": "7a8451fb-179b-4d4a-a752-c375a88ec0f2",
+      "diagnosis": "Right knee patellofemoral pain syndrome",
+      "clinical_notes": "Quadriceps strengthening exercises demonstrated. Cold compress twice daily.",
+      "issued_at": "2026-09-16T14:15:00+00:00",
+      "chemist_id": "e717c5dc-d450-410d-8bba-76b329b10e52",
+      "digital_signature": "MMC-EDIG-SIG-c23a771a449d44676c2af253",
+      "dispense_status": "dispensed",
+      "items": [
+        {
+          "drug_name": "Aceclofenac + Paracetamol",
+          "dosage": "100mg/325mg",
+          "frequency": "BD",
+          "duration_days": 5,
+          "instructions": "After food"
+        },
+        {
+          "drug_name": "Pan 40",
+          "dosage": "40mg",
+          "frequency": "OD",
+          "duration_days": 5,
+          "instructions": "Before breakfast"
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "id": "49f45f04-3b6a-4f32-b5ee-ec409c8960a5",
+      "appointment_id": "b0459f6c-3685-45b2-b081-45a327d21aec",
+      "doctor_id": "a4f08ef7-31b4-4632-b9ab-5f4ba5f7db8c",
+      "patient_id": "aa1f5f9a-2485-48f4-99cb-78668de2e0f0",
+      "rating": 5,
+      "review_text": "Dr. Sachin Kulkarni was extremely attentive. Listened to my symptoms carefully and explained the treatment clearly. Kranti Chowk clinic is very well maintained!",
+      "status": "published"
+    },
+    {
+      "id": "7e52d78b-f1dc-4d03-a47c-6ddb2e086122",
+      "appointment_id": "eabe8b90-38c0-44e5-898b-653ff95f641a",
+      "doctor_id": "fdb9c70a-49ec-4083-91e2-9a57ffeed151",
+      "patient_id": "4b54e18c-b79e-4aa7-94c2-8f24260083c5",
+      "rating": 5,
+      "review_text": "Dr. Neha is wonderful with toddlers! Made my daughter feel at ease immediately. Excellent clinic in CIDCO N-4.",
+      "status": "published"
+    },
+    {
+      "id": "69be0c42-5f1d-4bed-ade0-f08bb6bf4ace",
+      "appointment_id": "ec265682-45c7-4d2b-9a9b-fde9af737f8e",
+      "doctor_id": "439d6e37-4047-45a3-9cfe-b940bc8bb733",
+      "patient_id": "9124cc5b-4932-4fff-838d-d7613acb7a83",
+      "rating": 5,
+      "review_text": "Superb cardiologist on Jalna Road. Very reassuring and thorough ECG review. Highly recommended.",
+      "status": "published"
+    },
+    {
+      "id": "264495eb-2599-44f3-9812-532d3b7e9fad",
+      "appointment_id": "44a3f708-cd8f-4b60-937b-e7246adccd93",
+      "doctor_id": "c1e575d9-78e9-4bc7-876c-c9866534013d",
+      "patient_id": "6ed866ed-1f1a-4d51-b8c3-f8a7a4524896",
+      "rating": 4,
+      "review_text": "Great experience at Aura Skin Clinic in Nirala Bazar. Doctor gave practical skincare routine without pushing unnecessary procedures.",
+      "status": "published"
+    },
+    {
+      "id": "265b7663-e474-4e57-b7ff-70f228c5d721",
+      "appointment_id": "3887d6cf-6572-49b8-9080-5d095f9f1fde",
+      "doctor_id": "6dc8aa35-706b-4d90-9dde-619996d2caf7",
+      "patient_id": "7a8451fb-179b-4d4a-a752-c375a88ec0f2",
+      "rating": 5,
+      "review_text": "Accurate diagnosis and excellent physiotherapy advice. Dr. Patil avoided unnecessary MRI scans. Samarth Nagar location is easy to reach.",
+      "status": "published"
+    }
+  ]
+}

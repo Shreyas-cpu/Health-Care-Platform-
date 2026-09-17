@@ -88,11 +88,12 @@ export const api = {
   getMe: () => request<User>('/auth/me'),
 
   // Doctor & Discovery
-  searchDoctors: (params: { specialty?: string; locality?: string; city?: string }) => {
+  searchDoctors: (params: { specialty?: string; locality?: string; city?: string; limit?: number }) => {
     const query = new URLSearchParams()
     if (params.specialty) query.set('specialty', params.specialty)
     if (params.locality) query.set('locality', params.locality)
     if (params.city) query.set('city', params.city)
+    query.set('limit', String(params.limit || 100))
     return request<{ items: Doctor[]; total: number }>(`/search/doctors?${query.toString()}`)
   },
 
@@ -127,13 +128,16 @@ export const api = {
   getDoctorQueue: () => request<{ queue: Appointment[] }>('/doctor/queue'),
 
   // Bookings & Patient Portal
-  getSlots: (doctorId: string, dateStr: string) =>
-    request<{ slots: Array<{ start_time: string; end_time: string; is_available: boolean }> }>(
-      `/doctors/${doctorId}/slots?query_date=${dateStr}&mode=in_person`
-    ),
+  getSlots: async (doctorId: string, dateStr: string) => {
+    const data = await request<any>(
+      `/doctors/${doctorId}/slots?date=${dateStr}&query_date=${dateStr}&mode=in_person`
+    )
+    return { slots: Array.isArray(data) ? data : data?.slots || [] }
+  },
 
   reserveSlot: (data: {
     doctor_id: string
+    clinic_id?: string
     slot_start: string
     slot_end: string
     patient_name: string
@@ -141,7 +145,10 @@ export const api = {
   }) =>
     request<{ appointment_id: string; status: string }>('/bookings/reserve', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        mode: 'in_person',
+        ...data,
+      }),
     }),
 
   confirmAppointment: (appointmentId: string) =>
@@ -155,8 +162,20 @@ export const api = {
       body: JSON.stringify({ reason }),
     }),
 
-  getAppointmentHistory: () =>
-    request<{ appointments: Appointment[] }>('/patients/me/appointments/history'),
+  getAppointmentHistory: async () => {
+    const data = await request<any>('/patients/me/appointments/history')
+    const list = Array.isArray(data) ? data : data?.appointments || []
+    return {
+      appointments: list.map((item: any) => ({
+        ...item,
+        id: item.id || item.appointment_id,
+        prescription_download_url:
+          isAndroid && item.prescription_download_url?.includes('localhost:9000')
+            ? item.prescription_download_url.replace('localhost:9000', '192.168.10.39:9000')
+            : item.prescription_download_url,
+      })),
+    }
+  },
 
   // Health Document Vault
   uploadPatientDocument: (file: File, docType: string, notes?: string) => {
@@ -170,10 +189,33 @@ export const api = {
     })
   },
 
-  getPatientDocuments: () =>
-    request<{ documents: PatientDocument[]; prescriptions: Prescription[] }>(
-      '/patients/me/documents'
-    ),
+  getPatientDocuments: async () => {
+    const data = await request<any>('/patients/me/documents')
+    const docs = data?.uploaded_documents || data?.documents || []
+    const rxs = data?.prescriptions || []
+    return {
+      documents: docs.map((d: any) => {
+        let url = d.download_url || `http://192.168.10.39:9000/patient-documents/${d.s3_key}`
+        if (isAndroid && url.includes('localhost:9000')) {
+          url = url.replace('localhost:9000', '192.168.10.39:9000')
+        }
+        return {
+          ...d,
+          download_url: url,
+        }
+      }),
+      prescriptions: rxs.map((r: any) => {
+        let url = r.pdf_download_url
+        if (isAndroid && url && url.includes('localhost:9000')) {
+          url = url.replace('localhost:9000', '192.168.10.39:9000')
+        }
+        return {
+          ...r,
+          pdf_download_url: url,
+        }
+      }),
+    }
+  },
 
   // Prescriptions & Digital Signatures
   createPrescription: (prescription: {
